@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'none'; img-src data:; base-uri 'none'; form-action 'none'">
+<title>@@TITLE@@</title>
+<style>
+:root{color-scheme:light;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;color:#202424;background:#fff}
+*{box-sizing:border-box;letter-spacing:0}body{margin:0}button,select,input{font:inherit;color:inherit}
+button,select{min-height:40px;border:1px solid #c8d0cc;border-radius:4px;background:#fff;padding:6px 10px}
+button{min-width:40px;cursor:pointer}button:hover{background:#e9f3ef}button:disabled{opacity:.4;cursor:default}
+:focus-visible{outline:2px solid #00786b;outline-offset:3px}[hidden]{display:none!important}
+header,footer{padding:14px 24px;border-bottom:1px solid #d9dfdd}header{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.document-title{flex:1 1 280px;min-width:0;font-size:16px;overflow-wrap:anywhere}.tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center;max-width:100%}
+select{width:200px;max-width:100%;text-overflow:ellipsis}.edit-mode{font-size:14px;white-space:nowrap}input{accent-color:#00786b}
+main{max-width:1280px;margin:auto}.slide{position:relative;min-height:600px;padding:48px 64px 28px;display:flex;flex-direction:column;gap:22px;overflow-wrap:anywhere}
+.eyebrow{font-size:18px;color:#00786b;font-weight:700;margin:0}.slide h2{font-size:34px;line-height:1.5;margin:0;font-weight:700}
+.cover{justify-content:center;border-top:8px solid #d7192d}.cover h2{font-size:44px;max-width:960px}.audience{font-size:22px;line-height:1.8;margin:0;white-space:pre-wrap}
+.chapter{justify-content:center;background:#f1f6f3}.chapter h2{font-size:40px}.chapter-line{width:120px;height:5px;background:#d7192d}.chapter-note{max-width:900px;margin:0;font-size:20px;line-height:1.8;color:#46534e;white-space:pre-wrap}
+.content h2{padding-bottom:18px;border-bottom:2px solid #d7192d}.argument{display:grid;gap:24px;min-width:0}
+.lead,.support{white-space:pre-wrap;margin:0;line-height:1.85}.lead{font-size:26px;font-weight:600;max-width:1040px}.support{font-size:22px;color:#46534e}.support:empty{display:none}
+.page-points{padding-left:1.2em;margin:0;font-size:24px;line-height:1.6}.page-points li{margin:0 0 8px}
+.comparison{border-collapse:collapse;width:100%;table-layout:fixed;font-size:20px;line-height:1.5}.comparison th,.comparison td{border-bottom:1px solid #c8d0cc;padding:14px;text-align:left;vertical-align:top;overflow-wrap:anywhere}.comparison th{background:#eef5f1;font-weight:650}
+.bar-chart,.page-image{margin:0;min-width:0}.bar-chart figcaption,.page-image figcaption{font-size:16px;line-height:1.6;margin:8px 0;color:#46534e}.bar-row{display:grid;grid-template-columns:minmax(90px,1fr) minmax(80px,3fr) 64px;gap:16px;align-items:center;margin-top:18px;font-size:20px}.bar-track{background:#edf1ef;height:24px}.bar-fill{background:#00786b;height:100%}.bar-row:nth-child(3n) .bar-fill{background:#d7192d}.bar-value{text-align:right}.page-image img{display:block;width:100%;height:290px;object-fit:contain;object-position:left center}
+#speaker{max-width:1280px;margin:auto;padding:16px 24px;line-height:1.7;border-top:1px solid #d9dfdd}#speaker p{white-space:pre-wrap;margin:12px 0}
+.folio{margin:24px 0 0 auto;font-size:14px;color:#5a6662;font-variant-numeric:tabular-nums}.content .folio{margin-top:auto;padding-top:24px}
+[contenteditable="plaintext-only"]{outline:1px dashed #00786b;outline-offset:5px;cursor:text}footer{border-top:1px solid #d9dfdd;font-size:13px;color:#5a6662}
+#state{display:block;margin-bottom:12px;color:#9d1730;line-height:1.6;overflow-wrap:anywhere}summary{cursor:pointer}li{margin:12px 0;overflow-wrap:anywhere}code{display:block;font-size:12px;overflow-wrap:anywhere}
+@media(max-width:640px){header,footer{padding:12px 16px}.tools{width:100%}select{width:140px}.slide{padding:28px 20px;min-height:500px;gap:20px}.slide h2,.cover h2,.chapter h2{font-size:28px}.lead{font-size:22px}.support,.audience{font-size:19px}}
+@media(max-width:640px){.page-points{font-size:20px}.comparison{font-size:16px}.comparison th,.comparison td{padding:8px}.bar-row{font-size:16px;gap:8px;grid-template-columns:minmax(70px,1fr) minmax(60px,2fr) 48px}.page-image img{height:220px}}
+@media print{header,footer,#speaker{display:none}main{max-width:none}.slide[hidden]{display:flex!important}.slide{break-after:page;min-height:0;padding:24px}.slide:last-child{break-after:auto}[contenteditable]{outline:none!important}}
+</style>
+</head>
+<body>
+<header><strong class="document-title">@@TITLE@@</strong><nav class="tools" aria-label="提案导航">
+<button id="prev" type="button" title="上一页" aria-label="上一页">&#8592;</button>
+<select id="pages" aria-label="选择页面">@@OPTIONS@@</select>
+<button id="next" type="button" title="下一页" aria-label="下一页">&#8594;</button>
+<label class="edit-mode"><input id="edit" type="checkbox">编辑</label>
+<button id="download" type="button" title="导出草稿 HTML" aria-label="导出草稿 HTML">&#8595;</button>
+<button id="reset" type="button" title="恢复生成原文" aria-label="恢复生成原文">&#8634;</button>
+</nav></header>
+<main aria-label="提案内容">@@SLIDES@@</main>
+<details id="speaker"><summary>讲者稿</summary><p id="speaker-text"></p><p id="speaker-transition"></p></details>
+<footer><output id="state" aria-live="polite">文件版本：待独立检核和 PPT 内部确认。</output><details><summary>当前版本与上游</summary><ul>@@VERSIONS@@</ul></details></footer>
+<script type="application/json" data-phase5-deck>@@DATA@@</script>
+<script>
+(() => {
+  'use strict';
+  const metadata = document.querySelector('[data-phase5-deck]');
+  const data = JSON.parse(metadata.textContent);
+  const slides = [...document.querySelectorAll('.slide')];
+  const fields = [...document.querySelectorAll('[data-edit]')];
+  const originals = new Map(fields.map(field => [field.dataset.edit, field.textContent]));
+  const state = document.getElementById('state');
+  const selector = document.getElementById('pages');
+  const edit = document.getElementById('edit');
+  const key = 'phase5-deck:' + data.deck_ref.key + ':' + data.deck_ref.sha256;
+  let current = 0;
+  let draft = data.draft;
+  const valid = value => value && Number.isInteger(value.revision) && value.revision >= 0 &&
+    value.edits && typeof value.edits === 'object' && !Array.isArray(value.edits) &&
+    Object.entries(value.edits).every(([name, text]) => originals.has(name) && typeof text === 'string');
+  function persistDraft(candidate) {
+    try {
+      localStorage.setItem(key, JSON.stringify(candidate));
+      const stored = JSON.parse(localStorage.getItem(key) || 'null');
+      return valid(stored) && stored.revision === candidate.revision &&
+        JSON.stringify(stored.edits) === JSON.stringify(candidate.edits);
+    } catch {
+      return false;
+    }
+  }
+  function apply() {
+    fields.forEach(field => { field.textContent = Object.hasOwn(draft.edits, field.dataset.edit) ? draft.edits[field.dataset.edit] : originals.get(field.dataset.edit); });
+  }
+  function show(index) {
+    current = Math.max(0, Math.min(slides.length - 1, index));
+    slides.forEach((slide, i) => { slide.hidden = i !== current; });
+    selector.value = String(current);
+    document.getElementById('speaker-text').textContent = data.pages[current].speaker_text || '';
+    document.getElementById('speaker-transition').textContent = data.pages[current].speaker_transition || '';
+    document.getElementById('prev').disabled = current === 0;
+    document.getElementById('next').disabled = current === slides.length - 1;
+  }
+  try {
+    const cached = JSON.parse(localStorage.getItem(key) || 'null');
+    if (valid(cached) && cached.revision > draft.revision) draft = cached;
+  } catch { state.textContent = '缓存不可用；修改尚未保存到文件。'; }
+  if (!valid(draft)) draft = {revision:0, edits:{}};
+  apply();
+  if (Object.keys(draft.edits).length) state.textContent = '编辑草稿，未经检核和确认；原文件与正式版本未更新。';
+  document.getElementById('prev').onclick = () => show(current - 1);
+  document.getElementById('next').onclick = () => show(current + 1);
+  selector.onchange = () => show(Number(selector.value));
+  document.addEventListener('keydown', event => {
+    if (event.target.isContentEditable || event.target.closest('input,select,textarea,button') || event.altKey || event.ctrlKey || event.metaKey) return;
+    if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') { event.preventDefault(); show(current + (event.key === 'ArrowRight' ? 1 : -1)); }
+  });
+  edit.onchange = () => fields.forEach(field => field.setAttribute('contenteditable', edit.checked ? 'plaintext-only' : 'false'));
+  fields.forEach(field => field.addEventListener('input', () => {
+    draft.edits[field.dataset.edit] = field.textContent;
+    draft.revision += 1;
+    state.textContent = persistDraft(draft)
+      ? '编辑草稿已暂存于浏览器；原文件与正式版本未更新。'
+      : '缓存保存失败；修改仍在本页，尚未保存到文件。';
+  }));
+  document.getElementById('reset').onclick = () => {
+    if (!window.confirm('恢复生成原文并清除本页编辑草稿？')) return;
+    const nextDraft = {revision:draft.revision + 1, edits:{}};
+    const cached = persistDraft(nextDraft);
+    draft = nextDraft;
+    apply();
+    state.textContent = cached
+      ? '已恢复本页生成原文；未改动磁盘文件或正式版本。'
+      : '已恢复本页生成原文，但浏览器缓存清除失败；重开时可能恢复旧草稿。';
+  };
+  document.getElementById('download').onclick = () => {
+    const clone = document.documentElement.cloneNode(true);
+    clone.querySelector('[data-phase5-deck]').textContent = JSON.stringify({...data, draft}).replace(/</g, '\\u003c');
+    clone.querySelectorAll('[data-edit]').forEach(field => { field.textContent = originals.get(field.dataset.edit); field.removeAttribute('contenteditable'); });
+    clone.querySelectorAll('.slide').forEach(slide => { slide.hidden = false; });
+    clone.querySelector('#edit').removeAttribute('checked');
+    clone.querySelector('#state').textContent = '编辑草稿，未经检核和确认；不代表正式版本。';
+    const blob = new Blob(['<!doctype html>\n' + clone.outerHTML], {type:'text/html;charset=utf-8'});
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url; link.download = 'presentation-v' + data.deck_ref.version + '-draft.html'; link.click();
+    setTimeout(() => URL.revokeObjectURL(url), 3000);
+    state.textContent = '已发起草稿下载；未写回原文件，未登记新版本。';
+  };
+  show(0);
+})();
+</script>
+</body>
+</html>

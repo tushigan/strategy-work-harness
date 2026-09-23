@@ -1,0 +1,7 @@
+# 工作包内的 Codex 运行配置入口。
+# 只使用宿主已知的通用开关，不写个人模型、路径或凭据。
+# 项目级文件是否被当前 Codex 自动读取，须在接收者宿主实际核对。
+
+[features]
+multi_agent = true
+hooks = true

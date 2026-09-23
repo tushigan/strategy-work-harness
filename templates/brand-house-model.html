@@ -1,0 +1,1212 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; font-src 'none'; connect-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>品牌屋</title>
+  <style id="brand-house-style">
+:root {
+  color-scheme: light;
+  --bh-red: #d7192d;
+  --bh-ink: #202424;
+  --bh-line: #d9dfdd;
+  --bh-muted: #5a6662;
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+  color: var(--bh-ink);
+  background: #f1f3f2;
+}
+* { box-sizing: border-box; letter-spacing: 0; }
+body { margin: 0; }
+button, input, select, textarea { font: inherit; color: inherit; }
+button, input, select, textarea, fieldset, dialog { min-width: 0; }
+button { cursor: pointer; }
+button:disabled { cursor: default; opacity: .48; }
+[hidden] { display: none !important; }
+:focus-visible { outline: 2px solid #00786b; outline-offset: 3px; }
+.bh-toolbar {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+  gap: 10px 20px; padding: 12px 24px; background: #fff; border-bottom: 1px solid var(--bh-line);
+}
+.bh-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; min-width: 0; }
+.bh-button {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 40px; min-width: 40px; padding: 8px; border: 1px solid transparent;
+  border-radius: 4px; background: transparent; line-height: 1.4; font-size: 13px;
+  overflow-wrap: anywhere; white-space: normal;
+}
+.bh-button:hover:not(:disabled) { background: #edf2f0; border-color: var(--bh-line); }
+.bh-button[aria-pressed="true"] { color: #006b5e; background: #e1f0eb; border-color: #00786b; }
+.bh-button svg { width: 18px; height: 18px; flex: 0 0 18px; pointer-events: none; }
+.bh-primary-button { padding-inline: 14px; background: #263531; color: #fff; }
+.bh-primary-button:hover:not(:disabled) { background: #3a4d45; border-color: #3a4d45; }
+.bh-file-state { display: flex; flex-wrap: wrap; gap: 8px 16px; color: var(--bh-muted); font-size: 12px; }
+.bh-save-context { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; padding: 12px 24px; border-bottom: 1px solid var(--bh-line); background: #fff; }
+.bh-note-label { flex: 0 1 380px; }
+.bh-status { flex: 1 1 260px; min-height: 48px; padding: 8px 0; font-size: 13px; line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere; }
+.bh-status[data-level="error"], .bh-inline-error { color: #a21125; }
+.bh-status[data-level="warning"] { color: #745100; }
+.bh-status[data-level="success"] { color: #006b5e; }
+.bh-model {
+  --bh-columns: 3; --bh-width: 1200px; --bh-gap: 12px; --bh-padding: 16px;
+  width: min(var(--bh-width), calc(100% - 48px)); margin: 24px auto 48px;
+  background: #fff; padding: var(--bh-padding); container-type: inline-size;
+}
+.bh-model:empty { display: none; }
+.bh-model-header { padding: 8px 0 24px; }
+.bh-model-header .bh-field { margin-block: 0 8px; }
+.bh-tier { display: grid; gap: var(--bh-gap); align-items: start; }
+.bh-tier-two { grid-template-columns: repeat(min(2, var(--bh-columns)), minmax(0, 1fr)); }
+.bh-tier-three { grid-template-columns: repeat(var(--bh-columns), minmax(0, 1fr)); }
+.bh-section { min-width: 0; border-bottom: 1px solid var(--bh-line); margin: 0 0 var(--bh-gap); container: bh-section / inline-size; }
+.bh-heading { padding: var(--bh-padding); background: #f4f6f5; border-top: 4px solid var(--bh-red); }
+.bh-primary { padding: var(--bh-padding); }
+.bh-primary:empty, .bh-supports:empty { display: none; }
+.bh-field {
+  min-width: 0; min-height: 1.5em; margin: 0; padding: 3px 2px;
+  white-space: pre-wrap; overflow-wrap: anywhere; word-break: break-word;
+  font-size: 16px; font-weight: 400; line-height: 1.6;
+  scroll-margin-block: 20px;
+}
+.bh-field + .bh-field { margin-top: 8px; }
+.bh-field[data-role="title"] { font-size: 20px; font-weight: 700; }
+.bh-model-header .bh-field[data-role="title"] { font-size: 28px; }
+.bh-field[data-role="label"] { font-size: 13px; font-weight: 600; }
+.bh-field[data-role="support"] { font-size: 14px; }
+.bh-field[contenteditable="plaintext-only"] { cursor: text; }
+.bh-field[contenteditable="plaintext-only"]:hover { outline: 1px dashed #8a9992; outline-offset: 2px; }
+.bh-field[contenteditable="plaintext-only"]:focus { outline: 2px solid #00786b; outline-offset: 2px; }
+.bh-field[data-selected="true"] { box-shadow: inset 3px 0 #00786b; }
+.bh-supports {
+  display: grid; grid-template-columns: repeat(min(2, var(--bh-columns)), minmax(0, 1fr));
+  gap: var(--bh-gap); margin: 0 var(--bh-padding); padding: var(--bh-padding) 0;
+  border-top: 1px solid var(--bh-line);
+}
+.bh-support-group { min-width: 0; }
+.bh-support-group .bh-field[data-role="label"] { border-bottom: 1px solid var(--bh-line); padding-bottom: 6px; }
+.bh-section[data-group="vision"]::before {
+  content: ""; display: block; aspect-ratio: 12 / 1; background: var(--bh-red);
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+}
+.bh-section[data-group="vision"] > .bh-heading { border-top: 0; background: #ffedf0; }
+.bh-section[data-group="vision"] > .bh-primary { background: #fff8f9; }
+.bh-section[data-group="positioning"] > .bh-heading,
+.bh-section[data-group="proposition"] > .bh-heading { background: #ffedf0; }
+.bh-section[data-group="category"] > .bh-heading { border-top-color: #ce7622; }
+.bh-section[data-group="audience"] > .bh-heading { border-top-color: #bd962c; }
+.bh-section[data-group="differentiated_value"] > .bh-heading { border-top-color: #218779; }
+.bh-section[data-group="slogan"] { border-bottom: 3px solid var(--bh-red); }
+.bh-section[data-group="notes"] { margin-top: 24px; }
+.bh-section[data-group="notes"] > .bh-heading { border-top-color: #94a59c; }
+.bh-dialog {
+  width: min(640px, calc(100% - 32px)); max-height: calc(100dvh - 32px); padding: 24px;
+  border: 1px solid #c8d0cc; border-radius: 6px; background: #fff;
+  color: var(--bh-ink); overflow: auto; overscroll-behavior: contain;
+}
+.bh-dialog::backdrop { background: rgb(18 29 24 / .3); }
+.bh-dialog-wide { width: min(900px, calc(100% - 32px)); }
+.bh-dialog-heading { display: flex; align-items: start; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
+.bh-dialog-heading h2 { font-size: 18px; line-height: 1.5; margin: 6px 0; overflow-wrap: anywhere; }
+.bh-dialog-heading > div { flex: none; }
+.bh-control-label { display: flex; flex-direction: column; min-width: 0; gap: 6px; font-size: 12px; color: var(--bh-muted); overflow-wrap: anywhere; }
+.bh-control-label input, .bh-control-label select, .bh-control-label textarea {
+  width: 100%; max-width: 100%; border: 1px solid #bfc9c4; border-radius: 4px;
+  background: #fff; min-height: 40px; padding: 8px; color: var(--bh-ink); font-size: 14px;
+}
+.bh-control-label textarea { resize: vertical; line-height: 1.6; }
+.bh-control-label input[type="color"] { padding: 4px; }
+.bh-control-label [aria-invalid="true"] { border-color: #a21125; }
+.bh-control-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px 12px; }
+.bh-control-grid > .bh-full { grid-column: 1 / -1; }
+.bh-control-grid fieldset { margin: 0; padding: 0; border: 0; }
+.bh-control-grid legend { padding: 0 0 6px; font-size: 12px; color: var(--bh-muted); }
+.bh-segments { display: flex; gap: 4px; flex-wrap: wrap; }
+.bh-segments .bh-button { border-color: var(--bh-line); flex: 1; }
+.bh-layout { margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--bh-line); }
+.bh-layout h3 { font-size: 14px; margin: 0 0 14px; }
+.bh-selected-label { font-size: 13px; margin: 0 0 12px; line-height: 1.6; overflow-wrap: anywhere; }
+.bh-font-state { font-size: 11px; line-height: 1.5; color: #38644f; overflow-wrap: anywhere; }
+.bh-inline-error { margin: 12px 0 0; font-size: 13px; line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere; }
+.bh-inline-error:empty { margin: 0; }
+.bh-history-list { margin: 0; padding: 0; list-style: none; }
+.bh-history-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; padding: 16px 0; border-bottom: 1px solid var(--bh-line); }
+.bh-history-row p { margin: 5px 0 0; font-size: 13px; line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere; }
+.bh-history-row small { display: block; margin-top: 6px; color: var(--bh-muted); overflow-wrap: anywhere; }
+.bh-history-actions { display: flex; gap: 6px; align-items: start; }
+.bh-source-list { display: grid; grid-template-columns: minmax(80px, 1fr) minmax(0, 4fr); margin: 0; font-size: 13px; }
+.bh-source-list dt, .bh-source-list dd { margin: 0; padding: 9px 0; border-bottom: 1px solid var(--bh-line); overflow-wrap: anywhere; white-space: pre-wrap; }
+.bh-source-list dt { color: var(--bh-muted); padding-right: 12px; }
+.bh-source-panel-heading { font-size: 14px; margin: 24px 0 8px; }
+.bh-source-pre { font-size: 13px; line-height: 1.6; margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+@container (max-width: 720px) {
+  .bh-tier-three { grid-template-columns: repeat(min(2, var(--bh-columns)), minmax(0, 1fr)); }
+}
+@container (max-width: 480px) {
+  .bh-tier-two, .bh-tier-three { grid-template-columns: minmax(0, 1fr); }
+}
+@container bh-section (max-width: 480px) { .bh-supports { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 600px) {
+  .bh-toolbar { padding: 10px 12px; gap: 8px; }
+  .bh-model { width: calc(100% - 16px); margin-block: 12px 24px; }
+  .bh-save-context { padding: 10px 12px; gap: 8px; }
+  .bh-control-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .bh-dialog { padding: 16px; }
+  .bh-history-row { grid-template-columns: minmax(0, 1fr); }
+  .bh-source-list { grid-template-columns: minmax(0, 1fr); }
+  .bh-source-list dt { padding-bottom: 0; border-bottom: 0; }
+}
+@media print {
+  :root, body { background: #fff; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+  .bh-toolbar, .bh-save-context, .bh-dialog, noscript { display: none !important; }
+  .bh-model { width: 100%; max-width: none; margin: 0; padding: 0; }
+  .bh-field { box-shadow: none !important; outline: 0 !important; }
+  .bh-heading { break-after: avoid; }
+}
+
+</style>
+</head>
+<body>
+  <div id="bh-root">
+    <header class="bh-toolbar" aria-label="文件与编辑">
+      <div id="bh-actions" class="bh-actions"></div>
+      <div class="bh-file-state"><span id="bh-revision"></span><span id="bh-mode"></span></div>
+    </header>
+    <div class="bh-save-context">
+      <label class="bh-control-label bh-note-label" for="bh-note">修改说明
+        <textarea id="bh-note" rows="1" placeholder="可留空"></textarea>
+      </label>
+      <div id="bh-status" class="bh-status" role="status" aria-live="polite" aria-atomic="true">等待操作。</div>
+    </div>
+    <main id="bh-model" class="bh-model" aria-label="品牌屋内容"></main>
+    <input id="bh-import-file" type="file" accept=".html,.htm,.json,text/html,application/json" aria-label="导入品牌屋文件" hidden>
+    <dialog id="bh-format-dialog" class="bh-dialog" aria-labelledby="bh-format-title">
+      <header class="bh-dialog-heading"><h2 id="bh-format-title">文字与版式</h2><div data-close="bh-format-dialog"></div></header>
+      <div id="bh-format-panel"></div>
+    </dialog>
+    <dialog id="bh-history-dialog" class="bh-dialog bh-dialog-wide" aria-labelledby="bh-history-title">
+      <header class="bh-dialog-heading"><h2 id="bh-history-title">文件内历史</h2><div data-close="bh-history-dialog"></div></header>
+      <ol id="bh-history-list" class="bh-history-list"></ol>
+    </dialog>
+    <dialog id="bh-source-dialog" class="bh-dialog bh-dialog-wide" aria-labelledby="bh-source-title">
+      <header class="bh-dialog-heading"><h2 id="bh-source-title">来源与字段详情</h2><div data-close="bh-source-dialog"></div></header>
+      <div id="bh-source-panel"></div>
+    </dialog>
+    <noscript>需要启用 JavaScript 才能显示和编辑品牌屋。</noscript>
+  </div>
+  <script id="brand-house-data" type="application/json">{"schema_version":"1.0","document_id":"32a90a00-c8b1-50c9-8542-18895e77ebe2","project_id":"UNINITIALIZED","task_id":"UNINITIALIZED","source":{"body":{"space":"phase3","key":"UNINITIALIZED::brand-house","version":1,"sha256":"f3d8b87ab82cfeb9d2cd4be1c79faecaedfe6499a6d5029488446b74ccaba8a5"},"dependencies":[],"document":{"task_id":"UNINITIALIZED","kind":"brand-house","title":"","mode":"hypothesis","sections":[{"id":"category","title":"品类定位","text":"","evidence":[],"counterevidence":[],"assumptions":[],"verification":[]},{"id":"audience","title":"目标人群","text":"","evidence":[],"counterevidence":[],"assumptions":[],"verification":[]},{"id":"differentiated_value","title":"差异化价值","text":"","evidence":[],"counterevidence":[],"assumptions":[],"verification":[]},{"id":"positioning","title":"定位身份","text":"","evidence":[],"counterevidence":[],"assumptions":[],"verification":[]},{"id":"mission","title":"使命","text":"","evidence":[],"counterevidence":[],"assumptions":[],"verification":[]},{"id":"vision","title":"愿景","text":"","evidence":[],"counterevidence":[],"assumptions":[],"verification":[]},{"id":"values","title":"价值观","text":"","evidence":[],"counterevidence":[],"assumptions":[],"verification":[]},{"id":"rtb","title":"支持理由","text":"","evidence":[],"counterevidence":[],"assumptions":[],"verification":[]},{"id":"personality","title":"品牌人格","text":"","evidence":[],"counterevidence":[],"assumptions":[],"verification":[]},{"id":"proposition","title":"内部主张","text":"","evidence":[],"counterevidence":[],"assumptions":[],"verification":[]},{"id":"slogan","title":"品牌口号","text":"","evidence":[],"counterevidence":[],"assumptions":[],"verification":[]}],"gaps":[],"questions":[],"template_notice":"通用空白模板，尚未绑定项目；须由 Agent 从有效正文生成正式文件。"}},"fields":[{"key":"model_label","group":"header","role":"label","label":"模型名称","path":null},{"key":"title","group":"header","role":"title","label":"标题","path":["title"]},{"key":"category_title","group":"category","role":"title","label":"栏目标题","path":["sections",0,"title"]},{"key":"category_text","group":"category","role":"body","label":"正文","path":["sections",0,"text"]},{"key":"category_evidence_label","group":"category","role":"label","label":"支持证据","path":null},{"key":"category_counterevidence_label","group":"category","role":"label","label":"反证","path":null},{"key":"category_assumptions_label","group":"category","role":"label","label":"假设","path":null},{"key":"category_verification_label","group":"category","role":"label","label":"待验证","path":null},{"key":"audience_title","group":"audience","role":"title","label":"栏目标题","path":["sections",1,"title"]},{"key":"audience_text","group":"audience","role":"body","label":"正文","path":["sections",1,"text"]},{"key":"audience_evidence_label","group":"audience","role":"label","label":"支持证据","path":null},{"key":"audience_counterevidence_label","group":"audience","role":"label","label":"反证","path":null},{"key":"audience_assumptions_label","group":"audience","role":"label","label":"假设","path":null},{"key":"audience_verification_label","group":"audience","role":"label","label":"待验证","path":null},{"key":"differentiated_value_title","group":"differentiated_value","role":"title","label":"栏目标题","path":["sections",2,"title"]},{"key":"differentiated_value_text","group":"differentiated_value","role":"body","label":"正文","path":["sections",2,"text"]},{"key":"differentiated_value_evidence_label","group":"differentiated_value","role":"label","label":"支持证据","path":null},{"key":"differentiated_value_counterevidence_label","group":"differentiated_value","role":"label","label":"反证","path":null},{"key":"differentiated_value_assumptions_label","group":"differentiated_value","role":"label","label":"假设","path":null},{"key":"differentiated_value_verification_label","group":"differentiated_value","role":"label","label":"待验证","path":null},{"key":"positioning_title","group":"positioning","role":"title","label":"栏目标题","path":["sections",3,"title"]},{"key":"positioning_text","group":"positioning","role":"body","label":"正文","path":["sections",3,"text"]},{"key":"positioning_evidence_label","group":"positioning","role":"label","label":"支持证据","path":null},{"key":"positioning_counterevidence_label","group":"positioning","role":"label","label":"反证","path":null},{"key":"positioning_assumptions_label","group":"positioning","role":"label","label":"假设","path":null},{"key":"positioning_verification_label","group":"positioning","role":"label","label":"待验证","path":null},{"key":"mission_title","group":"mission","role":"title","label":"栏目标题","path":["sections",4,"title"]},{"key":"mission_text","group":"mission","role":"body","label":"正文","path":["sections",4,"text"]},{"key":"mission_evidence_label","group":"mission","role":"label","label":"支持证据","path":null},{"key":"mission_counterevidence_label","group":"mission","role":"label","label":"反证","path":null},{"key":"mission_assumptions_label","group":"mission","role":"label","label":"假设","path":null},{"key":"mission_verification_label","group":"mission","role":"label","label":"待验证","path":null},{"key":"vision_title","group":"vision","role":"title","label":"栏目标题","path":["sections",5,"title"]},{"key":"vision_text","group":"vision","role":"body","label":"正文","path":["sections",5,"text"]},{"key":"vision_evidence_label","group":"vision","role":"label","label":"支持证据","path":null},{"key":"vision_counterevidence_label","group":"vision","role":"label","label":"反证","path":null},{"key":"vision_assumptions_label","group":"vision","role":"label","label":"假设","path":null},{"key":"vision_verification_label","group":"vision","role":"label","label":"待验证","path":null},{"key":"values_title","group":"values","role":"title","label":"栏目标题","path":["sections",6,"title"]},{"key":"values_text","group":"values","role":"body","label":"正文","path":["sections",6,"text"]},{"key":"values_evidence_label","group":"values","role":"label","label":"支持证据","path":null},{"key":"values_counterevidence_label","group":"values","role":"label","label":"反证","path":null},{"key":"values_assumptions_label","group":"values","role":"label","label":"假设","path":null},{"key":"values_verification_label","group":"values","role":"label","label":"待验证","path":null},{"key":"rtb_title","group":"rtb","role":"title","label":"栏目标题","path":["sections",7,"title"]},{"key":"rtb_text","group":"rtb","role":"body","label":"正文","path":["sections",7,"text"]},{"key":"rtb_evidence_label","group":"rtb","role":"label","label":"支持证据","path":null},{"key":"rtb_counterevidence_label","group":"rtb","role":"label","label":"反证","path":null},{"key":"rtb_assumptions_label","group":"rtb","role":"label","label":"假设","path":null},{"key":"rtb_verification_label","group":"rtb","role":"label","label":"待验证","path":null},{"key":"personality_title","group":"personality","role":"title","label":"栏目标题","path":["sections",8,"title"]},{"key":"personality_text","group":"personality","role":"body","label":"正文","path":["sections",8,"text"]},{"key":"personality_evidence_label","group":"personality","role":"label","label":"支持证据","path":null},{"key":"personality_counterevidence_label","group":"personality","role":"label","label":"反证","path":null},{"key":"personality_assumptions_label","group":"personality","role":"label","label":"假设","path":null},{"key":"personality_verification_label","group":"personality","role":"label","label":"待验证","path":null},{"key":"proposition_title","group":"proposition","role":"title","label":"栏目标题","path":["sections",9,"title"]},{"key":"proposition_text","group":"proposition","role":"body","label":"正文","path":["sections",9,"text"]},{"key":"proposition_evidence_label","group":"proposition","role":"label","label":"支持证据","path":null},{"key":"proposition_counterevidence_label","group":"proposition","role":"label","label":"反证","path":null},{"key":"proposition_assumptions_label","group":"proposition","role":"label","label":"假设","path":null},{"key":"proposition_verification_label","group":"proposition","role":"label","label":"待验证","path":null},{"key":"slogan_title","group":"slogan","role":"title","label":"栏目标题","path":["sections",10,"title"]},{"key":"slogan_text","group":"slogan","role":"body","label":"正文","path":["sections",10,"text"]},{"key":"slogan_evidence_label","group":"slogan","role":"label","label":"支持证据","path":null},{"key":"slogan_counterevidence_label","group":"slogan","role":"label","label":"反证","path":null},{"key":"slogan_assumptions_label","group":"slogan","role":"label","label":"假设","path":null},{"key":"slogan_verification_label","group":"slogan","role":"label","label":"待验证","path":null}],"current":"bd1cad29-ff40-5375-b1a4-d7b31efe18e4","history":[{"id":"bd1cad29-ff40-5375-b1a4-d7b31efe18e4","version":1,"parent":null,"created_at":"2026-09-17T00:00:00+00:00","kind":"generated","note":"通用空白模板，尚未绑定项目，不是业务产出","restored_from":null,"snapshot":{"fields":{"model_label":{"text":"品牌屋","style":{"fontFamily":"system","fontSize":14,"fontWeight":600,"color":"#202424","textAlign":"left","lineHeight":1.6}},"title":{"text":"","style":{"fontFamily":"system","fontSize":28,"fontWeight":700,"color":"#202424","textAlign":"left","lineHeight":1.6}},"category_title":{"text":"品类定位","style":{"fontFamily":"system","fontSize":22,"fontWeight":700,"color":"#202424","textAlign":"left","lineHeight":1.6}},"category_text":{"text":"","style":{"fontFamily":"system","fontSize":18,"fontWeight":400,"color":"#202424","textAlign":"left","lineHeight":1.6}},"category_evidence_label":{"text":"支持证据","style":{"fontFamily":"system","fontSize":14,"fontWeight":600,"color":"#202424","textAlign":"left","lineHeight":1.6}},"category_counterevidence_label":{"text":"反证","style":{"fontFamily":"system","fontSize":14,"fontWeight":600,"color":"#202424","textAlign":"left","lineHeight":1.6}},"category_assumptions_label":{"text":"假设","style":{"fontFamily":"system","fontSize":14,"fontWeight":600,"color":"#202424","textAlign":"left","lineHeight":1.6}},"category_verification_label":{"text":"待验证","style":{"fontFamily":"system","fontSize":14,"fontWeight":600,"color":"#202424","textAlign":"left","lineHeight":1.6}},"audience_title":{"text":"目标人群","style":{"fontFamily":"system","fontSize":22,"fontWeight":700,"color":"#202424","textAlign":"left","lineHeight":1.6}},"audience_text":{"text":"","style":{"fontFamily":"system","fontSize":18,"fontWeight":400,"color":"#202424","textAlign":"left","lineHeight":1.6}},"audience_evidence_label":{"text":"支持证据","style":{"fontFamily":"system","fontSize":14,"fontWeight":600,"color":"#202424","textAlign":"left","lineHeight":1.6}},"audience_counterevidence_label":{"text":"反证","style":{"fontFamily":"system","fontSize":14,"fontWeight":600,"color":"#202424","textAlign":"left","lineHeight":1.6}},"audience_assumptions_label":{"text":"假设","style":{"fontFamily":"system","fontSize":14,"fontWeight":600,"color":"#202424","textAlign":"left","lineHeight":1.6}},"audience_verification_label":{"text":"待验证","style":{"fontFamily":"system","fontSize":14,"fontWeight":600,"color":"#202424","textAlign":"left","lineHeight":1.6}},"differentiated_value_title":{"text":"差异化价值","style":{"fontFamily":"system","fontSize":22,"fontWeight":700,"color":"#202424","textAlign":"left","lineHeight":1.6}},"differentiated_value_text":{"text":"","style":{"fontFamily":"system","fontSize":18,"fontWeight":400,"color":"#202424","textAlign":"left","lineHeight":1.6}},"differentiated_value_evidence_label":{"text":"支持证据","style":{"fontFamily":"system","fontSize":14,"fontWeight":600,"color":"#202424","textAlign":"left","lineHeight":1.6}},"differentiated_value_counterevidence_label":{"text":"反证","style":{"fontFamily":"system","fontSize":14,"fontWeight":600,"color":"#202424","textAlign":"left","lineHeight":1.6}},"differentiated_value_assumptions_label":{"text":"假设","style":{"fontFamily":"system","fontSize":14,"fontWeight":600,"color":"#202424","textAlign":"left","lineHeight":1.6}},"differentiated_value_verification_label":{"text":"待验证","style":{"fontFamily":"system","fontSize":14,"fontWeight":600,"color":"#202424","textAlign":"left","lineHeight":1.6}},"positioning_title":{"text":"定位身份","style":{"fontFamily":"system","fontSize":22,"fontWeight":700,"color":"#202424","textAlign":"left","lineHeight":1.6}},"positioning_text":{"text":"","style":{"fontFamily":"system","fontSize":18,"fontWeight":400,"color":"#202424","textAlign":"left","lineHeight":1.6}},"positioning_evidence_label":{"text":"支持证据","style":{"fontFamily":"system","fontSize":14,"fontWeight":600,"color":"#202424","textAlign":"left","lineHeight":1.6}},"positioning_counterevidence_label":{"text":"反证","style":{"fontFamily":"system","fontSize":14,"fontWeight":600,"color":"#202424","textAlign":"left","lineHeight":1.6}},"positioning_assumptions_label":{"text":"假设","style":{"fontFamily":"system","fontSize":14,"fontWeight":600,"color":"#202424","textAlign":"left","lineHeight":1.6}},"positioning_verification_label":{"text":"待验证","style":{"fontFamily":"system","fontSize":14,"fontWeight":600,"color":"#202424","textAlign":"left","lineHeight":1.6}},"mission_title":{"text":"使命","style":{"fontFamily":"system","fontSize":22,"fontWeight":700,"color":"#202424","textAlign":"left","lineHeight":1.6}},"mission_text":{"text":"","style":{"fontFamily":"system","fontSize":18,"fontWeight":400,"color":"#202424","textAlign":"left","lineHeight":1.6}},"mission_evidence_label":{"text":"支持证据","style":{"fontFamily":"system","fontSize":14,"fontWeight":600,"color":"#202424","textAlign":"left","lineHeight":1.6}},"mission_counterevidence_label":{"text":"反证","style":{"fontFamily":"system","fontSize":14,"fontWeight":600,"color":"#202424","textAlign":"left","lineHeight":1.6}},"mission_assumptions_label":{"text":"假设","style":{"fontFamily":"system","fontSize":14,"fontWeight":600,"color":"#202424","textAlign":"left","lineHeight":1.6}},"mission_verification_label":{"text":"待验证","style":{"fontFamily":"system","fontSize":14,"fontWeight":600,"color":"#202424","textAlign":"left","lineHeight":1.6}},"vision_title":{"text":"愿景","style":{"fontFamily":"system","fontSize":22,"fontWeight":700,"color":"#202424","textAlign":"left","lineHeight":1.6}},"vision_text":{"text":"","style":{"fontFamily":"system","fontSize":18,"fontWeight":400,"color":"#202424","textAlign":"left","lineHeight":1.6}},"vision_evidence_label":{"text":"支持证据","style":{"fontFamily":"system","fontSize":14,"fontWeight":600,"color":"#202424","textAlign":"left","lineHeight":1.6}},"vision_counterevidence_label":{"text":"反证","style":{"fontFamily":"system","fontSize":14,"fontWeight":600,"color":"#202424","textAlign":"left","lineHeight":1.6}},"vision_assumptions_label":{"text":"假设","style":{"fontFamily":"system","fontSize":14,"fontWeight":600,"color":"#202424","textAlign":"left","lineHeight":1.6}},"vision_verification_label":{"text":"待验证","style":{"fontFamily":"system","fontSize":14,"fontWeight":600,"color":"#202424","textAlign":"left","lineHeight":1.6}},"values_title":{"text":"价值观","style":{"fontFamily":"system","fontSize":22,"fontWeight":700,"color":"#202424","textAlign":"left","lineHeight":1.6}},"values_text":{"text":"","style":{"fontFamily":"system","fontSize":18,"fontWeight":400,"color":"#202424","textAlign":"left","lineHeight":1.6}},"values_evidence_label":{"text":"支持证据","style":{"fontFamily":"system","fontSize":14,"fontWeight":600,"color":"#202424","textAlign":"left","lineHeight":1.6}},"values_counterevidence_label":{"text":"反证","style":{"fontFamily":"system","fontSize":14,"fontWeight":600,"color":"#202424","textAlign":"left","lineHeight":1.6}},"values_assumptions_label":{"text":"假设","style":{"fontFamily":"system","fontSize":14,"fontWeight":600,"color":"#202424","textAlign":"left","lineHeight":1.6}},"values_verification_label":{"text":"待验证","style":{"fontFamily":"system","fontSize":14,"fontWeight":600,"color":"#202424","textAlign":"left","lineHeight":1.6}},"rtb_title":{"text":"支持理由","style":{"fontFamily":"system","fontSize":22,"fontWeight":700,"color":"#202424","textAlign":"left","lineHeight":1.6}},"rtb_text":{"text":"","style":{"fontFamily":"system","fontSize":18,"fontWeight":400,"color":"#202424","textAlign":"left","lineHeight":1.6}},"rtb_evidence_label":{"text":"支持证据","style":{"fontFamily":"system","fontSize":14,"fontWeight":600,"color":"#202424","textAlign":"left","lineHeight":1.6}},"rtb_counterevidence_label":{"text":"反证","style":{"fontFamily":"system","fontSize":14,"fontWeight":600,"color":"#202424","textAlign":"left","lineHeight":1.6}},"rtb_assumptions_label":{"text":"假设","style":{"fontFamily":"system","fontSize":14,"fontWeight":600,"color":"#202424","textAlign":"left","lineHeight":1.6}},"rtb_verification_label":{"text":"待验证","style":{"fontFamily":"system","fontSize":14,"fontWeight":600,"color":"#202424","textAlign":"left","lineHeight":1.6}},"personality_title":{"text":"品牌人格","style":{"fontFamily":"system","fontSize":22,"fontWeight":700,"color":"#202424","textAlign":"left","lineHeight":1.6}},"personality_text":{"text":"","style":{"fontFamily":"system","fontSize":18,"fontWeight":400,"color":"#202424","textAlign":"left","lineHeight":1.6}},"personality_evidence_label":{"text":"支持证据","style":{"fontFamily":"system","fontSize":14,"fontWeight":600,"color":"#202424","textAlign":"left","lineHeight":1.6}},"personality_counterevidence_label":{"text":"反证","style":{"fontFamily":"system","fontSize":14,"fontWeight":600,"color":"#202424","textAlign":"left","lineHeight":1.6}},"personality_assumptions_label":{"text":"假设","style":{"fontFamily":"system","fontSize":14,"fontWeight":600,"color":"#202424","textAlign":"left","lineHeight":1.6}},"personality_verification_label":{"text":"待验证","style":{"fontFamily":"system","fontSize":14,"fontWeight":600,"color":"#202424","textAlign":"left","lineHeight":1.6}},"proposition_title":{"text":"内部主张","style":{"fontFamily":"system","fontSize":22,"fontWeight":700,"color":"#202424","textAlign":"left","lineHeight":1.6}},"proposition_text":{"text":"","style":{"fontFamily":"system","fontSize":18,"fontWeight":400,"color":"#202424","textAlign":"left","lineHeight":1.6}},"proposition_evidence_label":{"text":"支持证据","style":{"fontFamily":"system","fontSize":14,"fontWeight":600,"color":"#202424","textAlign":"left","lineHeight":1.6}},"proposition_counterevidence_label":{"text":"反证","style":{"fontFamily":"system","fontSize":14,"fontWeight":600,"color":"#202424","textAlign":"left","lineHeight":1.6}},"proposition_assumptions_label":{"text":"假设","style":{"fontFamily":"system","fontSize":14,"fontWeight":600,"color":"#202424","textAlign":"left","lineHeight":1.6}},"proposition_verification_label":{"text":"待验证","style":{"fontFamily":"system","fontSize":14,"fontWeight":600,"color":"#202424","textAlign":"left","lineHeight":1.6}},"slogan_title":{"text":"品牌口号","style":{"fontFamily":"system","fontSize":22,"fontWeight":700,"color":"#202424","textAlign":"left","lineHeight":1.6}},"slogan_text":{"text":"","style":{"fontFamily":"system","fontSize":18,"fontWeight":400,"color":"#202424","textAlign":"left","lineHeight":1.6}},"slogan_evidence_label":{"text":"支持证据","style":{"fontFamily":"system","fontSize":14,"fontWeight":600,"color":"#202424","textAlign":"left","lineHeight":1.6}},"slogan_counterevidence_label":{"text":"反证","style":{"fontFamily":"system","fontSize":14,"fontWeight":600,"color":"#202424","textAlign":"left","lineHeight":1.6}},"slogan_assumptions_label":{"text":"假设","style":{"fontFamily":"system","fontSize":14,"fontWeight":600,"color":"#202424","textAlign":"left","lineHeight":1.6}},"slogan_verification_label":{"text":"待验证","style":{"fontFamily":"system","fontSize":14,"fontWeight":600,"color":"#202424","textAlign":"left","lineHeight":1.6}}},"layout":{"columns":3,"width":1200,"gap":12,"padding":16}}}],"events":[],"branches":[]}</script>
+  <script id="brand_house_validate">
+(function (root) {
+  'use strict';
+  const forbidden = new Set(['__proto__', 'constructor', 'prototype']);
+  const groups = ['header', 'category', 'audience', 'differentiated_value', 'positioning', 'mission',
+    'vision', 'values', 'rtb', 'personality', 'proposition', 'slogan', 'notes'];
+  const styles = ['fontFamily', 'fontSize', 'fontWeight', 'color', 'textAlign', 'lineHeight'];
+  const layouts = ['columns', 'width', 'gap', 'padding'];
+  const dataKeys = ['schema_version', 'document_id', 'project_id', 'task_id', 'source', 'fields', 'current', 'history', 'events', 'branches'];
+  const kinds = ['generated', 'save', 'restore', 'import', 'export'];
+  const statuses = ['attempted', 'readback_verified', 'export_requested', 'failed', 'cancelled', 'conflict'];
+  function fail(message) { throw new Error(message); }
+  function ensure(condition, message) { if (!condition) fail(message); }
+  function record(value) { ensure(value !== null && typeof value === 'object' && !Array.isArray(value), '数据项必须是普通对象'); }
+  function shape(value, required, optional = []) {
+    record(value);
+    ensure(required.every(k => Object.hasOwn(value, k)) && Object.keys(value).every(k => required.includes(k) || optional.includes(k)),
+      '数据结构缺少必要字段或含未知附加字段');
+  }
+  function text(value, nonempty = false) {
+    ensure(typeof value === 'string' && (!nonempty || value.trim().length > 0), '文字字段必须是字符串，标识和说明不得为空');
+  }
+  function identifier(value) {
+    ensure(typeof value === 'string' && /^[A-Za-z_][A-Za-z0-9_.:-]*$/.test(value) && value.split(/[.:]/).every(part => !forbidden.has(part)), '字段标识含非法字符或危险名称');
+  }
+  function uuid(value) {
+    ensure(typeof value === 'string' && /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value), '文档或记录 ID 必须是有效 UUID');
+  }
+  function timestamp(value) {
+    const m = typeof value === 'string' && /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(?:\.\d{1,9})?(Z|[+-]\d{2}:\d{2})$/.exec(value);
+    ensure(m, '时间必须是带时区的 ISO 时间');
+    const [year, month, day, hour, minute, second] = m.slice(1, 7).map(Number);
+    const days = [31, year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    ensure(month >= 1 && month <= 12 && day >= 1 && day <= days[month - 1] && hour < 24 && minute < 60 && second < 60 && Number.isFinite(Date.parse(value)), '时间包含无效日期或时刻');
+  }
+  // 检查属性描述符而不是读取属性，避免 getter、隐藏字段和非 JSON 值被悄悄执行或丢失。
+  function json(value) {
+    const active = new WeakSet(), stack = [{ value, depth: 0 }];
+    while (stack.length) {
+      const item = stack.pop(), v = item.value;
+      if (item.leave) { active.delete(v); continue; }
+      if (v === null || typeof v === 'string' || typeof v === 'boolean') continue;
+      if (typeof v === 'number') {
+        ensure(Number.isFinite(v) && (!Number.isInteger(v) || Number.isSafeInteger(v)), '数值必须有限且整数可精确表示，不能使用 NaN 或无穷大'); continue;
+      }
+      ensure(typeof v === 'object', '数据只允许 JSON 类型，不能含空值占位、函数或特殊类型');
+      ensure(item.depth <= 256 && !active.has(v), '数据存在循环引用或嵌套过深，未截断任何数据');
+      const array = Array.isArray(v), prototype = Object.getPrototypeOf(v), keys = Reflect.ownKeys(v);
+      ensure(array ? prototype === Array.prototype : prototype === Object.prototype || prototype === null, '不允许自定义原型或特殊对象');
+      if (array) ensure(keys.length === v.length + 1, '数组不能含空洞、隐藏属性或额外字段');
+      active.add(v); stack.push({ value: v, leave: true });
+      for (const key of keys) {
+        ensure(typeof key === 'string' && !forbidden.has(key), '数据键名不能含原型注入名称或符号');
+        if (array && key === 'length') continue;
+        if (array) ensure(/^(0|[1-9]\d*)$/.test(key) && Number(key) < v.length, '数组只能使用连续索引');
+        const descriptor = Object.getOwnPropertyDescriptor(v, key);
+        ensure(descriptor && Object.hasOwn(descriptor, 'value') && descriptor.enumerable, '不允许访问器或不可枚举属性');
+        stack.push({ value: descriptor.value, depth: item.depth + 1 });
+      }
+    }
+    return value;
+  }
+  function clone(value) {
+    json(value);
+    function copy(v) {
+      if (v === null || typeof v !== 'object') return v;
+      if (Array.isArray(v)) return v.map(copy);
+      return Object.fromEntries(Object.entries(v).map(([key, child]) => [key, copy(child)]));
+    }
+    return copy(value);
+  }
+  function parseJSON(raw) {
+    text(raw);
+    let data;
+    try { data = JSON.parse(raw); } catch { fail('JSON 文本格式错误，未导入数据'); }
+    // 语法由原生解析器判断；另扫原文键名，避免 JSON.parse 的重复键覆盖行为。
+    const stack = [];
+    for (let i = 0; i < raw.length; i++) {
+      const token = raw[i];
+      if (token === '{' || token === '[') stack.push(token === '{' ? new Set() : null);
+      else if (token === '}' || token === ']') stack.pop();
+      else if (token === '"') {
+        const start = i++;
+        for (; i < raw.length && raw[i] !== '"'; i++) if (raw[i] === '\\') i++;
+        let next = i + 1;
+        while (next < raw.length && /[\t\n\r ]/.test(raw[next])) next++;
+        if (raw[next] === ':') {
+          const key = JSON.parse(raw.slice(start, i + 1)), keys = stack[stack.length - 1];
+          ensure(keys && !keys.has(key), 'JSON 对象包含重复键，不能覆盖已有数据'); keys.add(key);
+        }
+      }
+    }
+    return json(data);
+  }
+  function parse(raw) { return validate(parseJSON(raw)); }
+  function fieldList(fields, document) {
+    ensure(Array.isArray(fields) && fields.length > 0, '字段清单必须是非空数组');
+    const keys = new Set();
+    for (const field of fields) {
+      shape(field, ['key', 'group', 'role', 'label', 'path']); identifier(field.key); text(field.label);
+      ensure(!keys.has(field.key), '字段标识重复'); keys.add(field.key);
+      ensure(groups.includes(field.group) && ['title', 'body', 'support', 'label'].includes(field.role), '字段分组或角色不在白名单');
+      if (field.path === null) continue;
+      ensure(Array.isArray(field.path) && field.path.length > 0, '来源路径必须是非空键或索引数组');
+      let value = document;
+      for (const segment of field.path) {
+        ensure(typeof segment === 'string' && segment.length > 0 && !forbidden.has(segment) || Number.isSafeInteger(segment) && segment >= 0, '来源路径含非法键或索引');
+        if (document === undefined) continue;
+        ensure(value !== null && typeof value === 'object' && (Array.isArray(value) ? Number.isSafeInteger(segment) : typeof segment === 'string') && Object.hasOwn(value, segment), '来源路径不存在或键与数组索引类型不符');
+        value = value[segment];
+      }
+    }
+    return [...keys];
+  }
+  function range(value, min, max, integer = false) {
+    ensure(typeof value === 'number' && Number.isFinite(value) && value >= min && value <= max && (!integer || Number.isInteger(value)), '样式或布局数值超出允许范围或类型错误');
+  }
+  function snapshot(value, keys) {
+    shape(value, ['fields', 'layout']); record(value.fields);
+    const actual = Object.keys(value.fields); ensure(actual.length > 0, '快照字段不能为空'); actual.forEach(identifier);
+    if (keys) ensure(actual.length === keys.length && keys.every(k => Object.hasOwn(value.fields, k)), '快照字段必须完整匹配固定字段清单');
+    for (const field of Object.values(value.fields)) {
+      shape(field, ['text', 'style']); text(field.text); shape(field.style, styles);
+      const s = field.style;
+      ensure(['system', 'serif', 'mono', 'pingfang', 'yahei'].includes(s.fontFamily), '字体不在白名单');
+      range(s.fontSize, 10, 48, true); ensure([400, 500, 600, 700, 800].includes(s.fontWeight), '字重不在白名单');
+      ensure(typeof s.color === 'string' && /^#[0-9a-f]{6}$/i.test(s.color), '颜色必须是六位十六进制色值');
+      ensure(['left', 'center', 'right'].includes(s.textAlign), '文字对齐方式不在白名单'); range(s.lineHeight, 1.2, 2.2);
+    }
+    shape(value.layout, layouts); ensure([1, 2, 3].includes(value.layout.columns), '布局列数只能是1、2或3');
+    range(value.layout.width, 800, 1600); range(value.layout.gap, 0, 32); range(value.layout.padding, 8, 32);
+    return value;
+  }
+  function sameSnapshot(a, b) {
+    const keys = Object.keys(a.fields);
+    return keys.length === Object.keys(b.fields).length && keys.every(k => Object.hasOwn(b.fields, k) &&
+      a.fields[k].text === b.fields[k].text && styles.every(p => a.fields[k].style[p] === b.fields[k].style[p])) &&
+      layouts.every(p => a.layout[p] === b.layout[p]);
+  }
+  function sameData(a, b) {
+    if (a === b) return true;
+    if (a === null || b === null || typeof a !== 'object' || typeof b !== 'object' || Array.isArray(a) !== Array.isArray(b)) return false;
+    const keys = Object.keys(a);
+    return keys.length === Object.keys(b).length && keys.every(k => Object.hasOwn(b, k) && sameData(a[k], b[k]));
+  }
+  function validateSnapshot(value, fields) { json({ value, fields }); return snapshot(value, fieldList(fields)); }
+  function document(data, external = false) {
+    shape(data, external ? dataKeys.filter(k => k !== 'branches') : dataKeys, external ? ['branches'] : []);
+    ensure(data.schema_version === '1.0', '不支持此数据格式版本'); uuid(data.document_id); text(data.project_id, true); text(data.task_id, true);
+    shape(data.source, ['body', 'dependencies', 'document']); record(data.source.body); record(data.source.document);
+    ensure(Array.isArray(data.source.dependencies), '来源依赖必须是数组'); data.source.dependencies.forEach(record);
+    const keys = fieldList(data.fields, data.source.document), revisions = new Map(), ids = new Set([data.document_id.toLowerCase()]);
+    const unique = id => { uuid(id); ensure(!ids.has(id.toLowerCase()), '文档内记录 ID 重复'); ids.add(id.toLowerCase()); };
+    ensure(Array.isArray(data.history) && data.history.length > 0, '历史必须包含至少一个版本');
+    for (const [index, revision] of data.history.entries()) {
+      shape(revision, ['id', 'version', 'parent', 'created_at', 'kind', 'note', 'restored_from', 'snapshot']); unique(revision.id);
+      ensure(revision.version === index + 1 && revision.parent === (index ? data.history[index - 1].id : null), '历史版本必须连续且父版本必须是上一版');
+      timestamp(revision.created_at); text(revision.note); ensure(kinds.includes(revision.kind) && (index === 0 ? revision.kind === 'generated' : revision.kind !== 'generated'), '历史版本类型无效或初始生成位置错误');
+      snapshot(revision.snapshot, keys);
+      if (revision.kind === 'restore') {
+        const target = revisions.get(revision.restored_from);
+        ensure(target && sameSnapshot(target.snapshot, revision.snapshot), '恢复必须引用先前已有版本并完整还原其快照');
+      } else ensure(revision.restored_from === null, '非恢复版本不得包含恢复引用');
+      revisions.set(revision.id, revision);
+    }
+    ensure(data.current === data.history[data.history.length - 1].id, '当前版本必须指向历史末版');
+    ensure(Array.isArray(data.events), '事件记录必须是数组');
+    for (const event of data.events) {
+      shape(event, ['id', 'time', 'action', 'status', 'detail', 'revision_id']); unique(event.id); timestamp(event.time);
+      text(event.action, true); text(event.detail); ensure(statuses.includes(event.status), '事件状态不在白名单');
+      ensure(revisions.has(event.revision_id), '事件必须引用本历史已有版本');
+    }
+    const branches = data.branches === undefined ? [] : data.branches;
+    ensure(Array.isArray(branches) && (!external || branches.length === 0), '冲突分支不得循环嵌套外部分支');
+    const bases = new Set(revisions.keys());
+    for (const branch of branches) {
+      shape(branch, ['id', 'time', 'reason', 'base_revision', 'local_snapshot', 'external']); unique(branch.id); timestamp(branch.time); text(branch.reason, true);
+      snapshot(branch.local_snapshot, keys); document(branch.external, true);
+      ensure(['project_id', 'document_id', 'task_id'].every(k => branch.external[k] === data[k]), '冲突外部数据必须属于同一项目、文档和任务，不能混入其他品牌屋');
+      ensure(sameData(branch.external.source, data.source) && sameData(branch.external.fields, data.fields), '冲突外部数据的来源与字段必须和主数据完全一致，不能替换上游');
+      branch.external.history.forEach(revision => bases.add(revision.id));
+    }
+    // 所有外部历史通过后才查基准，平铺分支的排列顺序不能影响引用有效性。
+    for (const branch of branches) ensure(bases.has(branch.base_revision), '冲突基准必须引用主历史或已完整保留的外部历史版本');
+    return data;
+  }
+  function validate(data) { json(data); return document(data); }
+  root.BHCore = Object.freeze({ validate, validateSnapshot, clone, parse, parseJSON,
+    checks: Object.freeze({ json, shape, text, ensure, snapshot, sameSnapshot, styles, layouts }) });
+})(globalThis);
+
+</script>
+<script id="brand_house_core">
+(function (root) {
+  'use strict';
+  const validation = root.BHCore;
+  if (!validation || !validation.checks) throw new Error('请先加载品牌屋数据校验脚本');
+  const { validate, validateSnapshot, clone, parse, parseJSON, checks: v } = validation;
+  const limit = { warningVersions: 100, blockedVersions: 300, warningBytes: 5 * 1024 ** 2, blockedBytes: 20 * 1024 ** 2 };
+  const escapes = { '<': '\\u003c', '>': '\\u003e', '&': '\\u0026', '\u2028': '\\u2028', '\u2029': '\\u2029' };
+  function serialize(data) { return JSON.stringify(data).replace(/[<>&\u2028\u2029]/g, c => escapes[c]); }
+  function encode(data) { validate(data); return serialize(data); }
+  function current(data) { validate(data); return data.history[data.history.length - 1]; }
+  function measure(data) {
+    const bytes = new TextEncoder().encode(serialize(data)).length, versions = data.history.length;
+    return { bytes, versions, warning: versions >= limit.warningVersions || bytes >= limit.warningBytes,
+      blocked: versions >= limit.blockedVersions || bytes >= limit.blockedBytes };
+  }
+  function capacity(data) { validate(data); return measure(data); }
+  function compare(a, b) {
+    v.json(a); v.json(b); v.snapshot(a); v.snapshot(b);
+    const content = [], style = [], keys = [...new Set([...Object.keys(a.fields), ...Object.keys(b.fields)])].sort();
+    for (const key of keys) {
+      const left = Object.hasOwn(a.fields, key) ? a.fields[key] : null, right = Object.hasOwn(b.fields, key) ? b.fields[key] : null;
+      if (!left || !right || left.text !== right.text) content.push(key);
+      if (!left || !right || v.styles.some(property => left.style[property] !== right.style[property])) style.push(key);
+    }
+    return { content, style, layout: v.layouts.some(property => a.layout[property] !== b.layout[property]) };
+  }
+  function freshId(data) {
+    const occupied = new Set([data.document_id, ...data.history.map(r => r.id), ...data.events.map(e => e.id), ...data.branches.map(b => b.id)].map(id => id.toLowerCase()));
+    for (let attempt = 0; attempt < 8; attempt++) {
+      const bytes = new Uint8Array(16);
+      try { root.crypto.getRandomValues(bytes); } catch { throw new Error('当前环境缺少安全随机数能力，未新增版本'); }
+      bytes[6] = (bytes[6] & 15) | 64; bytes[8] = (bytes[8] & 63) | 128;
+      const hex = [...bytes].map(n => n.toString(16).padStart(2, '0')).join('');
+      const id = `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
+      if (!occupied.has(id)) return id;
+    }
+    throw new Error('无法生成唯一版本 ID，未新增版本');
+  }
+  function append(data, snapshot, options = {}) {
+    validate(data); validateSnapshot(snapshot, data.fields); v.json(options); v.shape(options, [], ['kind', 'note', 'restored_from']);
+    const kind = options.kind === undefined ? 'save' : options.kind, restoredFrom = options.restored_from === undefined ? null : options.restored_from;
+    v.ensure(['save', 'restore', 'import', 'export'].includes(kind), '新增版本类型只能是保存、恢复、导入或导出');
+    if (options.note !== undefined) v.text(options.note);
+    let target;
+    if (kind === 'restore') {
+      target = data.history.find(revision => revision.id === restoredFrom);
+      v.ensure(target && v.sameSnapshot(snapshot, target.snapshot), '恢复必须引用已有版本并完整还原其快照');
+    } else v.ensure(restoredFrom === null, '保存版本不能携带恢复引用');
+    v.ensure(!measure(data).blocked, '历史已达容量保护上限，停止新增；原历史仍可完整读取和导出');
+    const changes = compare(data.history[data.history.length - 1].snapshot, snapshot);
+    const summary = target ? `恢复第${target.version}版` : `保存：${changes.content.length}项文字、${changes.style.length}项样式${changes.layout ? '及版式变更' : ''}`;
+    const revision = { id: freshId(data), version: data.history.length + 1, parent: data.current, created_at: new Date().toISOString(),
+      kind, note: options.note && options.note.trim() ? options.note : summary, restored_from: restoredFrom, snapshot };
+    const next = { ...data, current: revision.id, history: [...data.history, revision] };
+    // 可以刚好达到上限，但不能跨过；已在上限的文件只读，不裁切旧历史。
+    const nextSize = measure(next);
+    v.ensure(nextSize.versions <= limit.blockedVersions && nextSize.bytes <= limit.blockedBytes, '新增版本将超过容量上限，未新增也未删除历史；请完整导出后处理');
+    return clone(next);
+  }
+  root.BHCore = Object.freeze({ validate, validateSnapshot, current, append, compare, capacity, encode, clone, parse, parseJSON });
+})(globalThis);
+
+</script>
+<script id="brand_house_controls">
+(function (global) {
+  "use strict";
+  /* Lucide static icon data, ISC License. Copyright (c) 2026 Lucide Icons and Contributors.
+   * Permission to use, copy, modify, and/or distribute this software for any purpose with or
+   * without fee is hereby granted, provided that the above copyright notice and this permission
+   * notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL
+   * WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+   * AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR
+   * CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
+   * WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN
+   * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+   * Feather-derived icons: MIT License. Copyright (c) 2013-present Cole Bemis.
+   * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+   * and associated documentation files (the "Software"), to deal in the Software without restriction,
+   * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+   * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
+   * furnished to do so, subject to the following conditions: The above copyright notice and this
+   * permission notice shall be included in all copies or substantial portions of the Software.
+   * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+   * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+   * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+   * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+   */
+  const icons = {
+    Save: [["path", {d: "M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"}], ["path", {d: "M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7"}], ["path", {d: "M7 3v4a1 1 0 0 0 1 1h7"}]],
+    Download: [["path", {d: "M12 15V3"}], ["path", {d: "M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"}], ["path", {d: "m7 10 5 5 5-5"}]],
+    Upload: [["path", {d: "M12 3v12"}], ["path", {d: "m17 8-5-5-5 5"}], ["path", {d: "M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"}]],
+    History: [["path", {d: "M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"}], ["path", {d: "M3 3v5h5"}], ["path", {d: "M12 7v5l4 2"}]],
+    Type: [["path", {d: "M12 4v16"}], ["path", {d: "M4 7V5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v2"}], ["path", {d: "M9 20h6"}]],
+    FileText: [["path", {d: "M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"}], ["path", {d: "M14 2v5a1 1 0 0 0 1 1h5"}], ["path", {d: "M10 9H8"}], ["path", {d: "M16 13H8"}], ["path", {d: "M16 17H8"}]],
+    X: [["path", {d: "M18 6 6 18"}], ["path", {d: "m6 6 12 12"}]],
+    Eye: [["path", {d: "M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"}], ["circle", {cx: "12", cy: "12", r: "3"}]],
+    RotateCcw: [["path", {d: "M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"}], ["path", {d: "M3 3v5h5"}]],
+    Undo2: [["path", {d: "M9 14 4 9l5-5"}], ["path", {d: "M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5a5.5 5.5 0 0 1-5.5 5.5H11"}]],
+    ArchiveRestore: [["rect", {width: "20", height: "5", x: "2", y: "3", rx: "1"}], ["path", {d: "M4 8v11a2 2 0 0 0 2 2h2"}], ["path", {d: "M20 8v11a2 2 0 0 1-2 2h-2"}], ["path", {d: "m9 15 3-3 3 3"}], ["path", {d: "M12 12v9"}]],
+    AlignLeft: [["path", {d: "M21 5H3"}], ["path", {d: "M15 12H3"}], ["path", {d: "M17 19H3"}]],
+    AlignCenter: [["path", {d: "M21 5H3"}], ["path", {d: "M17 12H7"}], ["path", {d: "M19 19H5"}]],
+    AlignRight: [["path", {d: "M21 5H3"}], ["path", {d: "M21 12H9"}], ["path", {d: "M21 19H7"}]]
+  };
+  function node(tag, className = "", text = "") {
+    const el = document.createElement(tag); el.className = className; el.textContent = text; return el;
+  }
+  function button(icon, label, action, text = "") {
+    const el = node("button", "bh-button"); el.type = "button"; el.title = label;
+    el.setAttribute("aria-label", label); el.onclick = action;
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    for (const [key, value] of Object.entries({viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2", "stroke-linecap": "round", "stroke-linejoin": "round", "aria-hidden": "true", focusable: "false"})) svg.setAttribute(key, value);
+    for (const [tag, attrs] of icons[icon]) {
+      const part = document.createElementNS(svg.namespaceURI, tag);
+      for (const [key, value] of Object.entries(attrs)) part.setAttribute(key, value);
+      svg.append(part);
+    }
+    el.append(svg); if (text) el.append(node("span", "", text)); return el;
+  }
+  function create(options) {
+    const root = document.getElementById("bh-root"), byId = id => document.getElementById(id);
+    const actions = byId("bh-actions"), panel = byId("bh-format-panel"), inputs = {}, aligns = {}, fontCache = new Map();
+    let locked = false, viewing = false, chosen = null, previewId = null;
+    actions.replaceChildren(); panel.replaceChildren();
+    function show(id) { const dialog = byId(id); if (!dialog.open) dialog.showModal(); resizeText(); }
+    function command(icon, label, name, text = "") {
+      const el = button(icon, label, () => options.call(name), text); el.dataset.action = name; el.id = `bh-${name}`; return el;
+    }
+    const save = command("Save", "保存原文件", "save", "保存原文件"); save.classList.add("bh-primary-button"); actions.append(save);
+    actions.append(command("Download", "导出HTML", "export", "导出HTML"));
+    const upload = command("Upload", "导入品牌屋文件", "import"); upload.onclick = () => byId("bh-import-file").click(); actions.append(upload);
+    for (const [icon, label, id] of [["Type", "文字与版式", "format"], ["History", "文件内历史", "history"], ["FileText", "来源与字段详情", "source"]]) {
+      const el = button(icon, label, () => show(`bh-${id}-dialog`)); el.dataset.panel = id; el.id = `bh-${id}`;
+      el.setAttribute("aria-haspopup", "dialog"); el.setAttribute("aria-controls", `bh-${id}-dialog`); actions.append(el);
+    }
+    const backup = command("FileText", "草稿备份", "exportDraft", "草稿备份"); backup.title = "下载JSON草稿备份";
+    actions.append(command("ArchiveRestore", "恢复辅助草稿", "recoverDraft"), backup);
+    const exit = command("Undo2", "退出历史预览", "exitPreview", "退出预览"); exit.hidden = true; actions.append(exit);
+    root.querySelectorAll("[data-close]").forEach(slot => {
+      const dialog = byId(slot.dataset.close); slot.replaceChildren(button("X", "关闭", () => dialog.close()));
+    });
+    byId("bh-import-file").onchange = event => {
+      const file = event.target.files[0]; event.target.value = ""; if (file) options.call("import", file);
+    };
+    const note = byId("bh-note");
+    note.oninput = () => { note.style.height = "auto"; note.style.height = `${note.scrollHeight + 2}px`; };
+    const selectedLabel = node("p", "bh-selected-label"), grid = node("div", "bh-control-grid");
+    const error = node("p", "bh-inline-error"); error.id = "bh-control-error"; error.setAttribute("role", "alert");
+    panel.append(selectedLabel, grid);
+    function control(name, label, type, values, target, change) {
+      const wrap = node("label", "bh-control-label", label), input = node(type === "select" ? "select" : type === "textarea" ? "textarea" : "input");
+      input.id = `bh-${name}`; wrap.htmlFor = input.id; input.setAttribute("aria-describedby", error.id);
+      if (type === "select") values.forEach(([value, text]) => { const option = node("option", "", text); option.value = value; input.append(option); });
+      else if (type !== "textarea") { input.type = type; if (values) [input.min, input.max, input.step] = values; }
+      if (type === "textarea") { input.rows = 3; wrap.classList.add("bh-full"); }
+      input[type === "textarea" ? "oninput" : "onchange"] = () => {
+        if (locked || viewing) return;
+        const invalid = type === "number" && (!input.value.trim() || !input.checkValidity());
+        input.setAttribute("aria-invalid", String(invalid));
+        error.textContent = invalid ? `${label}须在 ${input.min} 至 ${input.max} 之间，步长为 ${input.step}。` : "";
+        if (!invalid) change(type === "number" ? Number(input.value) : input.value);
+        if (type === "textarea") resizeText();
+      };
+      inputs[name] = input; wrap.append(input); target.append(wrap); return input;
+    }
+    const textInput = control("text", "文字", "textarea", null, grid, options.text);
+    control("fontFamily", "字体", "select", [["system", "系统无衬线"], ["serif", "宋体 / 衬线"], ["mono", "等宽"], ["pingfang", "苹方"], ["yahei", "微软雅黑"]], grid, v => options.style("fontFamily", v));
+    const fontState = node("span", "bh-font-state"); fontState.id = "bh-font-state"; fontState.setAttribute("role", "status"); inputs.fontFamily.parentElement.append(fontState);
+    control("fontSize", "字号 (px)", "number", [10, 48, 1], grid, v => options.style("fontSize", v));
+    control("fontWeight", "字重", "select", [[400, "常规"], [500, "中等"], [600, "半粗"], [700, "粗体"], [800, "特粗"]], grid, v => options.style("fontWeight", Number(v)));
+    control("color", "颜色", "color", null, grid, v => options.style("color", v));
+    control("lineHeight", "行高", "number", [1.2, 2.2, 0.1], grid, v => options.style("lineHeight", v));
+    const alignment = node("fieldset"), segments = node("div", "bh-segments"); alignment.append(node("legend", "", "对齐"), segments); grid.append(alignment);
+    for (const [value, icon, label] of [["left", "AlignLeft", "左对齐"], ["center", "AlignCenter", "居中"], ["right", "AlignRight", "右对齐"]]) {
+      const el = button(icon, label, () => { if (!locked && !viewing) options.style("textAlign", value); });
+      el.dataset.format = "true"; aligns[value] = el; segments.append(el);
+    }
+    const layout = node("section", "bh-layout"), layoutGrid = node("div", "bh-control-grid");
+    layout.append(node("h3", "", "模型版式"), layoutGrid); panel.append(layout, error);
+    control("columns", "列数上限", "select", [[1, "1 列"], [2, "2 列"], [3, "3 列"]], layoutGrid, v => options.layout("columns", Number(v)));
+    control("width", "最大宽度 (px)", "number", [800, 1600, 1], layoutGrid, v => options.layout("width", v));
+    control("gap", "间距 (px)", "number", [0, 32, 1], layoutGrid, v => options.layout("gap", v));
+    control("padding", "内边距 (px)", "number", [8, 32, 1], layoutGrid, v => options.layout("padding", v));
+    function resizeText() { if (byId("bh-format-dialog").open) { textInput.style.height = "auto"; textInput.style.height = `${textInput.scrollHeight + 2}px`; } }
+    function fontStatus(name) {
+      if (name === "system") return "当前：系统字体";
+      if (fontCache.has(name)) return fontCache.get(name);
+      const candidates = {serif: ["Songti SC", "Noto Serif CJK SC", "SimSun"], mono: ["SFMono-Regular", "Consolas", "Liberation Mono"], pingfang: ["PingFang SC", "Microsoft YaHei"], yahei: ["Microsoft YaHei", "PingFang SC"]};
+      const context = document.createElement("canvas").getContext("2d"), sample = "策略标题 0123456789 WMWM";
+      if (!context) return "当前：浏览器回退字体";
+      const found = (candidates[name] || []).find(font => ["monospace", "serif"].some(base => {
+        context.font = `16px ${base}`; const width = context.measureText(sample).width;
+        context.font = `16px "${font}", ${base}`; return Math.abs(context.measureText(sample).width - width) > .1;
+      }));
+      const display = {"PingFang SC": "苹方", "Microsoft YaHei": "微软雅黑", "Songti SC": "宋体"};
+      const message = `${found === candidates[name]?.[0] ? "当前" : "回退"}：${display[found] || found || ({serif: "系统衬线", mono: "系统等宽"}[name] || "系统无衬线")}`;
+      fontCache.set(name, message); return message;
+    }
+    function selection(field, value, currentLayout) {
+      chosen = field; selectedLabel.textContent = field ? field.label : "没有可编辑字段";
+      if (document.activeElement !== textInput) textInput.value = value?.text ?? "";
+      for (const [key, input] of Object.entries(inputs)) if (key !== "text" && document.activeElement !== input) input.value = value?.style?.[key] ?? currentLayout[key] ?? "";
+      for (const [key, el] of Object.entries(aligns)) el.setAttribute("aria-pressed", String(key === value?.style?.textAlign));
+      fontState.textContent = fontStatus(value?.style?.fontFamily || "system");
+      resizeText();
+    }
+    function state(readOnly, busy) {
+      viewing = readOnly; locked = busy; exit.hidden = !viewing;
+      root.querySelectorAll("[data-action]").forEach(el => {
+        const name = el.dataset.action;
+        el.disabled = locked || !options.available(name) || (viewing && ["save", "export", "import", "recoverDraft"].includes(name));
+      });
+      panel.querySelectorAll("input,select,textarea,[data-format]").forEach(el => { el.disabled = locked || viewing || !chosen; });
+      actions.querySelector('[data-panel="format"]').disabled = locked || !chosen;
+      byId("bh-import-file").disabled = locked || viewing || !options.available("import");
+      note.disabled = locked || viewing;
+    }
+    function history(data) {
+      const list = byId("bh-history-list"); list.replaceChildren();
+      for (const item of [...data.history].reverse()) {
+        const row = node("li", "bh-history-row"), copy = node("div"), tools = node("div", "bh-history-actions"); row.dataset.revision = item.id;
+        copy.append(node("strong", "", `v${item.version}${item.id === data.current ? " · 当前工作版" : ""}`), node("p", "", item.note || "未填写说明"));
+        const date = new Date(item.created_at);
+        copy.append(node("small", "", `${Number.isNaN(date.valueOf()) ? item.created_at : date.toLocaleString("zh-CN")} · ${item.kind}`));
+        copy.append(node("small", "", item.id));
+        if (item.restored_from) copy.append(node("small", "", `恢复自 ${item.restored_from}`));
+        for (const [icon, label, action] of [["Eye", "预览", "preview"], ["RotateCcw", "恢复为新版本", "restore"]]) {
+          const el = button(icon, `${label} v${item.version}`, () => { byId("bh-history-dialog").close(); options.call(action, item.id); });
+          el.dataset.action = action; el.id = `bh-${action}-${item.id}`; tools.append(el);
+        }
+        row.append(copy, tools); list.append(row);
+      }
+      if (!data.history.length) list.append(node("li", "", "没有历史版本"));
+      preview(previewId); state(viewing, locked);
+    }
+    function preview(id) {
+      previewId = id;
+      byId("bh-history-list").querySelectorAll('[data-action="preview"]').forEach(el => el.setAttribute("aria-pressed", String(el.id === `bh-preview-${id}`)));
+    }
+    return {selection, state, history, preview};
+  }
+  global.BHControls = {create};
+})(globalThis);
+
+</script>
+<script id="brand_house_ui">
+(function (global) {
+  "use strict";
+  const clone = value => JSON.parse(JSON.stringify(value));
+  const fonts = {
+    system: '-apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif',
+    serif: '"Songti SC", "Noto Serif CJK SC", SimSun, serif',
+    mono: '"SFMono-Regular", Consolas, "Liberation Mono", "PingFang SC", monospace',
+    pingfang: '"PingFang SC", "Microsoft YaHei", sans-serif',
+    yahei: '"Microsoft YaHei", "PingFang SC", sans-serif'
+  };
+  const defaults = {fontFamily: "system", fontSize: 18, fontWeight: 400, color: "#202424", textAlign: "left", lineHeight: 1.6};
+  const tiers = [["vision"], ["mission", "values"], ["positioning"], ["category", "audience", "differentiated_value"], ["rtb"], ["personality"], ["proposition"], ["slogan"], ["notes"]];
+  function node(tag, className = "", text = "") {
+    const el = document.createElement(tag); el.className = className; el.textContent = text; return el;
+  }
+  function mount(initialData, callbacks = {}) {
+    if (!global.BHControls) throw new Error("缺少品牌屋编辑控件脚本");
+    let data = clone(initialData), draft, shown, readOnly = false, working = false, selected = null, previewId = null;
+    let sourceText = JSON.stringify(data.source, null, 2);
+    const root = document.getElementById("bh-root"), model = document.getElementById("bh-model"), elements = new Map();
+    const current = global.BHCore?.current ? global.BHCore.current(data) : data.history[data.history.length - 1];
+    draft = clone(current.snapshot); shown = draft;
+    function status(message, level = "info") {
+      const el = document.getElementById("bh-status"); el.textContent = String(message ?? "");
+      el.dataset.level = ["error", "failed"].includes(level) ? "error" : level;
+      el.setAttribute("role", el.dataset.level === "error" ? "alert" : "status");
+      el.setAttribute("aria-live", el.dataset.level === "error" ? "assertive" : "polite");
+    }
+    function call(name, ...args) {
+      if (working || (readOnly && ["change", "save", "export", "import", "recoverDraft"].includes(name))) return;
+      if (typeof callbacks[name] !== "function") return status("此操作尚未连接主控。", "warning");
+      try {
+        const result = callbacks[name](...args);
+        if (result && typeof result.catch === "function") result.catch(error => status(error.message || "操作失败，草稿仍保留。", "error"));
+      } catch (error) { status(error.message || "操作失败，草稿仍保留。", "error"); }
+    }
+    const controls = global.BHControls.create({
+      call, available: name => typeof callbacks[name] === "function",
+      text: text => edit("text", text), style: (name, value) => edit("style", value, name),
+      layout: (name, value) => { if (!readOnly && !working) { draft.layout[name] = value; applyLayout(); changed(); } }
+    });
+    function value(field) { return shown.fields[field.key]; }
+    function fieldName(field) {
+      const title = data.fields.find(item => item.group === field.group && item.role === "title");
+      return `${title ? value(title).text || field.group : field.group} / ${field.label}`;
+    }
+    function style(el, field) {
+      const s = {...defaults, ...value(field).style};
+      el.style.fontFamily = fonts[s.fontFamily] || fonts.system;
+      el.style.fontSize = `${s.fontSize}px`; el.style.fontWeight = s.fontWeight;
+      el.style.color = s.color; el.style.textAlign = s.textAlign; el.style.lineHeight = s.lineHeight;
+    }
+    function syncControls() {
+      const field = data.fields.find(f => f.key === selected), item = field ? value(field) : null;
+      controls.selection(field ? {...field, label: fieldName(field)} : null, item ? {...item, style: {...defaults, ...item.style}} : null, shown.layout);
+      controls.state(readOnly, working);
+    }
+    function select(field) {
+      if (selected) elements.get(selected)?.removeAttribute("data-selected");
+      selected = field.key; elements.get(selected)?.setAttribute("data-selected", "true");
+      syncControls(); source();
+    }
+    function changed() {
+      syncControls(); call("change", clone(draft));
+    }
+    function edit(kind, input, property) {
+      if (readOnly || working || !selected) return;
+      const field = data.fields.find(f => f.key === selected), item = draft.fields[selected], el = elements.get(selected);
+      if (kind === "text") {
+        item.text = input; if (document.activeElement !== el) el.textContent = input;
+        if (field.role === "title") for (const sibling of data.fields.filter(f => f.group === field.group)) elements.get(sibling.key)?.setAttribute("aria-label", fieldName(sibling));
+      }
+      else { item.style[property] = input; style(el, field); }
+      changed();
+    }
+    function insertText(el, text) {
+      const selection = global.getSelection();
+      if (!selection.rangeCount || !el.contains(selection.getRangeAt(0).commonAncestorContainer)) return;
+      const range = selection.getRangeAt(0); range.deleteContents();
+      const textNode = document.createTextNode(text); range.insertNode(textNode);
+      range.setStartAfter(textNode); range.collapse(true); selection.removeAllRanges(); selection.addRange(range);
+      el.dispatchEvent(new Event("input", {bubbles: true}));
+    }
+    function editable(field, tag = "div") {
+      const el = node(tag, "bh-field", value(field).text); el.dataset.key = field.key;
+      el.dataset.role = field.role; el.id = `bh-field-${field.key}`; el.tabIndex = 0;
+      el.setAttribute("role", "textbox"); el.setAttribute("aria-multiline", "true");
+      el.setAttribute("aria-label", fieldName(field)); el.spellcheck = false; style(el, field);
+      el.onfocus = () => select(field);
+      el.oninput = event => { if (!event.isComposing && !readOnly && !working) { selected = field.key; edit("text", el.innerText); } };
+      el.oncompositionend = () => { if (!readOnly && !working) { selected = field.key; edit("text", el.innerText); } };
+      el.onpaste = event => { event.preventDefault(); if (!readOnly && !working) insertText(el, event.clipboardData.getData("text/plain")); };
+      el.ondrop = event => event.preventDefault();
+      elements.set(field.key, el); return el;
+    }
+    function bucket(field) {
+      const path = field.path;
+      if (!Array.isArray(path)) return null;
+      if (path[0] === "sections") return String(path[2] || "support");
+      return path.slice(0, path[0] === "gaps" ? 2 : 1).join(".") || "support";
+    }
+    function section(group, fields) {
+      const section = node("section", group === "header" ? "bh-model-header" : "bh-section"); section.dataset.group = group;
+      const heading = node("header", "bh-heading"), primary = node("div", "bh-primary"), supports = node("div", "bh-supports"), buckets = new Map();
+      const title = fields.find(field => field.role === "title");
+      if (title) section.setAttribute("aria-labelledby", `bh-field-${title.key}`);
+      function support(name) {
+        if (!buckets.has(name)) { const el = node("div", "bh-support-group"); el.dataset.support = name; buckets.set(name, el); supports.append(el); }
+        return buckets.get(name);
+      }
+      fields.forEach((field, index) => {
+        if (group === "header") { section.append(editable(field, field === title ? "h1" : "div")); return; }
+        if (field.role === "title") { heading.append(editable(field, "h2")); return; }
+        if (field.role === "support") { support(bucket(field) || "support").append(editable(field)); return; }
+        if (field.role === "label") {
+          const next = fields.slice(index + 1).find(f => f.role !== "label");
+          const known = ["counterevidence", "evidence", "assumptions", "verification"].find(key => field.key.split(/[_-]/).includes(key));
+          const target = known || (next?.role === "support" ? bucket(next) : null);
+          (target ? support(target) : primary).append(editable(field, "h3")); return;
+        }
+        primary.append(editable(field));
+      });
+      if (group !== "header") { if (heading.childElementCount) section.append(heading); section.append(primary, supports); }
+      return section;
+    }
+    function applyLayout() {
+      for (const key of ["columns", "width", "gap", "padding"]) model.style.setProperty(`--bh-${key}`, `${shown.layout[key]}${key === "columns" ? "" : "px"}`);
+    }
+    function states() {
+      model.setAttribute("aria-busy", String(working)); root.dataset.readOnly = String(readOnly);
+      const preview = data.history.find(item => item.id === previewId);
+      document.getElementById("bh-mode").textContent = readOnly ? `历史预览${preview ? ` v${preview.version}` : ""} · 只读` : "";
+      for (const el of elements.values()) {
+        el.contentEditable = readOnly || working ? "false" : "plaintext-only";
+        el.setAttribute("aria-readonly", String(readOnly || working));
+      }
+      controls.state(readOnly, working);
+    }
+    function render(snapshot, preview = false) {
+      readOnly = Boolean(preview);
+      if (!readOnly) draft = clone(snapshot);
+      shown = readOnly ? clone(snapshot) : draft;
+      const fragment = document.createDocumentFragment(), groups = new Map(); elements.clear();
+      for (const field of data.fields) {
+        if (!shown.fields[field.key]) throw new Error(`字段缺少内容：${field.key}`);
+        if (!groups.has(field.group)) groups.set(field.group, []); groups.get(field.group).push(field);
+      }
+      if (groups.has("header")) { fragment.append(section("header", groups.get("header"))); groups.delete("header"); }
+      for (const tier of tiers) {
+        const row = node("div", `bh-tier${tier.length === 2 ? " bh-tier-two" : tier.length === 3 ? " bh-tier-three" : ""}`);
+        for (const group of tier) if (groups.has(group)) { row.append(section(group, groups.get(group))); groups.delete(group); }
+        if (row.childElementCount) fragment.append(row);
+      }
+      for (const [group, fields] of groups) fragment.append(section(group, fields));
+      model.replaceChildren(fragment); applyLayout();
+      const field = data.fields.find(f => f.key === selected) || data.fields[0];
+      if (field) select(field); else syncControls();
+      states();
+    }
+    function source() {
+      const panel = document.getElementById("bh-source-panel"), info = node("dl", "bh-source-list");
+      const field = data.fields.find(f => f.key === selected);
+      function entry(label, text) { info.append(node("dt", "", label), node("dd", "", String(text))); }
+      entry("项目", data.project_id); entry("任务", data.task_id); entry("文档", data.document_id); entry("当前工作版", data.current);
+      if (field) {
+        entry("当前字段", field.label); entry("字段标识", field.key); entry("字段分组", `${field.group} / ${field.role}`);
+        entry("来源路径", field.path === null ? "模型标签，无来源正文路径" : JSON.stringify(field.path));
+        let original = data.source.document;
+        for (const key of field.path || []) original = original != null && Object.prototype.hasOwnProperty.call(original, key) ? original[key] : undefined;
+        if (field.path !== null) entry("原始值", original === undefined ? "该路径不存在于来源文档" : typeof original === "string" ? original : JSON.stringify(original, null, 2));
+      }
+      const pre = node("pre", "bh-source-pre", sourceText);
+      panel.replaceChildren(info, node("h3", "bh-source-panel-heading", "完整来源数据（只读）"), pre);
+    }
+    function history(next) {
+      controls.history(next);
+      const revision = next.history.find(item => item.id === next.current);
+      document.getElementById("bh-revision").textContent = revision ? `当前 v${revision.version}` : "";
+    }
+    function setData(next) { data = clone(next); sourceText = JSON.stringify(data.source, null, 2); history(data); source(); }
+    function busy(flag) { working = Boolean(flag); states(); }
+    function setDraft(snapshot) { render(snapshot, false); }
+    function setPreview(id) { previewId = id; controls.preview(id); states(); }
+    render(draft, false); history(data);
+    return {render, history, status, busy, getDraft: () => clone(draft), setDraft, setData, getNote: () => document.getElementById("bh-note").value.trim(), setPreview};
+  }
+  global.BHUI = {mount};
+})(globalThis);
+
+</script>
+<script id="brand_house_file">
+(function () {
+  'use strict';
+  const MAX_BYTES = 40 * 1024 * 1024;
+  const digest = async value => Array.from(new Uint8Array(await crypto.subtle.digest(
+    'SHA-256', typeof value === 'string' ? new TextEncoder().encode(value) : value)),
+  x => x.toString(16).padStart(2, '0')).join('');
+  async function read(handle) {
+    const file = await handle.getFile();
+    if (file.size > MAX_BYTES) throw Error('文件超过40MiB读取保护范围；原文件未改，请交给Agent分批核对');
+    const bytes = new Uint8Array(await file.arrayBuffer());
+    if (bytes.byteLength > MAX_BYTES) throw Error('文件超过40MiB读取保护范围；原文件未改');
+    let raw = null;
+    try { raw = new TextDecoder('utf-8', {fatal:true, ignoreBOM:true}).decode(bytes); }
+    catch (_) { /* Preserve undecodable bytes without replacement characters. */ }
+    return {bytes, raw, hash:await digest(bytes)};
+  }
+  function base64(bytes) {
+    const chunks = [];
+    for (let i = 0; i < bytes.length; i += 32768) chunks.push(String.fromCharCode(...bytes.subarray(i, i + 32768)));
+    return btoa(chunks.join(''));
+  }
+  function documentOf(text) {
+    if (typeof text !== 'string' || new TextEncoder().encode(text).length > MAX_BYTES) {
+      throw Error('文件超过40MiB读取保护范围；原文件未改，请交给Agent分批核对');
+    }
+    const doc = new DOMParser().parseFromString(text, 'text/html');
+    const nodes = doc.querySelectorAll('script#brand-house-data');
+    if (nodes.length !== 1 || nodes[0].type !== 'application/json') throw Error('缺少唯一的品牌屋数据容器');
+    return {doc, node:nodes[0]};
+  }
+  function parse(text) {
+    return BHCore.parse(documentOf(text).node.textContent);
+  }
+  function shell(text) {
+    const {doc, node} = documentOf(text);
+    node.textContent = '';
+    return '<!doctype html>\n' + doc.documentElement.outerHTML;
+  }
+  function serialize(template, data) {
+    const {doc, node} = documentOf(template);
+    node.textContent = BHCore.encode(data);
+    return '<!doctype html>\n' + doc.documentElement.outerHTML;
+  }
+  function identity(a, b) {
+    return a.document_id === b.document_id && a.project_id === b.project_id && a.task_id === b.task_id
+      && JSON.stringify(a.source) === JSON.stringify(b.source) && JSON.stringify(a.fields) === JSON.stringify(b.fields);
+  }
+  function conflict(record, reason) {
+    const error = Error(reason);
+    error.name = 'ConflictError';
+    error.externalText = record.raw ?? '';
+    if (record.raw === null) error.externalBytes = base64(record.bytes);
+    try { error.externalData = parse(record.raw); } catch (_) { /* Raw bytes stay in the recovery draft. */ }
+    return error;
+  }
+  async function bind(handle, expected, template) {
+    if (!handle || handle.kind !== 'file' || !/\.html?$/i.test(handle.name)) throw Error('请选择当前项目的HTML文件');
+    const record = await read(handle);
+    if (record.raw === null) throw conflict(record, '文件不是有效UTF-8；已保留原始字节，未覆盖');
+    let actual;
+    try { actual = parse(record.raw); }
+    catch (_) { throw conflict(record, '所选文件无法识别为有效品牌屋；已保留原文，未覆盖'); }
+    if (!identity(actual, expected)) throw Error('文件身份或生成依据不符；未覆盖其他项目');
+    if (shell(record.raw) !== template || JSON.stringify(actual) !== JSON.stringify(expected)) {
+      throw conflict(record, '文件已被其他窗口或程序修改；已停止覆盖，请保留双方后核对');
+    }
+    return {handle, hash:record.hash, raw:record.raw};
+  }
+  async function write(binding, candidate, template) {
+    let stream, closed = false;
+    const next = serialize(template, candidate);
+    const wanted = await digest(next);
+    async function unchanged() {
+      const actual = await read(binding.handle);
+      if (actual.hash !== binding.hash) throw conflict(actual, '检测到外部修改；保留两份内容，原文件未被本次覆盖');
+    }
+    try {
+      await unchanged();
+      stream = await binding.handle.createWritable({mode:'exclusive'});
+      await unchanged();
+      await stream.write(next);
+      await unchanged();
+      await stream.close();
+      closed = true;
+      const actual = await read(binding.handle);
+      if (actual.hash !== wanted) throw conflict(actual, '写入后回读与本次版本不一致；结果待核对，草稿仍保留');
+      return {handle:binding.handle, hash:wanted, raw:actual.raw, verified:true};
+    } catch (error) {
+      if (stream && !closed) {
+        try { await stream.abort(); } catch (_) { /* A failed close may already have committed. */ }
+      }
+      if (error.name !== 'ConflictError') {
+        try {
+          const actual = await read(binding.handle);
+          if (actual.hash === wanted) {
+            return {handle:binding.handle, hash:wanted, raw:actual.raw, verified:true, recoveredAfterError:true};
+          }
+        } catch (_) { /* Unknown outcome remains a failure, never an assumed success. */ }
+      }
+      throw error;
+    }
+  }
+  function download(text, name) {
+    const type = /\.json$/i.test(name) ? 'application/json;charset=utf-8' : 'text/html;charset=utf-8';
+    const url = URL.createObjectURL(new Blob([text], {type}));
+    const anchor = document.createElement('a');
+    anchor.href = url;
+    anchor.download = name;
+    document.body.append(anchor);
+    anchor.click();
+    anchor.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 60000);
+  }
+  globalThis.BHFile = {parse, shell, serialize, identity, bind, write, digest, download};
+}());
+
+</script>
+<script id="brand_house_cache">
+(function () {
+  'use strict';
+  function recovery(value, data) {
+    if (!value || typeof value !== 'object' || Array.isArray(value)) throw Error('草稿备份结构不符');
+    BHCore.validate(value.envelope);
+    BHCore.validateSnapshot(value.draft, data.fields);
+    if (!BHFile.identity(value.envelope, data)) throw Error('草稿生成依据与文件不符');
+    if (typeof value.base_revision !== 'string' || !value.envelope.history.some(v=>v.id===value.base_revision))
+      throw Error('草稿缺少有效的基准版本');
+    if (value.intent !== null && value.intent !== undefined) {
+      const intent = value.intent;
+      if (!intent || typeof intent !== 'object' || Array.isArray(intent) ||
+          Object.keys(intent).some(k=>!['kind','note','restored_from'].includes(k)) ||
+          !['save','restore','import','export'].includes(intent.kind) || typeof intent.note !== 'string')
+        throw Error('草稿修订类型无效');
+      if (intent.kind==='restore') {
+        const target=value.envelope.history.find(v=>v.id===intent.restored_from);
+        if (!target || JSON.stringify(target.snapshot)!==JSON.stringify(value.draft)) throw Error('草稿恢复引用不符');
+      } else if (intent.restored_from!==null) throw Error('草稿不应含恢复引用');
+    }
+    if (!Array.isArray(value.raw_conflicts) || value.raw_conflicts.some(item=>!item ||
+        typeof item.text!=='string' || typeof item.time!=='string')) throw Error('冲突备份结构不符');
+    for (const item of value.raw_conflicts) if (item.bytes_base64 !== undefined) {
+      if (typeof item.bytes_base64 !== 'string' || item.text !== '' ||
+          item.bytes_base64.length % 4 !== 0 || !/^[A-Za-z0-9+/]*={0,2}$/.test(item.bytes_base64))
+        throw Error('冲突原始字节备份无效');
+      if (btoa(atob(item.bytes_base64)) !== item.bytes_base64) throw Error('冲突原始字节编码不规范');
+    }
+    return value;
+  }
+  function create(data) {
+    const key = 'brand-house-draft:' + data.document_id + ':' + location.pathname;
+    function read() {
+      try {
+        const raw = localStorage.getItem(key);
+        if (!raw) return {value:null};
+        const value = BHCore.parseJSON(raw);
+        if (value.document_id !== data.document_id || typeof value.pending!=='boolean') throw Error('草稿归属或状态不符');
+        recovery(value,data);
+        return {value};
+      } catch (error) { return {value:null, error:'草稿缓存不可用：' + error.message}; }
+    }
+    function write(value) {
+      try {
+        const text = JSON.stringify({document_id:data.document_id, ...value});
+        localStorage.setItem(key, text);
+        if (localStorage.getItem(key) !== text) throw Error('回读不符');
+        return true;
+      } catch (_) { return false; }
+    }
+    return {read, write};
+  }
+  globalThis.BHCache = {create,recovery};
+}());
+
+</script>
+<script id="brand_house_app">
+(function () {
+  'use strict';
+  function boot() {
+  const original = '<!doctype html>\n' + document.documentElement.outerHTML;
+  const template = BHFile.shell(original);
+  let data, ui;
+  try { data = BHFile.parse(original); }
+  catch (error) {
+    document.body.textContent = '品牌屋数据无法读取，未改原文件：' + error.message;
+    return;
+  }
+  let anchor = BHCore.clone(data), binding = null, draft = BHCore.clone(BHCore.current(data).snapshot);
+  let preview = null, pending = false, working = false, intent = null, rawConflicts = [];
+  const cache = BHCache.create(data);
+  const cached = cache.read();
+  let recovery = cached.value;
+  function status(message, level = 'info') { ui.status(message, level); }
+  function event(action, state, detail, revision = data.current) {
+    data.events.push({id:crypto.randomUUID(), time:new Date().toISOString(), action,
+      status:state, detail, revision_id:revision});
+  }
+  function store() {
+    const okay = cache.write({base_revision:anchor.current, envelope:data, draft, pending,
+      intent, raw_conflicts:rawConflicts, time:new Date().toISOString()});
+    if (!okay) status('草稿缓存失败；当前修改只在本窗口，请导出草稿后再关闭', 'error');
+    return okay;
+  }
+  function branch(external, reason) {
+    const preserved = BHCore.clone(external);
+    for (const item of preserved.branches) {
+      const existing = data.branches.find(b => b.id === item.id);
+      if (existing && JSON.stringify(existing) !== JSON.stringify(item)) throw Error('分支编号冲突，未合并；请备份双方后交给Agent');
+      if (!existing) data.branches.push(BHCore.clone(item));
+    }
+    preserved.branches = [];
+    data.branches.push({id:crypto.randomUUID(), time:new Date().toISOString(), reason,
+      base_revision:anchor.current, local_snapshot:BHCore.clone(draft), external:preserved});
+  }
+  function onError(error, action) {
+    const type = error.name === 'AbortError' ? 'cancelled' : error.name === 'ConflictError' ? 'conflict' : 'failed';
+    if (typeof error.externalText === 'string') rawConflicts.push({time:new Date().toISOString(),
+      text:error.externalText, ...(error.externalBytes ? {bytes_base64:error.externalBytes} : {})});
+    if (error.externalData && BHFile.identity(error.externalData, data)) {
+      try { branch(error.externalData, error.message); } catch (_) { /* Both raw branches remain available for backup. */ }
+    }
+    event(action, type, error.message);
+    pending = true;
+    const retained = store();
+    const message = type === 'cancelled' ? '已取消，未完成写回；修改仍保留在草稿中' : error.message + '；未确认保存成功，草稿仍保留';
+    status(message + (retained ? '' : '。缓存也失败，请立即导出草稿备份'), 'error');
+  }
+  function change(snapshot) {
+    if (working || preview) return;
+    draft = BHCore.clone(snapshot);
+    pending = true;
+    intent = null;
+    if (store()) status('有未保存修改', 'warning');
+  }
+  function candidate(kind) {
+    const revision = intent || {kind, note:ui.getNote(), restored_from:null};
+    return BHCore.append(data, draft, revision);
+  }
+  function capacityNote() {
+    const size = BHCore.capacity(data);
+    return size.blocked ? '；历史已达容量上限，停止新增，未保存稿请草稿备份' :
+      size.warning ? '；历史接近容量上限，请交Agent核对，旧版本不会自动删除' : '';
+  }
+  async function save() {
+    if (working || preview) return;
+    if (data.project_id === 'UNINITIALIZED') return status('通用模板没有项目归属，请先由Agent生成项目品牌屋', 'warning');
+    if (typeof showOpenFilePicker !== 'function' || !isSecureContext) {
+      onError(Error('此浏览器不支持原文件写回；请使用完整HTML导出'), 'writeback');
+      return;
+    }
+    working = true;
+    ui.busy(true);
+    let chosen;
+    try {
+      // Open the picker immediately within the user's click activation.
+      if (!binding) [chosen] = await showOpenFilePicker({multiple:false,
+        types:[{description:'项目品牌屋HTML', accept:{'text/html':['.html']}}]});
+      if (chosen) binding = await BHFile.bind(chosen, anchor, template);
+      const next = candidate('save');
+      next.events.push({id:crypto.randomUUID(), time:new Date().toISOString(), action:'writeback',
+        status:'attempted', detail:'等待流关闭及磁盘回读；本条不是成功回执', revision_id:next.current});
+      const result = await BHFile.write(binding, next, template);
+      binding = result;
+      anchor = BHCore.clone(next);
+      data = next;
+      event('writeback', 'readback_verified', '流已关闭，实际文件字节与待保存HTML一致');
+      pending = false;
+      intent = null;
+      ui.setData(data);
+      ui.setDraft(draft);
+      const retained = store();
+      status('已写回所选原文件，并回读确认 v' + BHCore.current(data).version + capacityNote() +
+        (retained ? '' : '；辅助缓存失败，文件内版本与历史已保存'), retained ? 'success' : 'warning');
+    } catch (error) { onError(error, 'writeback'); }
+    finally { working = false; ui.busy(false); }
+  }
+  function exportFile() {
+    if (working || preview) return;
+    try {
+      const atLimit = BHCore.capacity(data).blocked;
+      const next = atLimit ? BHCore.clone(data) : candidate('export');
+      next.events.push({id:crypto.randomUUID(), time:new Date().toISOString(), action:'export',
+        status:'export_requested', detail:'仅请求下载，无法确认系统下载完成；原文件未更新', revision_id:next.current});
+      BHFile.download(BHFile.serialize(template, next), '品牌屋-完整历史.html');
+      data = next;
+      pending = true;
+      if (!atLimit) intent = null;
+      ui.setData(data);
+      const retained = store();
+      status('已请求导出完整HTML；原文件未更新，请核对下载文件' +
+        (atLimit ? '。已达容量上限，本次只导出已有快照；未保存修改请另做草稿备份' : capacityNote()) +
+        (retained ? '' : '。缓存失败，请勿关闭未核对的草稿'), 'warning');
+    } catch (error) { onError(error, 'export'); }
+  }
+  function exportDraft() {
+    if (working) return;
+    try {
+      const backup = {format:'brand-house-recovery-1', envelope:data, draft, intent,
+        raw_conflicts:rawConflicts, base_revision:anchor.current, time:new Date().toISOString()};
+      BHFile.download(JSON.stringify(backup), '品牌屋-未保存草稿备份.json');
+      event('recovery-export', 'export_requested', '请求下载完整历史与未保存稿备份；不是原HTML写回');
+      const retained=store();
+      status('已请求草稿备份下载，包含完整历史和未保存内容；请核对文件' +
+        (retained ? '' : '。缓存失败，请勿关闭未核对的草稿'), 'warning');
+    } catch (error) { status('草稿备份未完成：' + error.message, 'error'); }
+  }
+  async function importFile(file) {
+    if (!file || working || preview) return;
+    working = true;
+    ui.busy(true);
+    status('正在读取导入文件，尚未保存', 'info');
+    try {
+      const raw = await file.text();
+      const parsed = /\.json$/i.test(file.name) ? BHCore.parseJSON(raw) : BHFile.parse(raw);
+      const backup = parsed?.format === 'brand-house-recovery-1' ? BHCache.recovery(parsed,data) : null;
+      const incoming = BHCore.validate(backup ? backup.envelope : parsed);
+      if (!BHFile.identity(incoming, data)) throw Error('导入文件不属于当前品牌屋或其生成依据不同');
+      branch(incoming, '手动导入；双方完整历史留在分支中，尚未写回');
+      draft = BHCore.clone(backup ? backup.draft : BHCore.current(incoming).snapshot);
+      if (backup && Array.isArray(backup.raw_conflicts)) rawConflicts.push(...backup.raw_conflicts);
+      pending = true;
+      intent = {kind:'import', note:'从所选文件导入，保留原内容分支', restored_from:null};
+      ui.setDraft(draft);
+      const retained=store();
+      status('已载入导入草稿，双方历史保留；尚未保存' +
+        (retained ? '' : '。缓存失败，请立即做草稿备份'), 'warning');
+    } catch (error) { onError(error, 'import'); }
+    finally { working = false; ui.busy(false); }
+  }
+  function showPreview(id) {
+    const version = data.history.find(v => v.id === id);
+    if (!version || working) return;
+    preview = id;
+    ui.setPreview?.(id);
+    ui.render(version.snapshot, true);
+    status('正在只读查看 v' + version.version + '；当前稿和未保存修改未变', 'info');
+  }
+  function exitPreview() {
+    if (working) return;
+    preview = null; ui.setPreview?.(null); ui.render(draft, false);
+    status(pending ? '有未保存草稿' : '已返回当前稿');
+  }
+  async function restore(id) {
+    if (working) return;
+    const version = data.history.find(v => v.id === id);
+    if (!version) return;
+    if (pending) branch(data, '恢复历史前保留未保存草稿');
+    draft = BHCore.clone(version.snapshot);
+    intent = {kind:'restore', note:'从 v' + version.version + ' 恢复；不恢复批准', restored_from:id};
+    pending = true;
+    preview = null;
+    ui.setPreview?.(null);
+    ui.setDraft(draft);
+    store();
+    await save();
+  }
+  function recoverDraft() {
+    if (!recovery || working || preview) return;
+    if (recovery.pending) {
+      branch(recovery.envelope, '恢复辅助缓存中的未保存稿；不替换当前文件历史');
+      draft = BHCore.clone(recovery.draft);
+      intent = recovery.intent || {kind:'import', note:'恢复本地未保存草稿', restored_from:null};
+      if (intent.restored_from && !data.history.some(v=>v.id===intent.restored_from)) intent = null;
+      rawConflicts = rawConflicts.concat(recovery.raw_conflicts || []);
+      pending = true;
+      ui.setDraft(draft);
+      const retained=store();
+      status('未保存稿已恢复；磁盘当前版和后续历史未被替换' +
+        (retained ? '' : '。缓存失败，请立即做草稿备份'), 'warning');
+    }
+    recovery = null;
+  }
+  ui = BHUI.mount(data, {change, save, export:()=>exportFile(), import:importFile,
+    preview:showPreview, restore, exitPreview, recoverDraft, exportDraft});
+  if (cached.error) status(cached.error + '；文件内历史不受影响', 'warning');
+  else if (recovery?.pending) status('发现未保存草稿；可选择恢复，文件当前版未被替换', 'warning');
+  else if (data.project_id === 'UNINITIALIZED') status('通用模板，尚未绑定项目', 'warning');
+  else status('文件内 v' + BHCore.current(data).version + '；保存时需选择本文件授权' + capacityNote());
+  addEventListener('beforeunload', e => { if (pending || working) { e.preventDefault(); e.returnValue = ''; } });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, {once:true});
+  else boot();
+}());
+
+</script>
+</body>
+</html>

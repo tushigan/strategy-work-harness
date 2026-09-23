@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$PWD/.codex/hooks/validate-project.sh\" --hook --json",
+            "timeout": 15
+          }
+        ]
+      }
+    ]
+  }
+}

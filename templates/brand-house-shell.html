@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; font-src 'none'; connect-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>品牌屋</title>
+  <!--BH_STYLES-->
+</head>
+<body>
+  <div id="bh-root">
+    <header class="bh-toolbar" aria-label="文件与编辑">
+      <div id="bh-actions" class="bh-actions"></div>
+      <div class="bh-file-state"><span id="bh-revision"></span><span id="bh-mode"></span></div>
+    </header>
+    <div class="bh-save-context">
+      <label class="bh-control-label bh-note-label" for="bh-note">修改说明
+        <textarea id="bh-note" rows="1" placeholder="可留空"></textarea>
+      </label>
+      <div id="bh-status" class="bh-status" role="status" aria-live="polite" aria-atomic="true">等待操作。</div>
+    </div>
+    <main id="bh-model" class="bh-model" aria-label="品牌屋内容"></main>
+    <input id="bh-import-file" type="file" accept=".html,.htm,.json,text/html,application/json" aria-label="导入品牌屋文件" hidden>
+    <dialog id="bh-format-dialog" class="bh-dialog" aria-labelledby="bh-format-title">
+      <header class="bh-dialog-heading"><h2 id="bh-format-title">文字与版式</h2><div data-close="bh-format-dialog"></div></header>
+      <div id="bh-format-panel"></div>
+    </dialog>
+    <dialog id="bh-history-dialog" class="bh-dialog bh-dialog-wide" aria-labelledby="bh-history-title">
+      <header class="bh-dialog-heading"><h2 id="bh-history-title">文件内历史</h2><div data-close="bh-history-dialog"></div></header>
+      <ol id="bh-history-list" class="bh-history-list"></ol>
+    </dialog>
+    <dialog id="bh-source-dialog" class="bh-dialog bh-dialog-wide" aria-labelledby="bh-source-title">
+      <header class="bh-dialog-heading"><h2 id="bh-source-title">来源与字段详情</h2><div data-close="bh-source-dialog"></div></header>
+      <div id="bh-source-panel"></div>
+    </dialog>
+    <noscript>需要启用 JavaScript 才能显示和编辑品牌屋。</noscript>
+  </div>
+  <script id="brand-house-data" type="application/json">{}</script>
+  <!--BH_SCRIPTS-->
+</body>
+</html>

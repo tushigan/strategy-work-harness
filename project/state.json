@@ -1,0 +1,62 @@
+{
+  "schema_version": "0.1",
+  "project_id": null,
+  "project_name": null,
+  "client_name": null,
+  "brand_name": null,
+  "status": "not_initialized",
+  "current_stage": "project_setup",
+  "next_action": "上传合同服务列项文件，并先确认识别结果",
+  "task_status": {
+    "status": "not_started",
+    "current_task_id": null,
+    "completed_task_ids": []
+  },
+  "artifact_status": {
+    "status": "not_started",
+    "current_artifact_id": null,
+    "latest_artifact_version": null
+  },
+  "machine_review": {
+    "status": "not_started",
+    "latest_review_id": null
+  },
+  "human_confirmation": {
+    "status": "not_requested",
+    "latest_confirmation_id": null
+  },
+  "client_confirmation": {
+    "status": "not_requested",
+    "latest_confirmation_id": null
+  },
+  "system_import": {
+    "status": "not_applicable",
+    "latest_import_id": null
+  },
+  "integrations": {
+    "feishu": {
+      "status": "not_configured",
+      "scope": "当前项目",
+      "last_checked": null
+    },
+    "cloud_brain": {
+      "status": "not_configured",
+      "scope": "当前项目硬连接；跨项目只取方法论软连接",
+      "last_checked": null
+    }
+  },
+  "references": [],
+  "last_updated": "2026-09-18T11:57:24.652395+00:00",
+  "phase2": {
+    "contract": {
+      "status": "not_started"
+    },
+    "plan": {
+      "status": "not_started"
+    },
+    "gantt": {
+      "status": "not_started"
+    },
+    "system_import": "not_applicable"
+  }
+}
