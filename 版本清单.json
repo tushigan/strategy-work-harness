@@ -7,12 +7,13 @@
   "package_inventory": "策略师工作包/package-inventory.json",
   "package_inventory_sha256": "58e0a41abb683e806f19d5b619b942aec0e0559a9d0e5e58bae73bd421d61b18",
   "release_zip": {
-    "name": "策略师工作包-统一版-v1.7.2-定稿-20261008.zip",
-    "url": "https://github.com/tushigan/strategy-work-harness/releases/download/v1.7.2/策略师工作包-统一版-v1.7.2-定稿-20261008.zip",
+    "name": "strategist-harness-v1.7.2-20261008.zip",
+    "url": "https://github.com/tushigan/strategy-work-harness/releases/download/v1.7.2/strategist-harness-v1.7.2-20261008.zip",
     "sha256": "7ba47267a8229cc65a3ba08d8a709e36acb09b750c47a6b132a83f8c660b2a5d",
     "bytes": 64467154,
     "files": 625,
-    "zip_root": "统一包"
+    "zip_root": "统一包",
+    "note": "与开发仓库定稿包 策略师工作包-统一版-v1.7.2-定稿-20261008.zip 逐字节相同，仅附件名改为英文（GitHub 会改写中文附件名）"
   },
   "git_tag": "v1.7.2",
   "requirements": {
