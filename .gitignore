@@ -1,7 +1,3 @@
 __pycache__/
+*.pyc
 .DS_Store
-.codex/.needs-review
-
-# Local development workspace and acceptance artifacts
-.development-materials/
-outputs/

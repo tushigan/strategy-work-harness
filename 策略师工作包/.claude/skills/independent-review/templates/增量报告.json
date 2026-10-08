@@ -1,0 +1,13 @@
+{
+  "report_schema_version": 2,
+  "review_mode": "incremental",
+  "review_purpose": "revision",
+  "base_review": null,
+  "changed_scope": null,
+  "reused_coverage": [],
+  "visual_evidence": [],
+  "impact_assessment": {
+    "change_kind": "unknown",
+    "reason": ""
+  }
+}

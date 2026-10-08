@@ -1,0 +1,5554 @@
+{
+  "schema_version": 1,
+  "mode": "template",
+  "inventory": [
+    {
+      "path": ".agents",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".agents/skills",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".agents/skills/README.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 3368,
+      "mode": 420,
+      "sha256": "f3e8e0bfde2e97724406e1cc354a330d55633bf8b10e173030ab3e99703629dd"
+    },
+    {
+      "path": ".agents/skills/brand-house",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".agents/skills/brand-house/SKILL.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 10746,
+      "mode": 420,
+      "sha256": "e9d52df45c402a640bf0305024f3c6462d375406e7fd60106fa8f38c4700ec9e"
+    },
+    {
+      "path": ".agents/skills/contract-schedule",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".agents/skills/contract-schedule/SKILL.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 4642,
+      "mode": 420,
+      "sha256": "2d1fd5cb4788c152ffabdf756f30e9fad9825338cb7e0ccd12884a9ddb5d438f"
+    },
+    {
+      "path": ".agents/skills/design-expression-review",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".agents/skills/design-expression-review/SKILL.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 8399,
+      "mode": 420,
+      "sha256": "2e1cdec8d27870aaa81c53023c3f3c721f62b4557b09d81da02861a15d166dab"
+    },
+    {
+      "path": ".agents/skills/editable-brand-house",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".agents/skills/editable-brand-house/SKILL.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 8762,
+      "mode": 420,
+      "sha256": "93f91768c34a865dcb980299b74b810d247006356a26ec611de2b36973dd0ced"
+    },
+    {
+      "path": ".agents/skills/html-deck",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".agents/skills/html-deck/SKILL.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 17864,
+      "mode": 420,
+      "sha256": "5a4a90590787262a132131a420cc20617b12b03a1681a93010b1fbec3557879d"
+    },
+    {
+      "path": ".agents/skills/html-deck/references",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".agents/skills/html-deck/references/page-plan.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 3759,
+      "mode": 420,
+      "sha256": "b84a2fbb848e22704c7adcc303a71f4129a048a957e3e81cc71ab58462a95e2f"
+    },
+    {
+      "path": ".agents/skills/huashu-design",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".agents/skills/huashu-design/.gitignore",
+      "kind": "file",
+      "excluded": false,
+      "size": 844,
+      "mode": 420,
+      "sha256": "c263d044826b41803d8fe9f04ec74b6d43dfed469fa1a5cd51131cffa157292e"
+    },
+    {
+      "path": ".agents/skills/huashu-design/LICENSE",
+      "kind": "file",
+      "excluded": false,
+      "size": 1086,
+      "mode": 420,
+      "sha256": "6d6a2a9caf2e6d2b76974050427053b2892d8aa4c33fd168ce63a537fcee9d96"
+    },
+    {
+      "path": ".agents/skills/huashu-design/README.en.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 18704,
+      "mode": 420,
+      "sha256": "570e517364e3d4dc76c866cbc3b29023e2cdc421f237a993312c3f673326d448"
+    },
+    {
+      "path": ".agents/skills/huashu-design/README.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 19671,
+      "mode": 420,
+      "sha256": "a443fc390ef0d06740b80ec1e2aead415a992bd197f0fdbf191ae26523b69739"
+    },
+    {
+      "path": ".agents/skills/huashu-design/SECURITY.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 5247,
+      "mode": 420,
+      "sha256": "612afd82f0a1947b0fd94775fb34c311fc01064d27cbf9b3d1123a1ce20387bb"
+    },
+    {
+      "path": ".agents/skills/huashu-design/SKILL.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 4551,
+      "mode": 420,
+      "sha256": "e144b9ef5601b7f03df0f2cab82c1161368bd7a096c632f007a97e854b48434e"
+    },
+    {
+      "path": ".agents/skills/huashu-design/SOURCE.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 2410,
+      "mode": 420,
+      "sha256": "876e5bc57fb7b47561817acad9a73e78e8e6b0f36a2bbe055890ea696a65431b"
+    },
+    {
+      "path": ".agents/skills/huashu-design/UPSTREAM.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 65159,
+      "mode": 420,
+      "sha256": "c2385d6f9349263aea2d7fbf8712ec170105d4d4af5ca1375f2b6db77d63d4cd"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/android_frame.jsx",
+      "kind": "file",
+      "excluded": false,
+      "size": 4506,
+      "mode": 420,
+      "sha256": "8c1c951518e5f0d39c07212d0bb9e8f1b5363b4ad4d1f903dca26d6a485e08bf"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/animations.jsx",
+      "kind": "file",
+      "excluded": false,
+      "size": 10528,
+      "mode": 420,
+      "sha256": "5cbb50b6d0c78af36678d13e47df363aec6c6e7d011131f503c1f99d45158b9d"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/banner.svg",
+      "kind": "file",
+      "excluded": false,
+      "size": 9502,
+      "mode": 420,
+      "sha256": "d8660a8e0cd300a773b21308b651ffdd4258ecdc723505724216e47425016b05"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/bgm-ad.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 4950071,
+      "mode": 420,
+      "sha256": "538e4dbf911afd6c6502e8ea008e994f2f6c5219cd498dbda4053f02f0b7dd95"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/bgm-educational-alt.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 4468765,
+      "mode": 420,
+      "sha256": "e100757b60afa69ffd6200012dcaba3d7c2c55e8f543cc25c1765ce59e795f46"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/bgm-educational.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 4047162,
+      "mode": 420,
+      "sha256": "f4d7fa4d6f612c92bbac39706757b331a333dc5ca125aff5f8d3c36b5903ebd3"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/bgm-tech.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 4818429,
+      "mode": 420,
+      "sha256": "37f55c71ef0aea6312efb8c735ecbf028b06219b42cc265bddc482d7b4adc2e9"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/bgm-tutorial-alt.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 3937926,
+      "mode": 420,
+      "sha256": "ead7cefd527b3fee1ef4c83c82b284690717c89b6aeb4ece4b91603059a7bd3c"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/bgm-tutorial.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 5542744,
+      "mode": 420,
+      "sha256": "2a49275922e2e197109d5c9969e6832e09f4c140da1edde22aa508fcddb9a46b"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/browser_window.jsx",
+      "kind": "file",
+      "excluded": false,
+      "size": 3975,
+      "mode": 420,
+      "sha256": "59e412322a5ca34d68716978b4e1147efc95ba65f6fd4d4a99abcc96909f7d55"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/cursor.jsx",
+      "kind": "file",
+      "excluded": false,
+      "size": 14408,
+      "mode": 420,
+      "sha256": "6321767cf44d7b95aeb2eeef756fc45d44e53985dc060f8e1c8805bb5f8e45a4"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/deck_index.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 21320,
+      "mode": 420,
+      "sha256": "83d63a9ed531fb4f4a7b47c23c13024cb0b1831ab4883fc902bda351724c6820"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/deck_stage.js",
+      "kind": "file",
+      "excluded": false,
+      "size": 11678,
+      "mode": 420,
+      "sha256": "a7a2af14c2f8001d2c7e2590dacbf8110b38b37da7b82cbce12382286e8ed6cf"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/design_canvas.jsx",
+      "kind": "file",
+      "excluded": false,
+      "size": 5195,
+      "mode": 420,
+      "sha256": "5376c8ebdc59ec8b969161cb815d9455ccd233e6d6baa0d49f8af337883ed3d6"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/director-notes-samples",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/director-notes-samples/launch-film-30s-sample.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 80207,
+      "mode": 420,
+      "sha256": "92929cba00fee525a70cbe3cd3f6e7b4d2ca7afb9a91a707721cfce9b34b92cd"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/ios_frame.jsx",
+      "kind": "file",
+      "excluded": false,
+      "size": 4753,
+      "mode": 420,
+      "sha256": "e19b4dd028aed54f8c20cea8b070c349e89f2ebcb9ff6b29fd37a9b2381789bd"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/macos_window.jsx",
+      "kind": "file",
+      "excluded": false,
+      "size": 2536,
+      "mode": 420,
+      "sha256": "ebe16aea22d9421dc64b649c4c6f985545abf976fdcd525f16dc010235c87b96"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/narration_stage.jsx",
+      "kind": "file",
+      "excluded": false,
+      "size": 20715,
+      "mode": 420,
+      "sha256": "a60a6421e26ca6b6d20feed7233873e1c19dea47bb00e60be3c686c3fa596bef"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/personal-asset-index.example.json",
+      "kind": "file",
+      "excluded": false,
+      "size": 1963,
+      "mode": 420,
+      "sha256": "8aa16638f63a24cdbaaa03a28c45d5c44b2360d5abb45d3178a65bcfb210e905"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/sfx",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/sfx/container",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/sfx/container/card-flip.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 12164,
+      "mode": 420,
+      "sha256": "346cc1953650959216780ba6e167ce5819f9cf87fa6e01c170249f2f941d5b59"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/sfx/container/card-snap.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 8821,
+      "mode": 420,
+      "sha256": "0870f1b9c0e1d7457f12a9204d627b8e1755b449d6299022edc304f3feb60b7b"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/sfx/container/modal-open.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 10493,
+      "mode": 420,
+      "sha256": "5a493c07db344478e1c69821bacabdc9fe3ed1e9743afc2c7c4a1ead328f7cdd"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/sfx/container/stack-collapse.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 13836,
+      "mode": 420,
+      "sha256": "69f5f5764251c5e08c2700561caf5df668aead8d411375e13a6a072b631692df"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/sfx/feedback",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/sfx/feedback/achievement.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 24703,
+      "mode": 420,
+      "sha256": "b8fb9d8806d6bde21c8a2a9d78f751fa79ddfb82fe09a5e5c49e069c14cdc754"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/sfx/feedback/error-tone.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 12164,
+      "mode": 420,
+      "sha256": "a85727f1afe67c948e5246e17ebfb5c144db9d5ccb414e4fa1011563230541c6"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/sfx/feedback/notification-pop.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 10493,
+      "mode": 420,
+      "sha256": "e455a187df06e7e0b9b51d1722ddcf225abaa704cb0d0b7fd2d56eb7d0b3ace5"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/sfx/feedback/success-chime.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 17180,
+      "mode": 420,
+      "sha256": "95a1aa98d046f08d412e59d50ea00d955f486964ea4368537e2754eb2313502c"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/sfx/impact",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/sfx/impact/brand-stamp.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 17180,
+      "mode": 420,
+      "sha256": "2fd4d6fe3df413d6c19dbd3da93f39df93b30c31eb106dc000a36f7dc6737ab7"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/sfx/impact/drop-thud.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 12164,
+      "mode": 420,
+      "sha256": "57ba7f12272a258e02280ec6839c00980ebe6b7e800080c899c9c03787bffc40"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/sfx/impact/logo-reveal-v2.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 24703,
+      "mode": 420,
+      "sha256": "7fe974ee3267ff30071dfa03722da448600e4834d79a5451377b187ecf88241b"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/sfx/impact/logo-reveal.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 24703,
+      "mode": 420,
+      "sha256": "7fe974ee3267ff30071dfa03722da448600e4834d79a5451377b187ecf88241b"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/sfx/keyboard",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/sfx/keyboard/delete-key.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 8821,
+      "mode": 420,
+      "sha256": "a554ca3a23535ea62da265b35ec9542299aafaa1c0334adf432b02b40a67e0da"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/sfx/keyboard/enter.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 8821,
+      "mode": 420,
+      "sha256": "f97e86cfb43f04900e43c771dee38f777e48ddd86a00389e3dd1e4d98c7f496b"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/sfx/keyboard/space-tap.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 8821,
+      "mode": 420,
+      "sha256": "b138014934488629241fb7132e99ea850c34b1865d712bc3c67de5962e6fc411"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/sfx/keyboard/type-fast.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 24703,
+      "mode": 420,
+      "sha256": "bc2dcab144e81b08f4b6e1a0d482f2497d2da4d9975d6e354e8396c02ae9cc8d"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/sfx/keyboard/type.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 13836,
+      "mode": 420,
+      "sha256": "5a5850c157fd7b7ab54c722399a3e1c3d3214667bdb68ba40003aa036adcb879"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/sfx/magic",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/sfx/magic/ai-process.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 20106,
+      "mode": 420,
+      "sha256": "600d06dcaa8eeb18226bbd37bb354c8ea323debc5d9edc021137533f29847901"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/sfx/magic/sparkle.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 13836,
+      "mode": 420,
+      "sha256": "e2a23a322d5e1d973f1e5df406ec754c1543a53b1ea1ce3ec54b632b254e0743"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/sfx/magic/transform.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 17180,
+      "mode": 420,
+      "sha256": "835c037a1390b18118e04d4915256958b2bf8bf8196a726aea9ec81fbf629a04"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/sfx/progress",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/sfx/progress/complete-done.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 13836,
+      "mode": 420,
+      "sha256": "1e43d66e8c9da873e942f5f71d4eebce3decf71a581c17be12c4997ec6434c0d"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/sfx/progress/generate-start.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 13836,
+      "mode": 420,
+      "sha256": "88b9599e41334ec21e1cc8ceb89f2b7209a2526bc81cd891f0c49a64301379d2"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/sfx/progress/loading-tick.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 8821,
+      "mode": 420,
+      "sha256": "72dba49889cbe89903865502476d19abf0a6b51b9b6c21eabc62bc1a278e0a46"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/sfx/terminal",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/sfx/terminal/command-execute.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 8821,
+      "mode": 420,
+      "sha256": "d47b1cb64682b7e6fe005ed87a65f454948f4a7e6d4d4acd848a5b8d7a5a3cf1"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/sfx/terminal/cursor-blink.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 8821,
+      "mode": 420,
+      "sha256": "bb0d13bdf7bc476e9e9ba20afb6643e7b868bbe41c7b82a670f6133e5ab91b66"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/sfx/terminal/output-appear.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 10493,
+      "mode": 420,
+      "sha256": "c55596314afe8130a9e06a9698fbea2db4c66052a3608e75d2a6b9da53bb3637"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/sfx/transition",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/sfx/transition/dissolve.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 13836,
+      "mode": 420,
+      "sha256": "39e8c79015f98aa3c3b251fa289d0d154cf9264d8edcc16d323a02912c9a2e72"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/sfx/transition/slide-in.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 10493,
+      "mode": 420,
+      "sha256": "f0050b0c649306fd900fd4fd90db0472f0fc58e250821fd6ed877a6cea0f8dc8"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/sfx/transition/swipe-horizontal.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 12164,
+      "mode": 420,
+      "sha256": "b8da68f93a57e8cc27bf62ec796991d3c459d09a2c8cf342755bb97bfb143eff"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/sfx/transition/whoosh-fast.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 8821,
+      "mode": 420,
+      "sha256": "941f258f25c3dd7bd9d381e65d8ece7556eb4b666360c99f7adb4ccd0c15637e"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/sfx/transition/whoosh.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 10493,
+      "mode": 420,
+      "sha256": "6a665acf18881c9b70288676929491584a0b99471fbebb1962cf91925daded43"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/sfx/ui",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/sfx/ui/click-soft.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 8821,
+      "mode": 420,
+      "sha256": "48ab6362e64156c8a907b7705608eaa484494e878eaa4fae77ad32f703990bf3"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/sfx/ui/click.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 8821,
+      "mode": 420,
+      "sha256": "c3acef5b24b47c6895bf4d74c3b47d9b25cf3b63e0db81303dcd6fe9d7bb9560"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/sfx/ui/focus.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 8821,
+      "mode": 420,
+      "sha256": "6c395c13bbf4eaa99d6434c3cb96622990e840d3cebe7c539626117aba74b936"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/sfx/ui/hover-subtle.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 8821,
+      "mode": 420,
+      "sha256": "565ef4d0d8dfcdc6696ef57ec142fffb90ef980f24af753cbe3a1f8ca807e57a"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/sfx/ui/tap-finger.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 8821,
+      "mode": 420,
+      "sha256": "abe259fac618b97e28463122cda1ffc739649815da346b5ed279fd617f28a3c3"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/sfx/ui/toggle-on.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 8821,
+      "mode": 420,
+      "sha256": "5cb28331ecc00dc18386808ad3502f712af2b617ac7fec1748674209c98c5c7c"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/showcases",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/showcases/INDEX.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 5538,
+      "mode": 420,
+      "sha256": "576c8c1c6ca508e074337a9bcc001615c72ab7bf13611421ff2b13007fd970f9"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/showcases/cover",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/showcases/cover/cover-build.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 5664,
+      "mode": 420,
+      "sha256": "9d35f6687f3cac442dd5d8e2e5ed431d7d3d70b17b60dc44eefecdb3f4d84cd9"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/showcases/cover/cover-build.png",
+      "kind": "file",
+      "excluded": false,
+      "size": 116336,
+      "mode": 420,
+      "sha256": "a5494a78ae0e6b7553a961fcd830a817cc75c6d9c85e5f5a714b42f74b587824"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/showcases/cover/cover-pentagram.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 4914,
+      "mode": 420,
+      "sha256": "8480a08fe2231822e6236c0aad41741faece30a5bf0059f9fece76ef0190dfec"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/showcases/cover/cover-pentagram.png",
+      "kind": "file",
+      "excluded": false,
+      "size": 36047,
+      "mode": 420,
+      "sha256": "d8482c018e4bb15957f95eb0d5f349a318fbd223d5e62d728f667351244bae92"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/showcases/cover/cover-takram.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 11823,
+      "mode": 420,
+      "sha256": "c8436fb562d34a76931bc936bcbd907be2d29ea33b476d306b3a80b5c9594b1b"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/showcases/cover/cover-takram.png",
+      "kind": "file",
+      "excluded": false,
+      "size": 155362,
+      "mode": 420,
+      "sha256": "8aa520e057fd5acf7030db6568dd10b493c898f175d7f7d71836b66e30ca6817"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/showcases/infographic",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/showcases/infographic/infographic-build.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 11696,
+      "mode": 420,
+      "sha256": "b69e1cad7ca1db69c0b2498ceec55ef4746fc23c4288169a41c497dbc1321234"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/showcases/infographic/infographic-build.png",
+      "kind": "file",
+      "excluded": false,
+      "size": 108710,
+      "mode": 420,
+      "sha256": "fa9afbfdf559ed0c541f8dc77aedd3796a7a98dcbb75ad2c6e2ac0121f0c0c1b"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/showcases/infographic/infographic-pentagram.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 13911,
+      "mode": 420,
+      "sha256": "c427b9c5fd351463caac85445c0bef83d702ab39e54407bc6ae6a3f93c04b632"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/showcases/infographic/infographic-pentagram.png",
+      "kind": "file",
+      "excluded": false,
+      "size": 159021,
+      "mode": 420,
+      "sha256": "15692b204e9f7ead259983441476e69a12a8f65aa81f72d9ec0619b5cbeccc17"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/showcases/infographic/infographic-takram.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 22396,
+      "mode": 420,
+      "sha256": "3a6f65940c847186f881101b6958d822880bdad81a39c8121653c756cc37b8ee"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/showcases/infographic/infographic-takram.png",
+      "kind": "file",
+      "excluded": false,
+      "size": 162976,
+      "mode": 420,
+      "sha256": "5eba3094dd2a860083c150665772c7d96a5bf93a47f3cfbe5d797f51989ae3ea"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/showcases/ppt",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/showcases/ppt/ppt-build.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 9083,
+      "mode": 420,
+      "sha256": "8140f3860e039ea18f090c53b32b2bebcd926de56a6e099250d4aced66ef45f8"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/showcases/ppt/ppt-build.png",
+      "kind": "file",
+      "excluded": false,
+      "size": 84423,
+      "mode": 420,
+      "sha256": "6aa21e66a1077e24521939dd3bfbf907a7ed6266a40870cd925ee1a03e2b3c69"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/showcases/ppt/ppt-pentagram.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 11955,
+      "mode": 420,
+      "sha256": "a4b9461533cdd58e339235f4dad9396a47a389f84f1f19a72d230409d1ef8b1a"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/showcases/ppt/ppt-pentagram.png",
+      "kind": "file",
+      "excluded": false,
+      "size": 101335,
+      "mode": 420,
+      "sha256": "e426bd70703fd6557772006c8db84a6230eab154d1ec6730b9069a327547c7bf"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/showcases/ppt/ppt-takram.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 15656,
+      "mode": 420,
+      "sha256": "77273fcb09a128d9fe9ef41ba38ee90ae3474640614c591ac645b5ba83812ff6"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/showcases/ppt/ppt-takram.png",
+      "kind": "file",
+      "excluded": false,
+      "size": 467187,
+      "mode": 420,
+      "sha256": "88bc00e535912eb9bd7d22dc50c9b737704ae81a257af0d3d9273847f3816a2c"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/showcases/website-ai-nav",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/showcases/website-ai-nav/ainav-build.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 9621,
+      "mode": 420,
+      "sha256": "9ad1fe678e9ba0fcc6fb7753d07f141b17e9fd27c72225b59521f63e841c9fed"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/showcases/website-ai-nav/ainav-build.png",
+      "kind": "file",
+      "excluded": false,
+      "size": 85064,
+      "mode": 420,
+      "sha256": "a1f380d9aa9dbb891c73682b0d9627760e2c1e39370ed29338cb4372da3f861c"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/showcases/website-ai-nav/ainav-pentagram.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 10553,
+      "mode": 420,
+      "sha256": "d729fbbc6dcf067c8bf97eb654e4c6063908e89d09f91e769a73fca990038d70"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/showcases/website-ai-nav/ainav-pentagram.png",
+      "kind": "file",
+      "excluded": false,
+      "size": 105575,
+      "mode": 420,
+      "sha256": "04b65a201170453d4f4261f9fed835b3e516b2ecbeb528560991c33d0a582dd0"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/showcases/website-ai-nav/ainav-takram.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 12747,
+      "mode": 420,
+      "sha256": "f553f875fe60498e177e5c99c0444895b444fe37c5969364f7f6af53c909e42f"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/showcases/website-ai-nav/ainav-takram.png",
+      "kind": "file",
+      "excluded": false,
+      "size": 121675,
+      "mode": 420,
+      "sha256": "8c16c90993f499aadd35d8a597d9793824181c17e7e5ed29a17f4f4b53958400"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/showcases/website-ai-writing",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/showcases/website-ai-writing/aiwriting-build.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 14066,
+      "mode": 420,
+      "sha256": "9f35620be810d44ce44e5828684efb5d31c68f6a4ae6dfd77947e800236f786b"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/showcases/website-ai-writing/aiwriting-build.png",
+      "kind": "file",
+      "excluded": false,
+      "size": 130604,
+      "mode": 420,
+      "sha256": "171556a04eb950ae17469a0f040d64b6ee145324f43d76f1d6a8b551582f85d1"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/showcases/website-ai-writing/aiwriting-pentagram.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 14226,
+      "mode": 420,
+      "sha256": "15a913d13ebfceb4631931e0a5aa0d616b42854b4fafe76ccdf50fd11c67e352"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/showcases/website-ai-writing/aiwriting-pentagram.png",
+      "kind": "file",
+      "excluded": false,
+      "size": 150195,
+      "mode": 420,
+      "sha256": "c7eba9cf29218c5a0896d594791c7f1540c37e12855c0969d10b19ba0c2ec71d"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/showcases/website-ai-writing/aiwriting-takram.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 18003,
+      "mode": 420,
+      "sha256": "d038d88ffed699a8f7867737731d175484c97552c32bdeb5d6ba18e90bbb59f3"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/showcases/website-ai-writing/aiwriting-takram.png",
+      "kind": "file",
+      "excluded": false,
+      "size": 157158,
+      "mode": 420,
+      "sha256": "3c18cc8997f817cba5b4363edb5b7687ee564740f63511ce7d8535d49688704e"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/showcases/website-devdocs",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/showcases/website-devdocs/devdocs-build.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 9928,
+      "mode": 420,
+      "sha256": "772b8a0de4be25b310c412398d9392da31947e1a97cb4ea5213fe001157acd81"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/showcases/website-devdocs/devdocs-build.png",
+      "kind": "file",
+      "excluded": false,
+      "size": 68230,
+      "mode": 420,
+      "sha256": "9d5f29a7c6985ac923217f5d1b3f829f254fde237f7726ef6d8f01ef18c1ac1f"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/showcases/website-devdocs/devdocs-pentagram.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 12801,
+      "mode": 420,
+      "sha256": "d2486d80dc12b0930a757f294f5679c2877ff0233ee016d90921b7eb8306ec32"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/showcases/website-devdocs/devdocs-pentagram.png",
+      "kind": "file",
+      "excluded": false,
+      "size": 117051,
+      "mode": 420,
+      "sha256": "a40c2b6b029110a79a81ccfaebcfd02f2c9dee3f0eaec333483c13bbdb2afa1b"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/showcases/website-devdocs/devdocs-takram.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 13106,
+      "mode": 420,
+      "sha256": "c0e0f30700539996f21261f6d2ae13cb097d0ae1698d9b39742b818def2752b9"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/showcases/website-devdocs/devdocs-takram.png",
+      "kind": "file",
+      "excluded": false,
+      "size": 111854,
+      "mode": 420,
+      "sha256": "40ac110037d94c5caf3e7210e66cd1fc1909b754ed21a4ae0191cf6150374549"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/showcases/website-homepage",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/showcases/website-homepage/homepage-build.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 8314,
+      "mode": 420,
+      "sha256": "4c207d33dca1cb0d9a5eb4cf63583d30aa2d88b4576668881bd8437f68539090"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/showcases/website-homepage/homepage-build.png",
+      "kind": "file",
+      "excluded": false,
+      "size": 61708,
+      "mode": 420,
+      "sha256": "2be9f198345749735b403e364e7835d30fbd4521d455c817caab5db023282146"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/showcases/website-homepage/homepage-pentagram.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 8491,
+      "mode": 420,
+      "sha256": "315dc0a438dce2668dde109f97ecaec6ac9e6f49d99aad1f69cd95dcf26c7738"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/showcases/website-homepage/homepage-pentagram.png",
+      "kind": "file",
+      "excluded": false,
+      "size": 57093,
+      "mode": 420,
+      "sha256": "5199e4d1d26e0d333a74a2e54b793ff29dccf6c88e577f9c8efd42ad18d2e485"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/showcases/website-homepage/homepage-takram.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 10543,
+      "mode": 420,
+      "sha256": "08f0f7625edbc91733979de526d5a2a270b02f84089aa15b27cc9cd47bbc8a04"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/showcases/website-homepage/homepage-takram.png",
+      "kind": "file",
+      "excluded": false,
+      "size": 127610,
+      "mode": 420,
+      "sha256": "daaf7e9f1f99bc8dd8ee81fe5dcca3b6f37493c0afbce097b247a834c26b7e78"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/showcases/website-saas",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/showcases/website-saas/saas-build.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 12901,
+      "mode": 420,
+      "sha256": "dcaade14100656640375cd86409af3298077a16dc34ce880f2bf630f6a6fa059"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/showcases/website-saas/saas-build.png",
+      "kind": "file",
+      "excluded": false,
+      "size": 99745,
+      "mode": 420,
+      "sha256": "ac0158d2581567d755dd8fd759d0b453b30fdef189f926efe8662c70f3fb41aa"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/showcases/website-saas/saas-pentagram.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 15050,
+      "mode": 420,
+      "sha256": "7de234517804ffe59698f1b74eed296fc926296bb996c1718e32be0299e90c73"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/showcases/website-saas/saas-pentagram.png",
+      "kind": "file",
+      "excluded": false,
+      "size": 96559,
+      "mode": 420,
+      "sha256": "6017150ea044cbcb00f121f549b0e9cffce583c2a06063b0a6479b18793fbf72"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/showcases/website-saas/saas-takram.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 18209,
+      "mode": 420,
+      "sha256": "122f274623e47b33516caabcc57648a98fb4512d8ca27f6f145c16feec63c08c"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/showcases/website-saas/saas-takram.png",
+      "kind": "file",
+      "excluded": false,
+      "size": 123532,
+      "mode": 420,
+      "sha256": "5f877b12ca5fb876a92f8b44f1f7968de4366dd30c88479e7bf3f361dd2df455"
+    },
+    {
+      "path": ".agents/skills/huashu-design/demos",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".agents/skills/huashu-design/demos/c1-ios-prototype-en.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 35165,
+      "mode": 420,
+      "sha256": "6362d832c6ab83d6bbf205059ff7901f868273895d3c75b844b2b1cdce265afb"
+    },
+    {
+      "path": ".agents/skills/huashu-design/demos/c1-ios-prototype.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 35151,
+      "mode": 420,
+      "sha256": "0b10e236332112628232ba29cba5970fd02915c26a1652567326ceebf9bb862b"
+    },
+    {
+      "path": ".agents/skills/huashu-design/demos/c2-slides-pptx-en.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 32906,
+      "mode": 420,
+      "sha256": "ff1f2710f601cc86811339eacd5e735bd7bfe88b94c4e8f9aee0b5bff6dd45e5"
+    },
+    {
+      "path": ".agents/skills/huashu-design/demos/c2-slides-pptx.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 32975,
+      "mode": 420,
+      "sha256": "7008af7701cf515b681dff9b0d0141564cc72b1c7791f16d0b83f0268ba473c0"
+    },
+    {
+      "path": ".agents/skills/huashu-design/demos/c3-motion-design-en.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 37031,
+      "mode": 420,
+      "sha256": "3bc25588bcd75bc8e2fd695844301d68288012ae7a5e7b32bffe2eaeed476282"
+    },
+    {
+      "path": ".agents/skills/huashu-design/demos/c3-motion-design.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 37048,
+      "mode": 420,
+      "sha256": "e772e754e72b7a51894416703b56802df3d5dec76f0f23619825d23fddfc6608"
+    },
+    {
+      "path": ".agents/skills/huashu-design/demos/c4-tweaks-en.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 31102,
+      "mode": 420,
+      "sha256": "a483395b34252310f1222c7b1a5836fa296c0ca7746c0d1a356111af879bd698"
+    },
+    {
+      "path": ".agents/skills/huashu-design/demos/c4-tweaks.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 31150,
+      "mode": 420,
+      "sha256": "578fbbff7b635f8e5f1212a5cb9900135fb105cac4779c27d7359698ecdc79a0"
+    },
+    {
+      "path": ".agents/skills/huashu-design/demos/c5-infographic-en.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 24941,
+      "mode": 420,
+      "sha256": "c3db171ef0dd9475717569e10cd3cba54ea92893a38c1199a104768499015bec"
+    },
+    {
+      "path": ".agents/skills/huashu-design/demos/c5-infographic.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 24823,
+      "mode": 420,
+      "sha256": "9c48e3b670a6a3fab8c216e652b4906564c5663d39415e970305a18820b94ebb"
+    },
+    {
+      "path": ".agents/skills/huashu-design/demos/c6-expert-review-en.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 26382,
+      "mode": 420,
+      "sha256": "161a47b07ad00e5cea652ca1142a95a5cf175c2c5ab8adc609726a74f5edd745"
+    },
+    {
+      "path": ".agents/skills/huashu-design/demos/c6-expert-review.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 26822,
+      "mode": 420,
+      "sha256": "800cbf45ec3aebee7fb077dc7b9b2c7d871072fb5651cd534fed91d7a860188b"
+    },
+    {
+      "path": ".agents/skills/huashu-design/demos/hero-animation-v10-en.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 48712,
+      "mode": 420,
+      "sha256": "87d2f21994f2eb04981ef062f6cc21b0aa0e4bf4df565055166a1a1614414450"
+    },
+    {
+      "path": ".agents/skills/huashu-design/demos/md-html-narration",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".agents/skills/huashu-design/demos/md-html-narration/md-html-demo.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 37926,
+      "mode": 420,
+      "sha256": "345ca77334f1d92f8a30a0ae4906a0719152138b14746695a91a59564fc04a46"
+    },
+    {
+      "path": ".agents/skills/huashu-design/demos/md-html-narration/script.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 3452,
+      "mode": 420,
+      "sha256": "2e368457a248cf4ac1c03bbfe7ccb088097222b7528fd526e892579b478c5354"
+    },
+    {
+      "path": ".agents/skills/huashu-design/demos/voiceover-demo",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".agents/skills/huashu-design/demos/voiceover-demo/script.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 589,
+      "mode": 420,
+      "sha256": "99245dbda4b4d09716ae14aa6a8cea45865035d45b88d2c6519723f3f26cb7fa"
+    },
+    {
+      "path": ".agents/skills/huashu-design/demos/voiceover-demo/什么是令牌.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 11988,
+      "mode": 420,
+      "sha256": "f7efee54f6f8230718e5c0fa362ce3e9f717ddce6c248ad6301d9242c1e8b522"
+    },
+    {
+      "path": ".agents/skills/huashu-design/demos/w1-brand-protocol-en.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 20572,
+      "mode": 420,
+      "sha256": "9a1dffe8eed97be95330ef1cdff39c91580448866ed3b318d06c11c70d69cb38"
+    },
+    {
+      "path": ".agents/skills/huashu-design/demos/w1-brand-protocol.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 20905,
+      "mode": 420,
+      "sha256": "782fb54e99e80ec5e8d6fd151a8041520a1755e97cfe1675e566922391b47858"
+    },
+    {
+      "path": ".agents/skills/huashu-design/demos/w2-junior-designer-en.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 31305,
+      "mode": 420,
+      "sha256": "a559552ab5409879a35f71cf1dfe2c456f0527a50ba202fd0fd06f708fb04f5e"
+    },
+    {
+      "path": ".agents/skills/huashu-design/demos/w2-junior-designer.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 31764,
+      "mode": 420,
+      "sha256": "5d1639ddc29834181fcd4336d80534b9977c7e955a5f43bb85f6ed2674044a1b"
+    },
+    {
+      "path": ".agents/skills/huashu-design/demos/w3-fallback-advisor-en.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 23901,
+      "mode": 420,
+      "sha256": "17ff8414f7e58923e91ade4161325f143788ca1baf29a1bce05864d7ff2ff29d"
+    },
+    {
+      "path": ".agents/skills/huashu-design/demos/w3-fallback-advisor.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 26413,
+      "mode": 420,
+      "sha256": "2ec9e8ed6c897d7e196dca3d6820cf92f1bb9408ad80bc4b964d746102d4b09d"
+    },
+    {
+      "path": ".agents/skills/huashu-design/package-lock.json",
+      "kind": "file",
+      "excluded": false,
+      "size": 28566,
+      "mode": 420,
+      "sha256": "0c334005bfe0da4ad5fa1ea805a1d99d3290f636add29faa861c841ddaac6a69"
+    },
+    {
+      "path": ".agents/skills/huashu-design/package.json",
+      "kind": "file",
+      "excluded": false,
+      "size": 133,
+      "mode": 420,
+      "sha256": "144b28fbf3911f2969589bbddb3208bb02e98bfb33988723d33d3a724ad3b7d5"
+    },
+    {
+      "path": ".agents/skills/huashu-design/references",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".agents/skills/huashu-design/references/ai-video-review.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 4006,
+      "mode": 420,
+      "sha256": "4a76c1a3ac4f438844c2213b6435ebcf453a3718c1bd4a28c1ef154c62c335b2"
+    },
+    {
+      "path": ".agents/skills/huashu-design/references/animation-best-practices.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 22446,
+      "mode": 420,
+      "sha256": "347a751b3114199e52c2349c2ad6a00c619a5cee5f50cec114ded0d0fbdc9ffe"
+    },
+    {
+      "path": ".agents/skills/huashu-design/references/animation-pitfalls.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 30805,
+      "mode": 420,
+      "sha256": "10c897e79ec0e976ef0a622c6fc05147e996081c9a83b451770de97a80cd84d7"
+    },
+    {
+      "path": ".agents/skills/huashu-design/references/animations.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 7749,
+      "mode": 420,
+      "sha256": "8790b4580f182b082f8df8740fc09337c29ed323f5fd6ffc960fb158ae68ae98"
+    },
+    {
+      "path": ".agents/skills/huashu-design/references/app-prototype.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 9898,
+      "mode": 420,
+      "sha256": "e043075078adc2b7131129a9f50e69105e8c04ffdf29cdfad6643d2a1e87d1c8"
+    },
+    {
+      "path": ".agents/skills/huashu-design/references/apple-gallery-showcase.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 11311,
+      "mode": 420,
+      "sha256": "263847cc370e097d5ef31287556111de7d2098551dfc5b06641d7ea60fcf82ba"
+    },
+    {
+      "path": ".agents/skills/huashu-design/references/audio-design-rules.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 9613,
+      "mode": 420,
+      "sha256": "aa8c76e64100507b7f264a78b9408028935b2bdafe2bbde695ed4a49555a75a0"
+    },
+    {
+      "path": ".agents/skills/huashu-design/references/brand-asset-protocol.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 15418,
+      "mode": 420,
+      "sha256": "bc476983114f00057134d47b229fb4496a37bbac2fcbb4bf9f86139165e1528d"
+    },
+    {
+      "path": ".agents/skills/huashu-design/references/camera-language.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 23221,
+      "mode": 420,
+      "sha256": "17d9ec457df9920953588ffdd1fdff92c3679093cebd3b022b48861105563c71"
+    },
+    {
+      "path": ".agents/skills/huashu-design/references/cinematic-patterns.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 11086,
+      "mode": 420,
+      "sha256": "1266cb4feb14e44997b6abcc33091991565402ec6a7b22698628b31a4da472b8"
+    },
+    {
+      "path": ".agents/skills/huashu-design/references/content-guidelines.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 8389,
+      "mode": 420,
+      "sha256": "3c0bcf0e94b4f6cc64b11e871ba8d53607ad6ec7317f08dc3f7f5bb6708088a7"
+    },
+    {
+      "path": ".agents/skills/huashu-design/references/critique-guide.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 9022,
+      "mode": 420,
+      "sha256": "3636ed8422bb88a11bc3e1db00b252b707f20cf83f6ec900077abb020ff7a8ce"
+    },
+    {
+      "path": ".agents/skills/huashu-design/references/design-context.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 6704,
+      "mode": 420,
+      "sha256": "93a7e6be5f6cb29076d3651747d5033701362ddd03283b1ddf11b105757430b6"
+    },
+    {
+      "path": ".agents/skills/huashu-design/references/design-styles.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 62833,
+      "mode": 420,
+      "sha256": "f62aaa191b2feeced5c024de7008c87c18dd532af90193a3ae2756e944997d4d"
+    },
+    {
+      "path": ".agents/skills/huashu-design/references/editable-pptx.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 16950,
+      "mode": 420,
+      "sha256": "a077e135890087cd278e00dee84ed02c43a3d3ed33314fd0b8841095d338fee9"
+    },
+    {
+      "path": ".agents/skills/huashu-design/references/gsap-recipes.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 35591,
+      "mode": 420,
+      "sha256": "374f346aeab61192f497130f933424bd3a3850e2f68e03f73cd3fa81e058a33a"
+    },
+    {
+      "path": ".agents/skills/huashu-design/references/harness-deck.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 4707,
+      "mode": 420,
+      "sha256": "40f56871aef5551406c465510a7dc65e6475e65e8b53633610d2e639129f7ea3"
+    },
+    {
+      "path": ".agents/skills/huashu-design/references/hero-animation-case-study.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 11358,
+      "mode": 420,
+      "sha256": "7e2b6e2bdddf5e38cc4f8182c0085c6fa30ec711a23aa1b3bf3525316822ef84"
+    },
+    {
+      "path": ".agents/skills/huashu-design/references/hyperframes-backend.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 7459,
+      "mode": 420,
+      "sha256": "3a643f662a11fbd5aa4b0e0d4ce9658c432daabdae0e338b3a4ccd2fad6da65b"
+    },
+    {
+      "path": ".agents/skills/huashu-design/references/launch-film-director-notes.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 14886,
+      "mode": 420,
+      "sha256": "1cc8c18d693231c3b2438057a1fc43fd72edbf7f2a60eec548dad6903cd13338"
+    },
+    {
+      "path": ".agents/skills/huashu-design/references/multi-perspective-parallel-case-study.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 11093,
+      "mode": 420,
+      "sha256": "e1f80cc2e3e12d04405f897f3da49b371dbc7782c5ba23152a956c2780e738da"
+    },
+    {
+      "path": ".agents/skills/huashu-design/references/pptx-from-rendered-html.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 9571,
+      "mode": 420,
+      "sha256": "da8318b5566a6ee586615b7f3b33766c3abe11f0bfe87acec3e10bbcf88c80d3"
+    },
+    {
+      "path": ".agents/skills/huashu-design/references/react-setup.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 8863,
+      "mode": 420,
+      "sha256": "80477b0bf1a473eef5626ef27a6f4453f3a0ad358692de74e406cbd057a3f132"
+    },
+    {
+      "path": ".agents/skills/huashu-design/references/scene-templates.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 7144,
+      "mode": 420,
+      "sha256": "c91852062d923787896076368fff883bed2eb8b53087f1efdc2f81ed3014a314"
+    },
+    {
+      "path": ".agents/skills/huashu-design/references/sfx-library.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 9790,
+      "mode": 420,
+      "sha256": "e18b1ae71acd1104657bc594628829977c66e6b5a0d2a399fdc65a98aa461c13"
+    },
+    {
+      "path": ".agents/skills/huashu-design/references/slide-decks.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 36205,
+      "mode": 420,
+      "sha256": "ba6df513a1d11d66e74deef871e5019c212e45c731b2002ecdb016fc751d4413"
+    },
+    {
+      "path": ".agents/skills/huashu-design/references/storyboard-basics.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 23987,
+      "mode": 420,
+      "sha256": "b8775952ae96bbe3e99f080520896fa9d853d324733c771da5f45da865b6f884"
+    },
+    {
+      "path": ".agents/skills/huashu-design/references/tweaks-system.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 9015,
+      "mode": 420,
+      "sha256": "88569174eaa1d790e5f261a287e44ea39f6b8bce926493d21ad5ff4e7c2ef441"
+    },
+    {
+      "path": ".agents/skills/huashu-design/references/typography.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 18348,
+      "mode": 420,
+      "sha256": "5fbf83b9a916a986d873b6950c2f2e3aeebc0192bdb2a89bcf56d84dc4915e51"
+    },
+    {
+      "path": ".agents/skills/huashu-design/references/ui-demo-animation.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 29109,
+      "mode": 420,
+      "sha256": "38a2b52ad03d97442757016f1ef2c4c439d4f3e9f234cdce81cacc6fb60a894c"
+    },
+    {
+      "path": ".agents/skills/huashu-design/references/verification.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 6967,
+      "mode": 420,
+      "sha256": "1625e5488872d3b42bd678f029e2142b16f55529df7282b4dcf2b77c2a4de784"
+    },
+    {
+      "path": ".agents/skills/huashu-design/references/video-export.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 11527,
+      "mode": 420,
+      "sha256": "7ed97faa22b49f407c61a482eddb3b30a7463c3e5e491e5a4b2bcb48ad7929f6"
+    },
+    {
+      "path": ".agents/skills/huashu-design/references/voiceover-pipeline.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 20121,
+      "mode": 420,
+      "sha256": "c8e992779eb3de74b7c46c195a46dd716ee922def7ea5f9e19beef814834e756"
+    },
+    {
+      "path": ".agents/skills/huashu-design/references/workflow.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 7090,
+      "mode": 420,
+      "sha256": "57c032774cb789949bb5ef5840cefc137f31573cc2449fc8f699a794bf40d4ee"
+    },
+    {
+      "path": ".agents/skills/huashu-design/scripts",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".agents/skills/huashu-design/scripts/add-music.sh",
+      "kind": "file",
+      "excluded": false,
+      "size": 4146,
+      "mode": 420,
+      "sha256": "ad59e18e0e87fc987e60d1cad6c4f0da97b76144035faa480af2e82c69da48ce"
+    },
+    {
+      "path": ".agents/skills/huashu-design/scripts/cloud",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".agents/skills/huashu-design/scripts/cloud/ai-review-video.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 20433,
+      "mode": 420,
+      "sha256": "c882682ab99a3d61b1955240b2d386363893a0cc65e4c6930bc27857d33d2560"
+    },
+    {
+      "path": ".agents/skills/huashu-design/scripts/cloud/tts-doubao.mjs",
+      "kind": "file",
+      "excluded": false,
+      "size": 10071,
+      "mode": 420,
+      "sha256": "8ddc9980b76a60deaf057b732d80d187382ddd9188d9d673ebd9e35c461a0015"
+    },
+    {
+      "path": ".agents/skills/huashu-design/scripts/convert-formats.sh",
+      "kind": "file",
+      "excluded": false,
+      "size": 3000,
+      "mode": 420,
+      "sha256": "4fdf469a1f1c44b40858cea8484d92fcae48096de1dedc3d4b9d640b5026277b"
+    },
+    {
+      "path": ".agents/skills/huashu-design/scripts/design-gate-hook.sh",
+      "kind": "file",
+      "excluded": false,
+      "size": 3459,
+      "mode": 420,
+      "sha256": "e8f255791e1475202f84aa6ac9589cf5790aa3cb0afe6f294237099583a8c42b"
+    },
+    {
+      "path": ".agents/skills/huashu-design/scripts/export_deck_pdf.mjs",
+      "kind": "file",
+      "excluded": false,
+      "size": 3219,
+      "mode": 420,
+      "sha256": "33b9f7b5c95543b6ac025a214b80ba349455697499fcc0561e6bcbafc483acd8"
+    },
+    {
+      "path": ".agents/skills/huashu-design/scripts/export_deck_pptx.mjs",
+      "kind": "file",
+      "excluded": false,
+      "size": 3800,
+      "mode": 420,
+      "sha256": "6e4ede89ff4915ed9bdd26b82a86834e2c32e583faf1659b80915867668b9def"
+    },
+    {
+      "path": ".agents/skills/huashu-design/scripts/export_deck_stage_pdf.mjs",
+      "kind": "file",
+      "excluded": false,
+      "size": 4791,
+      "mode": 420,
+      "sha256": "e8f55efe207031cb9643f6af8a28de02f74211d231023b968ebd6fd46643d8aa"
+    },
+    {
+      "path": ".agents/skills/huashu-design/scripts/fetch_images.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 4442,
+      "mode": 420,
+      "sha256": "6bb273e785513c965a14445a2daaabbf9afc38f1dd93802c28a35374c53def89"
+    },
+    {
+      "path": ".agents/skills/huashu-design/scripts/gen_deck_thumbs.mjs",
+      "kind": "file",
+      "excluded": false,
+      "size": 3047,
+      "mode": 420,
+      "sha256": "896282ebc9bb01214f39db232cf03dbb200c0d01f354bd2b83a44f3164e47b8c"
+    },
+    {
+      "path": ".agents/skills/huashu-design/scripts/html2pptx.js",
+      "kind": "file",
+      "excluded": false,
+      "size": 46391,
+      "mode": 420,
+      "sha256": "e754ea8a692db0754a09af8be0a81b93ce6f420518f141b9a58ec7aef364227c"
+    },
+    {
+      "path": ".agents/skills/huashu-design/scripts/mix-voiceover.sh",
+      "kind": "file",
+      "excluded": false,
+      "size": 4461,
+      "mode": 420,
+      "sha256": "6d3b5dfcf874593b9b7b82147a44e72e40077608f23ff4a3d4429e53c9cac1aa"
+    },
+    {
+      "path": ".agents/skills/huashu-design/scripts/narrate-pipeline.mjs",
+      "kind": "file",
+      "excluded": false,
+      "size": 12530,
+      "mode": 420,
+      "sha256": "5b387544314c9f6374de7399a23b6692b77333e53a8fb4e2d892e2ae6e836a14"
+    },
+    {
+      "path": ".agents/skills/huashu-design/scripts/pptx_from_rendered.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 25341,
+      "mode": 420,
+      "sha256": "893e0216d984bdc514ad6cbf1647a9679c4abe97c34c232b3ded0fa8d46dd20b"
+    },
+    {
+      "path": ".agents/skills/huashu-design/scripts/render-narration.sh",
+      "kind": "file",
+      "excluded": false,
+      "size": 5425,
+      "mode": 420,
+      "sha256": "30703fff8de2f7d94ceb0714dd8ce3c712ff1b7f5dd9803d41bcdc1c6a0330b2"
+    },
+    {
+      "path": ".agents/skills/huashu-design/scripts/render-video-seek.js",
+      "kind": "file",
+      "excluded": false,
+      "size": 9793,
+      "mode": 420,
+      "sha256": "376f7f2f680a8c2cf573ae915f2f9b42451d1ca75de879b18f697eef43df3a39"
+    },
+    {
+      "path": ".agents/skills/huashu-design/scripts/render-video.js",
+      "kind": "file",
+      "excluded": false,
+      "size": 12308,
+      "mode": 420,
+      "sha256": "7f8f6981b53f54914ada55cd7f02dd3a7d99608067e1898f4e81285a846668c2"
+    },
+    {
+      "path": ".agents/skills/huashu-design/scripts/sfx-cues.sh",
+      "kind": "file",
+      "excluded": false,
+      "size": 1628,
+      "mode": 420,
+      "sha256": "842cda4237dd88d84b4de634bf23507ec01aacb621ce5f6ac17e2a1c60857244"
+    },
+    {
+      "path": ".agents/skills/huashu-design/scripts/verify-video.sh",
+      "kind": "file",
+      "excluded": false,
+      "size": 4996,
+      "mode": 420,
+      "sha256": "cd7cf69f282f19dede1cd5aeae9c829a44b587f86f9518a51343dba264a81d85"
+    },
+    {
+      "path": ".agents/skills/huashu-design/scripts/verify.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 5451,
+      "mode": 420,
+      "sha256": "7a0a3243f51a1c816944a948a5caba239c63c9890327a60d80934d493153e9e4"
+    },
+    {
+      "path": ".agents/skills/huashu-design/test-prompts.json",
+      "kind": "file",
+      "excluded": false,
+      "size": 2760,
+      "mode": 420,
+      "sha256": "1b09dd756a0c3673b9f0b2fd8a83ce04fa21095af3d2b522e364285b3775ea68"
+    },
+    {
+      "path": ".agents/skills/independent-review",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".agents/skills/independent-review/SKILL.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 12013,
+      "mode": 420,
+      "sha256": "cc84951ae240186ddc6776e288883535cc5ac82351677d1518ea5cd4536a1bc7"
+    },
+    {
+      "path": ".agents/skills/independent-review/references",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".agents/skills/independent-review/references/增量报告协议.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 6519,
+      "mode": 420,
+      "sha256": "c6f52f879eace7d99689e6df3e916427ce59ac2fa5d99aed574ba604e8142d97"
+    },
+    {
+      "path": ".agents/skills/independent-review/templates",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".agents/skills/independent-review/templates/增量报告.json",
+      "kind": "file",
+      "excluded": false,
+      "size": 272,
+      "mode": 420,
+      "sha256": "9aaf5a35a6afc986b95bb1f803cc555d96d21d734fd6bff4929173dea01fd093"
+    },
+    {
+      "path": ".agents/skills/knowledge-connectors",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".agents/skills/knowledge-connectors/SKILL.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 3283,
+      "mode": 420,
+      "sha256": "174af162abb11d1a44f3a66fa03eb140d9f82d8688b6cce4785a7a34286424f4"
+    },
+    {
+      "path": ".agents/skills/project-control",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".agents/skills/project-control/SKILL.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 21604,
+      "mode": 420,
+      "sha256": "728993d2ac707ff798a198bc8bd6642d159cb71748fe803203a0a6fe9ba45e20"
+    },
+    {
+      "path": ".agents/skills/project-import-template",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".agents/skills/project-import-template/SKILL.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 4545,
+      "mode": 420,
+      "sha256": "a3ac92e387009486999393eee3aa2049d39e0e9da34ccefeb1c8c0a425e43543"
+    },
+    {
+      "path": ".agents/skills/project-import-template/assets",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".agents/skills/project-import-template/assets/openclaw-gantt-import-template.xlsx",
+      "kind": "file",
+      "excluded": false,
+      "size": 14928,
+      "mode": 420,
+      "sha256": "ae3c8d041ff8aa9a2fcc48a7ceb32d2c0b7e54950b4a307a132b7e19f5a0d59d"
+    },
+    {
+      "path": ".agents/skills/proposal-script",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".agents/skills/proposal-script/SKILL.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 11327,
+      "mode": 420,
+      "sha256": "bbb99208e5ee1ea84a56ac9ab181521fc78a11a8f3419ee07f49970a813d6bab"
+    },
+    {
+      "path": ".agents/skills/research-evidence",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".agents/skills/research-evidence/SKILL.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 13748,
+      "mode": 420,
+      "sha256": "b7f557c4e80611ef88d7529b93e90e998d491da5921ec68ff7d7cb4d57f592cd"
+    },
+    {
+      "path": ".agents/skills/research-evidence/references",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".agents/skills/research-evidence/references/调研情境验收.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 6445,
+      "mode": 420,
+      "sha256": "ae97af294f5346ab57f755476d118daec40a63161759a1fd6d912776e8c5cb38"
+    },
+    {
+      "path": ".agents/skills/research-evidence/references/资料核验.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 3865,
+      "mode": 420,
+      "sha256": "0cd0f748bfbbd53ec10c1069b278424e2f419ce1c0c88444bcf9ebf7416a973a"
+    },
+    {
+      "path": ".agents/skills/task-brief",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".agents/skills/task-brief/SKILL.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 10848,
+      "mode": 420,
+      "sha256": "1e8c8dbc2a88125c542eefcac6bf5575a098335d1d3862701e981213fcdd2103"
+    },
+    {
+      "path": ".agents/skills/version-impact",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".agents/skills/version-impact/SKILL.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 7919,
+      "mode": 420,
+      "sha256": "7e371853b7b76730b3993906081b18ce9ff6788107fdb994b22c50edbb98e1dc"
+    },
+    {
+      "path": ".agents/skills/方法来源.json",
+      "kind": "file",
+      "excluded": false,
+      "size": 2851,
+      "mode": 420,
+      "sha256": "ee4ec6982686a6bafeef63f7e6dcd02be429b9fe58d8db42d61c46cffa1c2f0e"
+    },
+    {
+      "path": ".claude",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".claude/agents",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".claude/agents/deck-builder.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 7136,
+      "mode": 420,
+      "sha256": "62e0ce452c6483af408667bcc1ff4c7b362006334f103b1a71a46963d301fe1f"
+    },
+    {
+      "path": ".claude/agents/design-expression-reviewer.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 4574,
+      "mode": 420,
+      "sha256": "efe0a112d9d758efe0e7b64715e21c10d4cb344485b634f12e63a31ae419d425"
+    },
+    {
+      "path": ".claude/agents/independent-reviewer.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 9734,
+      "mode": 420,
+      "sha256": "2cfaf034b799d300206da6226cdf8e593eded41839193a78dda634c2c76cc733"
+    },
+    {
+      "path": ".claude/agents/project-controller.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 17564,
+      "mode": 420,
+      "sha256": "b9018507d1af4894fdc95dadafa85449e9a88aeeea79c1fd90762dc731d0a66f"
+    },
+    {
+      "path": ".claude/agents/proposal-author.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 4664,
+      "mode": 420,
+      "sha256": "3d68224566ac0dcdac4f258c68d913566d8ff6e867e9c230fceed12aa0e37791"
+    },
+    {
+      "path": ".claude/agents/strategy-author.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 4039,
+      "mode": 420,
+      "sha256": "9769ef07e8e76eff2d75d578ce21ae5f441545b37af5c1fd3f43978ad73c027f"
+    },
+    {
+      "path": ".claude/hooks",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".claude/hooks/validate-project.sh",
+      "kind": "file",
+      "excluded": false,
+      "size": 2159,
+      "mode": 420,
+      "sha256": "87ba4b8ce23cba022e1b90d4c8c7fc51701beddaa9a3b0171c9030797521d47d"
+    },
+    {
+      "path": ".claude/settings.json",
+      "kind": "file",
+      "excluded": false,
+      "size": 342,
+      "mode": 420,
+      "sha256": "0f72f9b7bab3842375ec19ec5f5a3dce6e04abb4e4e38c6e8a615480cdb76e00"
+    },
+    {
+      "path": ".claude/skills",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".claude/skills/README.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 3368,
+      "mode": 420,
+      "sha256": "f3e8e0bfde2e97724406e1cc354a330d55633bf8b10e173030ab3e99703629dd"
+    },
+    {
+      "path": ".claude/skills/brand-house",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".claude/skills/brand-house/SKILL.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 10746,
+      "mode": 420,
+      "sha256": "e9d52df45c402a640bf0305024f3c6462d375406e7fd60106fa8f38c4700ec9e"
+    },
+    {
+      "path": ".claude/skills/contract-schedule",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".claude/skills/contract-schedule/SKILL.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 4642,
+      "mode": 420,
+      "sha256": "2d1fd5cb4788c152ffabdf756f30e9fad9825338cb7e0ccd12884a9ddb5d438f"
+    },
+    {
+      "path": ".claude/skills/design-expression-review",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".claude/skills/design-expression-review/SKILL.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 8399,
+      "mode": 420,
+      "sha256": "2e1cdec8d27870aaa81c53023c3f3c721f62b4557b09d81da02861a15d166dab"
+    },
+    {
+      "path": ".claude/skills/editable-brand-house",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".claude/skills/editable-brand-house/SKILL.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 8762,
+      "mode": 420,
+      "sha256": "93f91768c34a865dcb980299b74b810d247006356a26ec611de2b36973dd0ced"
+    },
+    {
+      "path": ".claude/skills/html-deck",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".claude/skills/html-deck/SKILL.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 17864,
+      "mode": 420,
+      "sha256": "5a4a90590787262a132131a420cc20617b12b03a1681a93010b1fbec3557879d"
+    },
+    {
+      "path": ".claude/skills/html-deck/references",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".claude/skills/html-deck/references/page-plan.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 3759,
+      "mode": 420,
+      "sha256": "b84a2fbb848e22704c7adcc303a71f4129a048a957e3e81cc71ab58462a95e2f"
+    },
+    {
+      "path": ".claude/skills/huashu-design",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".claude/skills/huashu-design/.gitignore",
+      "kind": "file",
+      "excluded": false,
+      "size": 844,
+      "mode": 420,
+      "sha256": "c263d044826b41803d8fe9f04ec74b6d43dfed469fa1a5cd51131cffa157292e"
+    },
+    {
+      "path": ".claude/skills/huashu-design/LICENSE",
+      "kind": "file",
+      "excluded": false,
+      "size": 1086,
+      "mode": 420,
+      "sha256": "6d6a2a9caf2e6d2b76974050427053b2892d8aa4c33fd168ce63a537fcee9d96"
+    },
+    {
+      "path": ".claude/skills/huashu-design/README.en.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 18704,
+      "mode": 420,
+      "sha256": "570e517364e3d4dc76c866cbc3b29023e2cdc421f237a993312c3f673326d448"
+    },
+    {
+      "path": ".claude/skills/huashu-design/README.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 19671,
+      "mode": 420,
+      "sha256": "a443fc390ef0d06740b80ec1e2aead415a992bd197f0fdbf191ae26523b69739"
+    },
+    {
+      "path": ".claude/skills/huashu-design/SECURITY.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 5247,
+      "mode": 420,
+      "sha256": "612afd82f0a1947b0fd94775fb34c311fc01064d27cbf9b3d1123a1ce20387bb"
+    },
+    {
+      "path": ".claude/skills/huashu-design/SKILL.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 4551,
+      "mode": 420,
+      "sha256": "e144b9ef5601b7f03df0f2cab82c1161368bd7a096c632f007a97e854b48434e"
+    },
+    {
+      "path": ".claude/skills/huashu-design/SOURCE.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 2410,
+      "mode": 420,
+      "sha256": "876e5bc57fb7b47561817acad9a73e78e8e6b0f36a2bbe055890ea696a65431b"
+    },
+    {
+      "path": ".claude/skills/huashu-design/UPSTREAM.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 65159,
+      "mode": 420,
+      "sha256": "c2385d6f9349263aea2d7fbf8712ec170105d4d4af5ca1375f2b6db77d63d4cd"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/android_frame.jsx",
+      "kind": "file",
+      "excluded": false,
+      "size": 4506,
+      "mode": 420,
+      "sha256": "8c1c951518e5f0d39c07212d0bb9e8f1b5363b4ad4d1f903dca26d6a485e08bf"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/animations.jsx",
+      "kind": "file",
+      "excluded": false,
+      "size": 10528,
+      "mode": 420,
+      "sha256": "5cbb50b6d0c78af36678d13e47df363aec6c6e7d011131f503c1f99d45158b9d"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/banner.svg",
+      "kind": "file",
+      "excluded": false,
+      "size": 9502,
+      "mode": 420,
+      "sha256": "d8660a8e0cd300a773b21308b651ffdd4258ecdc723505724216e47425016b05"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/bgm-ad.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 4950071,
+      "mode": 420,
+      "sha256": "538e4dbf911afd6c6502e8ea008e994f2f6c5219cd498dbda4053f02f0b7dd95"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/bgm-educational-alt.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 4468765,
+      "mode": 420,
+      "sha256": "e100757b60afa69ffd6200012dcaba3d7c2c55e8f543cc25c1765ce59e795f46"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/bgm-educational.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 4047162,
+      "mode": 420,
+      "sha256": "f4d7fa4d6f612c92bbac39706757b331a333dc5ca125aff5f8d3c36b5903ebd3"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/bgm-tech.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 4818429,
+      "mode": 420,
+      "sha256": "37f55c71ef0aea6312efb8c735ecbf028b06219b42cc265bddc482d7b4adc2e9"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/bgm-tutorial-alt.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 3937926,
+      "mode": 420,
+      "sha256": "ead7cefd527b3fee1ef4c83c82b284690717c89b6aeb4ece4b91603059a7bd3c"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/bgm-tutorial.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 5542744,
+      "mode": 420,
+      "sha256": "2a49275922e2e197109d5c9969e6832e09f4c140da1edde22aa508fcddb9a46b"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/browser_window.jsx",
+      "kind": "file",
+      "excluded": false,
+      "size": 3975,
+      "mode": 420,
+      "sha256": "59e412322a5ca34d68716978b4e1147efc95ba65f6fd4d4a99abcc96909f7d55"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/cursor.jsx",
+      "kind": "file",
+      "excluded": false,
+      "size": 14408,
+      "mode": 420,
+      "sha256": "6321767cf44d7b95aeb2eeef756fc45d44e53985dc060f8e1c8805bb5f8e45a4"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/deck_index.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 21320,
+      "mode": 420,
+      "sha256": "83d63a9ed531fb4f4a7b47c23c13024cb0b1831ab4883fc902bda351724c6820"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/deck_stage.js",
+      "kind": "file",
+      "excluded": false,
+      "size": 11678,
+      "mode": 420,
+      "sha256": "a7a2af14c2f8001d2c7e2590dacbf8110b38b37da7b82cbce12382286e8ed6cf"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/design_canvas.jsx",
+      "kind": "file",
+      "excluded": false,
+      "size": 5195,
+      "mode": 420,
+      "sha256": "5376c8ebdc59ec8b969161cb815d9455ccd233e6d6baa0d49f8af337883ed3d6"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/director-notes-samples",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/director-notes-samples/launch-film-30s-sample.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 80207,
+      "mode": 420,
+      "sha256": "92929cba00fee525a70cbe3cd3f6e7b4d2ca7afb9a91a707721cfce9b34b92cd"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/ios_frame.jsx",
+      "kind": "file",
+      "excluded": false,
+      "size": 4753,
+      "mode": 420,
+      "sha256": "e19b4dd028aed54f8c20cea8b070c349e89f2ebcb9ff6b29fd37a9b2381789bd"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/macos_window.jsx",
+      "kind": "file",
+      "excluded": false,
+      "size": 2536,
+      "mode": 420,
+      "sha256": "ebe16aea22d9421dc64b649c4c6f985545abf976fdcd525f16dc010235c87b96"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/narration_stage.jsx",
+      "kind": "file",
+      "excluded": false,
+      "size": 20715,
+      "mode": 420,
+      "sha256": "a60a6421e26ca6b6d20feed7233873e1c19dea47bb00e60be3c686c3fa596bef"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/personal-asset-index.example.json",
+      "kind": "file",
+      "excluded": false,
+      "size": 1963,
+      "mode": 420,
+      "sha256": "8aa16638f63a24cdbaaa03a28c45d5c44b2360d5abb45d3178a65bcfb210e905"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/sfx",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/sfx/container",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/sfx/container/card-flip.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 12164,
+      "mode": 420,
+      "sha256": "346cc1953650959216780ba6e167ce5819f9cf87fa6e01c170249f2f941d5b59"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/sfx/container/card-snap.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 8821,
+      "mode": 420,
+      "sha256": "0870f1b9c0e1d7457f12a9204d627b8e1755b449d6299022edc304f3feb60b7b"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/sfx/container/modal-open.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 10493,
+      "mode": 420,
+      "sha256": "5a493c07db344478e1c69821bacabdc9fe3ed1e9743afc2c7c4a1ead328f7cdd"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/sfx/container/stack-collapse.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 13836,
+      "mode": 420,
+      "sha256": "69f5f5764251c5e08c2700561caf5df668aead8d411375e13a6a072b631692df"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/sfx/feedback",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/sfx/feedback/achievement.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 24703,
+      "mode": 420,
+      "sha256": "b8fb9d8806d6bde21c8a2a9d78f751fa79ddfb82fe09a5e5c49e069c14cdc754"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/sfx/feedback/error-tone.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 12164,
+      "mode": 420,
+      "sha256": "a85727f1afe67c948e5246e17ebfb5c144db9d5ccb414e4fa1011563230541c6"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/sfx/feedback/notification-pop.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 10493,
+      "mode": 420,
+      "sha256": "e455a187df06e7e0b9b51d1722ddcf225abaa704cb0d0b7fd2d56eb7d0b3ace5"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/sfx/feedback/success-chime.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 17180,
+      "mode": 420,
+      "sha256": "95a1aa98d046f08d412e59d50ea00d955f486964ea4368537e2754eb2313502c"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/sfx/impact",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/sfx/impact/brand-stamp.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 17180,
+      "mode": 420,
+      "sha256": "2fd4d6fe3df413d6c19dbd3da93f39df93b30c31eb106dc000a36f7dc6737ab7"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/sfx/impact/drop-thud.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 12164,
+      "mode": 420,
+      "sha256": "57ba7f12272a258e02280ec6839c00980ebe6b7e800080c899c9c03787bffc40"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/sfx/impact/logo-reveal-v2.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 24703,
+      "mode": 420,
+      "sha256": "7fe974ee3267ff30071dfa03722da448600e4834d79a5451377b187ecf88241b"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/sfx/impact/logo-reveal.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 24703,
+      "mode": 420,
+      "sha256": "7fe974ee3267ff30071dfa03722da448600e4834d79a5451377b187ecf88241b"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/sfx/keyboard",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/sfx/keyboard/delete-key.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 8821,
+      "mode": 420,
+      "sha256": "a554ca3a23535ea62da265b35ec9542299aafaa1c0334adf432b02b40a67e0da"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/sfx/keyboard/enter.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 8821,
+      "mode": 420,
+      "sha256": "f97e86cfb43f04900e43c771dee38f777e48ddd86a00389e3dd1e4d98c7f496b"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/sfx/keyboard/space-tap.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 8821,
+      "mode": 420,
+      "sha256": "b138014934488629241fb7132e99ea850c34b1865d712bc3c67de5962e6fc411"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/sfx/keyboard/type-fast.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 24703,
+      "mode": 420,
+      "sha256": "bc2dcab144e81b08f4b6e1a0d482f2497d2da4d9975d6e354e8396c02ae9cc8d"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/sfx/keyboard/type.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 13836,
+      "mode": 420,
+      "sha256": "5a5850c157fd7b7ab54c722399a3e1c3d3214667bdb68ba40003aa036adcb879"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/sfx/magic",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/sfx/magic/ai-process.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 20106,
+      "mode": 420,
+      "sha256": "600d06dcaa8eeb18226bbd37bb354c8ea323debc5d9edc021137533f29847901"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/sfx/magic/sparkle.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 13836,
+      "mode": 420,
+      "sha256": "e2a23a322d5e1d973f1e5df406ec754c1543a53b1ea1ce3ec54b632b254e0743"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/sfx/magic/transform.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 17180,
+      "mode": 420,
+      "sha256": "835c037a1390b18118e04d4915256958b2bf8bf8196a726aea9ec81fbf629a04"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/sfx/progress",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/sfx/progress/complete-done.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 13836,
+      "mode": 420,
+      "sha256": "1e43d66e8c9da873e942f5f71d4eebce3decf71a581c17be12c4997ec6434c0d"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/sfx/progress/generate-start.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 13836,
+      "mode": 420,
+      "sha256": "88b9599e41334ec21e1cc8ceb89f2b7209a2526bc81cd891f0c49a64301379d2"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/sfx/progress/loading-tick.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 8821,
+      "mode": 420,
+      "sha256": "72dba49889cbe89903865502476d19abf0a6b51b9b6c21eabc62bc1a278e0a46"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/sfx/terminal",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/sfx/terminal/command-execute.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 8821,
+      "mode": 420,
+      "sha256": "d47b1cb64682b7e6fe005ed87a65f454948f4a7e6d4d4acd848a5b8d7a5a3cf1"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/sfx/terminal/cursor-blink.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 8821,
+      "mode": 420,
+      "sha256": "bb0d13bdf7bc476e9e9ba20afb6643e7b868bbe41c7b82a670f6133e5ab91b66"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/sfx/terminal/output-appear.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 10493,
+      "mode": 420,
+      "sha256": "c55596314afe8130a9e06a9698fbea2db4c66052a3608e75d2a6b9da53bb3637"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/sfx/transition",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/sfx/transition/dissolve.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 13836,
+      "mode": 420,
+      "sha256": "39e8c79015f98aa3c3b251fa289d0d154cf9264d8edcc16d323a02912c9a2e72"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/sfx/transition/slide-in.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 10493,
+      "mode": 420,
+      "sha256": "f0050b0c649306fd900fd4fd90db0472f0fc58e250821fd6ed877a6cea0f8dc8"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/sfx/transition/swipe-horizontal.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 12164,
+      "mode": 420,
+      "sha256": "b8da68f93a57e8cc27bf62ec796991d3c459d09a2c8cf342755bb97bfb143eff"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/sfx/transition/whoosh-fast.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 8821,
+      "mode": 420,
+      "sha256": "941f258f25c3dd7bd9d381e65d8ece7556eb4b666360c99f7adb4ccd0c15637e"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/sfx/transition/whoosh.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 10493,
+      "mode": 420,
+      "sha256": "6a665acf18881c9b70288676929491584a0b99471fbebb1962cf91925daded43"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/sfx/ui",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/sfx/ui/click-soft.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 8821,
+      "mode": 420,
+      "sha256": "48ab6362e64156c8a907b7705608eaa484494e878eaa4fae77ad32f703990bf3"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/sfx/ui/click.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 8821,
+      "mode": 420,
+      "sha256": "c3acef5b24b47c6895bf4d74c3b47d9b25cf3b63e0db81303dcd6fe9d7bb9560"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/sfx/ui/focus.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 8821,
+      "mode": 420,
+      "sha256": "6c395c13bbf4eaa99d6434c3cb96622990e840d3cebe7c539626117aba74b936"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/sfx/ui/hover-subtle.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 8821,
+      "mode": 420,
+      "sha256": "565ef4d0d8dfcdc6696ef57ec142fffb90ef980f24af753cbe3a1f8ca807e57a"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/sfx/ui/tap-finger.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 8821,
+      "mode": 420,
+      "sha256": "abe259fac618b97e28463122cda1ffc739649815da346b5ed279fd617f28a3c3"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/sfx/ui/toggle-on.mp3",
+      "kind": "file",
+      "excluded": false,
+      "size": 8821,
+      "mode": 420,
+      "sha256": "5cb28331ecc00dc18386808ad3502f712af2b617ac7fec1748674209c98c5c7c"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/showcases",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/showcases/INDEX.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 5538,
+      "mode": 420,
+      "sha256": "576c8c1c6ca508e074337a9bcc001615c72ab7bf13611421ff2b13007fd970f9"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/showcases/cover",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/showcases/cover/cover-build.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 5664,
+      "mode": 420,
+      "sha256": "9d35f6687f3cac442dd5d8e2e5ed431d7d3d70b17b60dc44eefecdb3f4d84cd9"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/showcases/cover/cover-build.png",
+      "kind": "file",
+      "excluded": false,
+      "size": 116336,
+      "mode": 420,
+      "sha256": "a5494a78ae0e6b7553a961fcd830a817cc75c6d9c85e5f5a714b42f74b587824"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/showcases/cover/cover-pentagram.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 4914,
+      "mode": 420,
+      "sha256": "8480a08fe2231822e6236c0aad41741faece30a5bf0059f9fece76ef0190dfec"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/showcases/cover/cover-pentagram.png",
+      "kind": "file",
+      "excluded": false,
+      "size": 36047,
+      "mode": 420,
+      "sha256": "d8482c018e4bb15957f95eb0d5f349a318fbd223d5e62d728f667351244bae92"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/showcases/cover/cover-takram.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 11823,
+      "mode": 420,
+      "sha256": "c8436fb562d34a76931bc936bcbd907be2d29ea33b476d306b3a80b5c9594b1b"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/showcases/cover/cover-takram.png",
+      "kind": "file",
+      "excluded": false,
+      "size": 155362,
+      "mode": 420,
+      "sha256": "8aa520e057fd5acf7030db6568dd10b493c898f175d7f7d71836b66e30ca6817"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/showcases/infographic",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/showcases/infographic/infographic-build.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 11696,
+      "mode": 420,
+      "sha256": "b69e1cad7ca1db69c0b2498ceec55ef4746fc23c4288169a41c497dbc1321234"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/showcases/infographic/infographic-build.png",
+      "kind": "file",
+      "excluded": false,
+      "size": 108710,
+      "mode": 420,
+      "sha256": "fa9afbfdf559ed0c541f8dc77aedd3796a7a98dcbb75ad2c6e2ac0121f0c0c1b"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/showcases/infographic/infographic-pentagram.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 13911,
+      "mode": 420,
+      "sha256": "c427b9c5fd351463caac85445c0bef83d702ab39e54407bc6ae6a3f93c04b632"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/showcases/infographic/infographic-pentagram.png",
+      "kind": "file",
+      "excluded": false,
+      "size": 159021,
+      "mode": 420,
+      "sha256": "15692b204e9f7ead259983441476e69a12a8f65aa81f72d9ec0619b5cbeccc17"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/showcases/infographic/infographic-takram.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 22396,
+      "mode": 420,
+      "sha256": "3a6f65940c847186f881101b6958d822880bdad81a39c8121653c756cc37b8ee"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/showcases/infographic/infographic-takram.png",
+      "kind": "file",
+      "excluded": false,
+      "size": 162976,
+      "mode": 420,
+      "sha256": "5eba3094dd2a860083c150665772c7d96a5bf93a47f3cfbe5d797f51989ae3ea"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/showcases/ppt",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/showcases/ppt/ppt-build.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 9083,
+      "mode": 420,
+      "sha256": "8140f3860e039ea18f090c53b32b2bebcd926de56a6e099250d4aced66ef45f8"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/showcases/ppt/ppt-build.png",
+      "kind": "file",
+      "excluded": false,
+      "size": 84423,
+      "mode": 420,
+      "sha256": "6aa21e66a1077e24521939dd3bfbf907a7ed6266a40870cd925ee1a03e2b3c69"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/showcases/ppt/ppt-pentagram.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 11955,
+      "mode": 420,
+      "sha256": "a4b9461533cdd58e339235f4dad9396a47a389f84f1f19a72d230409d1ef8b1a"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/showcases/ppt/ppt-pentagram.png",
+      "kind": "file",
+      "excluded": false,
+      "size": 101335,
+      "mode": 420,
+      "sha256": "e426bd70703fd6557772006c8db84a6230eab154d1ec6730b9069a327547c7bf"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/showcases/ppt/ppt-takram.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 15656,
+      "mode": 420,
+      "sha256": "77273fcb09a128d9fe9ef41ba38ee90ae3474640614c591ac645b5ba83812ff6"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/showcases/ppt/ppt-takram.png",
+      "kind": "file",
+      "excluded": false,
+      "size": 467187,
+      "mode": 420,
+      "sha256": "88bc00e535912eb9bd7d22dc50c9b737704ae81a257af0d3d9273847f3816a2c"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/showcases/website-ai-nav",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/showcases/website-ai-nav/ainav-build.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 9621,
+      "mode": 420,
+      "sha256": "9ad1fe678e9ba0fcc6fb7753d07f141b17e9fd27c72225b59521f63e841c9fed"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/showcases/website-ai-nav/ainav-build.png",
+      "kind": "file",
+      "excluded": false,
+      "size": 85064,
+      "mode": 420,
+      "sha256": "a1f380d9aa9dbb891c73682b0d9627760e2c1e39370ed29338cb4372da3f861c"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/showcases/website-ai-nav/ainav-pentagram.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 10553,
+      "mode": 420,
+      "sha256": "d729fbbc6dcf067c8bf97eb654e4c6063908e89d09f91e769a73fca990038d70"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/showcases/website-ai-nav/ainav-pentagram.png",
+      "kind": "file",
+      "excluded": false,
+      "size": 105575,
+      "mode": 420,
+      "sha256": "04b65a201170453d4f4261f9fed835b3e516b2ecbeb528560991c33d0a582dd0"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/showcases/website-ai-nav/ainav-takram.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 12747,
+      "mode": 420,
+      "sha256": "f553f875fe60498e177e5c99c0444895b444fe37c5969364f7f6af53c909e42f"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/showcases/website-ai-nav/ainav-takram.png",
+      "kind": "file",
+      "excluded": false,
+      "size": 121675,
+      "mode": 420,
+      "sha256": "8c16c90993f499aadd35d8a597d9793824181c17e7e5ed29a17f4f4b53958400"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/showcases/website-ai-writing",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/showcases/website-ai-writing/aiwriting-build.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 14066,
+      "mode": 420,
+      "sha256": "9f35620be810d44ce44e5828684efb5d31c68f6a4ae6dfd77947e800236f786b"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/showcases/website-ai-writing/aiwriting-build.png",
+      "kind": "file",
+      "excluded": false,
+      "size": 130604,
+      "mode": 420,
+      "sha256": "171556a04eb950ae17469a0f040d64b6ee145324f43d76f1d6a8b551582f85d1"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/showcases/website-ai-writing/aiwriting-pentagram.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 14226,
+      "mode": 420,
+      "sha256": "15a913d13ebfceb4631931e0a5aa0d616b42854b4fafe76ccdf50fd11c67e352"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/showcases/website-ai-writing/aiwriting-pentagram.png",
+      "kind": "file",
+      "excluded": false,
+      "size": 150195,
+      "mode": 420,
+      "sha256": "c7eba9cf29218c5a0896d594791c7f1540c37e12855c0969d10b19ba0c2ec71d"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/showcases/website-ai-writing/aiwriting-takram.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 18003,
+      "mode": 420,
+      "sha256": "d038d88ffed699a8f7867737731d175484c97552c32bdeb5d6ba18e90bbb59f3"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/showcases/website-ai-writing/aiwriting-takram.png",
+      "kind": "file",
+      "excluded": false,
+      "size": 157158,
+      "mode": 420,
+      "sha256": "3c18cc8997f817cba5b4363edb5b7687ee564740f63511ce7d8535d49688704e"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/showcases/website-devdocs",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/showcases/website-devdocs/devdocs-build.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 9928,
+      "mode": 420,
+      "sha256": "772b8a0de4be25b310c412398d9392da31947e1a97cb4ea5213fe001157acd81"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/showcases/website-devdocs/devdocs-build.png",
+      "kind": "file",
+      "excluded": false,
+      "size": 68230,
+      "mode": 420,
+      "sha256": "9d5f29a7c6985ac923217f5d1b3f829f254fde237f7726ef6d8f01ef18c1ac1f"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/showcases/website-devdocs/devdocs-pentagram.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 12801,
+      "mode": 420,
+      "sha256": "d2486d80dc12b0930a757f294f5679c2877ff0233ee016d90921b7eb8306ec32"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/showcases/website-devdocs/devdocs-pentagram.png",
+      "kind": "file",
+      "excluded": false,
+      "size": 117051,
+      "mode": 420,
+      "sha256": "a40c2b6b029110a79a81ccfaebcfd02f2c9dee3f0eaec333483c13bbdb2afa1b"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/showcases/website-devdocs/devdocs-takram.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 13106,
+      "mode": 420,
+      "sha256": "c0e0f30700539996f21261f6d2ae13cb097d0ae1698d9b39742b818def2752b9"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/showcases/website-devdocs/devdocs-takram.png",
+      "kind": "file",
+      "excluded": false,
+      "size": 111854,
+      "mode": 420,
+      "sha256": "40ac110037d94c5caf3e7210e66cd1fc1909b754ed21a4ae0191cf6150374549"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/showcases/website-homepage",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/showcases/website-homepage/homepage-build.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 8314,
+      "mode": 420,
+      "sha256": "4c207d33dca1cb0d9a5eb4cf63583d30aa2d88b4576668881bd8437f68539090"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/showcases/website-homepage/homepage-build.png",
+      "kind": "file",
+      "excluded": false,
+      "size": 61708,
+      "mode": 420,
+      "sha256": "2be9f198345749735b403e364e7835d30fbd4521d455c817caab5db023282146"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/showcases/website-homepage/homepage-pentagram.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 8491,
+      "mode": 420,
+      "sha256": "315dc0a438dce2668dde109f97ecaec6ac9e6f49d99aad1f69cd95dcf26c7738"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/showcases/website-homepage/homepage-pentagram.png",
+      "kind": "file",
+      "excluded": false,
+      "size": 57093,
+      "mode": 420,
+      "sha256": "5199e4d1d26e0d333a74a2e54b793ff29dccf6c88e577f9c8efd42ad18d2e485"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/showcases/website-homepage/homepage-takram.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 10543,
+      "mode": 420,
+      "sha256": "08f0f7625edbc91733979de526d5a2a270b02f84089aa15b27cc9cd47bbc8a04"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/showcases/website-homepage/homepage-takram.png",
+      "kind": "file",
+      "excluded": false,
+      "size": 127610,
+      "mode": 420,
+      "sha256": "daaf7e9f1f99bc8dd8ee81fe5dcca3b6f37493c0afbce097b247a834c26b7e78"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/showcases/website-saas",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/showcases/website-saas/saas-build.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 12901,
+      "mode": 420,
+      "sha256": "dcaade14100656640375cd86409af3298077a16dc34ce880f2bf630f6a6fa059"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/showcases/website-saas/saas-build.png",
+      "kind": "file",
+      "excluded": false,
+      "size": 99745,
+      "mode": 420,
+      "sha256": "ac0158d2581567d755dd8fd759d0b453b30fdef189f926efe8662c70f3fb41aa"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/showcases/website-saas/saas-pentagram.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 15050,
+      "mode": 420,
+      "sha256": "7de234517804ffe59698f1b74eed296fc926296bb996c1718e32be0299e90c73"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/showcases/website-saas/saas-pentagram.png",
+      "kind": "file",
+      "excluded": false,
+      "size": 96559,
+      "mode": 420,
+      "sha256": "6017150ea044cbcb00f121f549b0e9cffce583c2a06063b0a6479b18793fbf72"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/showcases/website-saas/saas-takram.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 18209,
+      "mode": 420,
+      "sha256": "122f274623e47b33516caabcc57648a98fb4512d8ca27f6f145c16feec63c08c"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/showcases/website-saas/saas-takram.png",
+      "kind": "file",
+      "excluded": false,
+      "size": 123532,
+      "mode": 420,
+      "sha256": "5f877b12ca5fb876a92f8b44f1f7968de4366dd30c88479e7bf3f361dd2df455"
+    },
+    {
+      "path": ".claude/skills/huashu-design/demos",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".claude/skills/huashu-design/demos/c1-ios-prototype-en.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 35165,
+      "mode": 420,
+      "sha256": "6362d832c6ab83d6bbf205059ff7901f868273895d3c75b844b2b1cdce265afb"
+    },
+    {
+      "path": ".claude/skills/huashu-design/demos/c1-ios-prototype.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 35151,
+      "mode": 420,
+      "sha256": "0b10e236332112628232ba29cba5970fd02915c26a1652567326ceebf9bb862b"
+    },
+    {
+      "path": ".claude/skills/huashu-design/demos/c2-slides-pptx-en.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 32906,
+      "mode": 420,
+      "sha256": "ff1f2710f601cc86811339eacd5e735bd7bfe88b94c4e8f9aee0b5bff6dd45e5"
+    },
+    {
+      "path": ".claude/skills/huashu-design/demos/c2-slides-pptx.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 32975,
+      "mode": 420,
+      "sha256": "7008af7701cf515b681dff9b0d0141564cc72b1c7791f16d0b83f0268ba473c0"
+    },
+    {
+      "path": ".claude/skills/huashu-design/demos/c3-motion-design-en.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 37031,
+      "mode": 420,
+      "sha256": "3bc25588bcd75bc8e2fd695844301d68288012ae7a5e7b32bffe2eaeed476282"
+    },
+    {
+      "path": ".claude/skills/huashu-design/demos/c3-motion-design.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 37048,
+      "mode": 420,
+      "sha256": "e772e754e72b7a51894416703b56802df3d5dec76f0f23619825d23fddfc6608"
+    },
+    {
+      "path": ".claude/skills/huashu-design/demos/c4-tweaks-en.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 31102,
+      "mode": 420,
+      "sha256": "a483395b34252310f1222c7b1a5836fa296c0ca7746c0d1a356111af879bd698"
+    },
+    {
+      "path": ".claude/skills/huashu-design/demos/c4-tweaks.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 31150,
+      "mode": 420,
+      "sha256": "578fbbff7b635f8e5f1212a5cb9900135fb105cac4779c27d7359698ecdc79a0"
+    },
+    {
+      "path": ".claude/skills/huashu-design/demos/c5-infographic-en.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 24941,
+      "mode": 420,
+      "sha256": "c3db171ef0dd9475717569e10cd3cba54ea92893a38c1199a104768499015bec"
+    },
+    {
+      "path": ".claude/skills/huashu-design/demos/c5-infographic.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 24823,
+      "mode": 420,
+      "sha256": "9c48e3b670a6a3fab8c216e652b4906564c5663d39415e970305a18820b94ebb"
+    },
+    {
+      "path": ".claude/skills/huashu-design/demos/c6-expert-review-en.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 26382,
+      "mode": 420,
+      "sha256": "161a47b07ad00e5cea652ca1142a95a5cf175c2c5ab8adc609726a74f5edd745"
+    },
+    {
+      "path": ".claude/skills/huashu-design/demos/c6-expert-review.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 26822,
+      "mode": 420,
+      "sha256": "800cbf45ec3aebee7fb077dc7b9b2c7d871072fb5651cd534fed91d7a860188b"
+    },
+    {
+      "path": ".claude/skills/huashu-design/demos/hero-animation-v10-en.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 48712,
+      "mode": 420,
+      "sha256": "87d2f21994f2eb04981ef062f6cc21b0aa0e4bf4df565055166a1a1614414450"
+    },
+    {
+      "path": ".claude/skills/huashu-design/demos/md-html-narration",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".claude/skills/huashu-design/demos/md-html-narration/md-html-demo.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 37926,
+      "mode": 420,
+      "sha256": "345ca77334f1d92f8a30a0ae4906a0719152138b14746695a91a59564fc04a46"
+    },
+    {
+      "path": ".claude/skills/huashu-design/demos/md-html-narration/script.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 3452,
+      "mode": 420,
+      "sha256": "2e368457a248cf4ac1c03bbfe7ccb088097222b7528fd526e892579b478c5354"
+    },
+    {
+      "path": ".claude/skills/huashu-design/demos/voiceover-demo",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".claude/skills/huashu-design/demos/voiceover-demo/script.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 589,
+      "mode": 420,
+      "sha256": "99245dbda4b4d09716ae14aa6a8cea45865035d45b88d2c6519723f3f26cb7fa"
+    },
+    {
+      "path": ".claude/skills/huashu-design/demos/voiceover-demo/什么是令牌.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 11988,
+      "mode": 420,
+      "sha256": "f7efee54f6f8230718e5c0fa362ce3e9f717ddce6c248ad6301d9242c1e8b522"
+    },
+    {
+      "path": ".claude/skills/huashu-design/demos/w1-brand-protocol-en.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 20572,
+      "mode": 420,
+      "sha256": "9a1dffe8eed97be95330ef1cdff39c91580448866ed3b318d06c11c70d69cb38"
+    },
+    {
+      "path": ".claude/skills/huashu-design/demos/w1-brand-protocol.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 20905,
+      "mode": 420,
+      "sha256": "782fb54e99e80ec5e8d6fd151a8041520a1755e97cfe1675e566922391b47858"
+    },
+    {
+      "path": ".claude/skills/huashu-design/demos/w2-junior-designer-en.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 31305,
+      "mode": 420,
+      "sha256": "a559552ab5409879a35f71cf1dfe2c456f0527a50ba202fd0fd06f708fb04f5e"
+    },
+    {
+      "path": ".claude/skills/huashu-design/demos/w2-junior-designer.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 31764,
+      "mode": 420,
+      "sha256": "5d1639ddc29834181fcd4336d80534b9977c7e955a5f43bb85f6ed2674044a1b"
+    },
+    {
+      "path": ".claude/skills/huashu-design/demos/w3-fallback-advisor-en.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 23901,
+      "mode": 420,
+      "sha256": "17ff8414f7e58923e91ade4161325f143788ca1baf29a1bce05864d7ff2ff29d"
+    },
+    {
+      "path": ".claude/skills/huashu-design/demos/w3-fallback-advisor.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 26413,
+      "mode": 420,
+      "sha256": "2ec9e8ed6c897d7e196dca3d6820cf92f1bb9408ad80bc4b964d746102d4b09d"
+    },
+    {
+      "path": ".claude/skills/huashu-design/package-lock.json",
+      "kind": "file",
+      "excluded": false,
+      "size": 28566,
+      "mode": 420,
+      "sha256": "0c334005bfe0da4ad5fa1ea805a1d99d3290f636add29faa861c841ddaac6a69"
+    },
+    {
+      "path": ".claude/skills/huashu-design/package.json",
+      "kind": "file",
+      "excluded": false,
+      "size": 133,
+      "mode": 420,
+      "sha256": "144b28fbf3911f2969589bbddb3208bb02e98bfb33988723d33d3a724ad3b7d5"
+    },
+    {
+      "path": ".claude/skills/huashu-design/references",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".claude/skills/huashu-design/references/ai-video-review.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 4006,
+      "mode": 420,
+      "sha256": "4a76c1a3ac4f438844c2213b6435ebcf453a3718c1bd4a28c1ef154c62c335b2"
+    },
+    {
+      "path": ".claude/skills/huashu-design/references/animation-best-practices.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 22446,
+      "mode": 420,
+      "sha256": "347a751b3114199e52c2349c2ad6a00c619a5cee5f50cec114ded0d0fbdc9ffe"
+    },
+    {
+      "path": ".claude/skills/huashu-design/references/animation-pitfalls.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 30805,
+      "mode": 420,
+      "sha256": "10c897e79ec0e976ef0a622c6fc05147e996081c9a83b451770de97a80cd84d7"
+    },
+    {
+      "path": ".claude/skills/huashu-design/references/animations.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 7749,
+      "mode": 420,
+      "sha256": "8790b4580f182b082f8df8740fc09337c29ed323f5fd6ffc960fb158ae68ae98"
+    },
+    {
+      "path": ".claude/skills/huashu-design/references/app-prototype.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 9898,
+      "mode": 420,
+      "sha256": "e043075078adc2b7131129a9f50e69105e8c04ffdf29cdfad6643d2a1e87d1c8"
+    },
+    {
+      "path": ".claude/skills/huashu-design/references/apple-gallery-showcase.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 11311,
+      "mode": 420,
+      "sha256": "263847cc370e097d5ef31287556111de7d2098551dfc5b06641d7ea60fcf82ba"
+    },
+    {
+      "path": ".claude/skills/huashu-design/references/audio-design-rules.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 9613,
+      "mode": 420,
+      "sha256": "aa8c76e64100507b7f264a78b9408028935b2bdafe2bbde695ed4a49555a75a0"
+    },
+    {
+      "path": ".claude/skills/huashu-design/references/brand-asset-protocol.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 15418,
+      "mode": 420,
+      "sha256": "bc476983114f00057134d47b229fb4496a37bbac2fcbb4bf9f86139165e1528d"
+    },
+    {
+      "path": ".claude/skills/huashu-design/references/camera-language.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 23221,
+      "mode": 420,
+      "sha256": "17d9ec457df9920953588ffdd1fdff92c3679093cebd3b022b48861105563c71"
+    },
+    {
+      "path": ".claude/skills/huashu-design/references/cinematic-patterns.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 11086,
+      "mode": 420,
+      "sha256": "1266cb4feb14e44997b6abcc33091991565402ec6a7b22698628b31a4da472b8"
+    },
+    {
+      "path": ".claude/skills/huashu-design/references/content-guidelines.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 8389,
+      "mode": 420,
+      "sha256": "3c0bcf0e94b4f6cc64b11e871ba8d53607ad6ec7317f08dc3f7f5bb6708088a7"
+    },
+    {
+      "path": ".claude/skills/huashu-design/references/critique-guide.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 9022,
+      "mode": 420,
+      "sha256": "3636ed8422bb88a11bc3e1db00b252b707f20cf83f6ec900077abb020ff7a8ce"
+    },
+    {
+      "path": ".claude/skills/huashu-design/references/design-context.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 6704,
+      "mode": 420,
+      "sha256": "93a7e6be5f6cb29076d3651747d5033701362ddd03283b1ddf11b105757430b6"
+    },
+    {
+      "path": ".claude/skills/huashu-design/references/design-styles.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 62833,
+      "mode": 420,
+      "sha256": "f62aaa191b2feeced5c024de7008c87c18dd532af90193a3ae2756e944997d4d"
+    },
+    {
+      "path": ".claude/skills/huashu-design/references/editable-pptx.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 16950,
+      "mode": 420,
+      "sha256": "a077e135890087cd278e00dee84ed02c43a3d3ed33314fd0b8841095d338fee9"
+    },
+    {
+      "path": ".claude/skills/huashu-design/references/gsap-recipes.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 35591,
+      "mode": 420,
+      "sha256": "374f346aeab61192f497130f933424bd3a3850e2f68e03f73cd3fa81e058a33a"
+    },
+    {
+      "path": ".claude/skills/huashu-design/references/harness-deck.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 4707,
+      "mode": 420,
+      "sha256": "40f56871aef5551406c465510a7dc65e6475e65e8b53633610d2e639129f7ea3"
+    },
+    {
+      "path": ".claude/skills/huashu-design/references/hero-animation-case-study.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 11358,
+      "mode": 420,
+      "sha256": "7e2b6e2bdddf5e38cc4f8182c0085c6fa30ec711a23aa1b3bf3525316822ef84"
+    },
+    {
+      "path": ".claude/skills/huashu-design/references/hyperframes-backend.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 7459,
+      "mode": 420,
+      "sha256": "3a643f662a11fbd5aa4b0e0d4ce9658c432daabdae0e338b3a4ccd2fad6da65b"
+    },
+    {
+      "path": ".claude/skills/huashu-design/references/launch-film-director-notes.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 14886,
+      "mode": 420,
+      "sha256": "1cc8c18d693231c3b2438057a1fc43fd72edbf7f2a60eec548dad6903cd13338"
+    },
+    {
+      "path": ".claude/skills/huashu-design/references/multi-perspective-parallel-case-study.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 11093,
+      "mode": 420,
+      "sha256": "e1f80cc2e3e12d04405f897f3da49b371dbc7782c5ba23152a956c2780e738da"
+    },
+    {
+      "path": ".claude/skills/huashu-design/references/pptx-from-rendered-html.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 9571,
+      "mode": 420,
+      "sha256": "da8318b5566a6ee586615b7f3b33766c3abe11f0bfe87acec3e10bbcf88c80d3"
+    },
+    {
+      "path": ".claude/skills/huashu-design/references/react-setup.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 8863,
+      "mode": 420,
+      "sha256": "80477b0bf1a473eef5626ef27a6f4453f3a0ad358692de74e406cbd057a3f132"
+    },
+    {
+      "path": ".claude/skills/huashu-design/references/scene-templates.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 7144,
+      "mode": 420,
+      "sha256": "c91852062d923787896076368fff883bed2eb8b53087f1efdc2f81ed3014a314"
+    },
+    {
+      "path": ".claude/skills/huashu-design/references/sfx-library.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 9790,
+      "mode": 420,
+      "sha256": "e18b1ae71acd1104657bc594628829977c66e6b5a0d2a399fdc65a98aa461c13"
+    },
+    {
+      "path": ".claude/skills/huashu-design/references/slide-decks.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 36205,
+      "mode": 420,
+      "sha256": "ba6df513a1d11d66e74deef871e5019c212e45c731b2002ecdb016fc751d4413"
+    },
+    {
+      "path": ".claude/skills/huashu-design/references/storyboard-basics.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 23987,
+      "mode": 420,
+      "sha256": "b8775952ae96bbe3e99f080520896fa9d853d324733c771da5f45da865b6f884"
+    },
+    {
+      "path": ".claude/skills/huashu-design/references/tweaks-system.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 9015,
+      "mode": 420,
+      "sha256": "88569174eaa1d790e5f261a287e44ea39f6b8bce926493d21ad5ff4e7c2ef441"
+    },
+    {
+      "path": ".claude/skills/huashu-design/references/typography.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 18348,
+      "mode": 420,
+      "sha256": "5fbf83b9a916a986d873b6950c2f2e3aeebc0192bdb2a89bcf56d84dc4915e51"
+    },
+    {
+      "path": ".claude/skills/huashu-design/references/ui-demo-animation.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 29109,
+      "mode": 420,
+      "sha256": "38a2b52ad03d97442757016f1ef2c4c439d4f3e9f234cdce81cacc6fb60a894c"
+    },
+    {
+      "path": ".claude/skills/huashu-design/references/verification.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 6967,
+      "mode": 420,
+      "sha256": "1625e5488872d3b42bd678f029e2142b16f55529df7282b4dcf2b77c2a4de784"
+    },
+    {
+      "path": ".claude/skills/huashu-design/references/video-export.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 11527,
+      "mode": 420,
+      "sha256": "7ed97faa22b49f407c61a482eddb3b30a7463c3e5e491e5a4b2bcb48ad7929f6"
+    },
+    {
+      "path": ".claude/skills/huashu-design/references/voiceover-pipeline.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 20121,
+      "mode": 420,
+      "sha256": "c8e992779eb3de74b7c46c195a46dd716ee922def7ea5f9e19beef814834e756"
+    },
+    {
+      "path": ".claude/skills/huashu-design/references/workflow.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 7090,
+      "mode": 420,
+      "sha256": "57c032774cb789949bb5ef5840cefc137f31573cc2449fc8f699a794bf40d4ee"
+    },
+    {
+      "path": ".claude/skills/huashu-design/scripts",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".claude/skills/huashu-design/scripts/add-music.sh",
+      "kind": "file",
+      "excluded": false,
+      "size": 4146,
+      "mode": 420,
+      "sha256": "ad59e18e0e87fc987e60d1cad6c4f0da97b76144035faa480af2e82c69da48ce"
+    },
+    {
+      "path": ".claude/skills/huashu-design/scripts/cloud",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".claude/skills/huashu-design/scripts/cloud/ai-review-video.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 20433,
+      "mode": 420,
+      "sha256": "c882682ab99a3d61b1955240b2d386363893a0cc65e4c6930bc27857d33d2560"
+    },
+    {
+      "path": ".claude/skills/huashu-design/scripts/cloud/tts-doubao.mjs",
+      "kind": "file",
+      "excluded": false,
+      "size": 10071,
+      "mode": 420,
+      "sha256": "8ddc9980b76a60deaf057b732d80d187382ddd9188d9d673ebd9e35c461a0015"
+    },
+    {
+      "path": ".claude/skills/huashu-design/scripts/convert-formats.sh",
+      "kind": "file",
+      "excluded": false,
+      "size": 3000,
+      "mode": 420,
+      "sha256": "4fdf469a1f1c44b40858cea8484d92fcae48096de1dedc3d4b9d640b5026277b"
+    },
+    {
+      "path": ".claude/skills/huashu-design/scripts/design-gate-hook.sh",
+      "kind": "file",
+      "excluded": false,
+      "size": 3459,
+      "mode": 420,
+      "sha256": "e8f255791e1475202f84aa6ac9589cf5790aa3cb0afe6f294237099583a8c42b"
+    },
+    {
+      "path": ".claude/skills/huashu-design/scripts/export_deck_pdf.mjs",
+      "kind": "file",
+      "excluded": false,
+      "size": 3219,
+      "mode": 420,
+      "sha256": "33b9f7b5c95543b6ac025a214b80ba349455697499fcc0561e6bcbafc483acd8"
+    },
+    {
+      "path": ".claude/skills/huashu-design/scripts/export_deck_pptx.mjs",
+      "kind": "file",
+      "excluded": false,
+      "size": 3800,
+      "mode": 420,
+      "sha256": "6e4ede89ff4915ed9bdd26b82a86834e2c32e583faf1659b80915867668b9def"
+    },
+    {
+      "path": ".claude/skills/huashu-design/scripts/export_deck_stage_pdf.mjs",
+      "kind": "file",
+      "excluded": false,
+      "size": 4791,
+      "mode": 420,
+      "sha256": "e8f55efe207031cb9643f6af8a28de02f74211d231023b968ebd6fd46643d8aa"
+    },
+    {
+      "path": ".claude/skills/huashu-design/scripts/fetch_images.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 4442,
+      "mode": 420,
+      "sha256": "6bb273e785513c965a14445a2daaabbf9afc38f1dd93802c28a35374c53def89"
+    },
+    {
+      "path": ".claude/skills/huashu-design/scripts/gen_deck_thumbs.mjs",
+      "kind": "file",
+      "excluded": false,
+      "size": 3047,
+      "mode": 420,
+      "sha256": "896282ebc9bb01214f39db232cf03dbb200c0d01f354bd2b83a44f3164e47b8c"
+    },
+    {
+      "path": ".claude/skills/huashu-design/scripts/html2pptx.js",
+      "kind": "file",
+      "excluded": false,
+      "size": 46391,
+      "mode": 420,
+      "sha256": "e754ea8a692db0754a09af8be0a81b93ce6f420518f141b9a58ec7aef364227c"
+    },
+    {
+      "path": ".claude/skills/huashu-design/scripts/mix-voiceover.sh",
+      "kind": "file",
+      "excluded": false,
+      "size": 4461,
+      "mode": 420,
+      "sha256": "6d3b5dfcf874593b9b7b82147a44e72e40077608f23ff4a3d4429e53c9cac1aa"
+    },
+    {
+      "path": ".claude/skills/huashu-design/scripts/narrate-pipeline.mjs",
+      "kind": "file",
+      "excluded": false,
+      "size": 12530,
+      "mode": 420,
+      "sha256": "5b387544314c9f6374de7399a23b6692b77333e53a8fb4e2d892e2ae6e836a14"
+    },
+    {
+      "path": ".claude/skills/huashu-design/scripts/pptx_from_rendered.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 25341,
+      "mode": 420,
+      "sha256": "893e0216d984bdc514ad6cbf1647a9679c4abe97c34c232b3ded0fa8d46dd20b"
+    },
+    {
+      "path": ".claude/skills/huashu-design/scripts/render-narration.sh",
+      "kind": "file",
+      "excluded": false,
+      "size": 5425,
+      "mode": 420,
+      "sha256": "30703fff8de2f7d94ceb0714dd8ce3c712ff1b7f5dd9803d41bcdc1c6a0330b2"
+    },
+    {
+      "path": ".claude/skills/huashu-design/scripts/render-video-seek.js",
+      "kind": "file",
+      "excluded": false,
+      "size": 9793,
+      "mode": 420,
+      "sha256": "376f7f2f680a8c2cf573ae915f2f9b42451d1ca75de879b18f697eef43df3a39"
+    },
+    {
+      "path": ".claude/skills/huashu-design/scripts/render-video.js",
+      "kind": "file",
+      "excluded": false,
+      "size": 12308,
+      "mode": 420,
+      "sha256": "7f8f6981b53f54914ada55cd7f02dd3a7d99608067e1898f4e81285a846668c2"
+    },
+    {
+      "path": ".claude/skills/huashu-design/scripts/sfx-cues.sh",
+      "kind": "file",
+      "excluded": false,
+      "size": 1628,
+      "mode": 420,
+      "sha256": "842cda4237dd88d84b4de634bf23507ec01aacb621ce5f6ac17e2a1c60857244"
+    },
+    {
+      "path": ".claude/skills/huashu-design/scripts/verify-video.sh",
+      "kind": "file",
+      "excluded": false,
+      "size": 4996,
+      "mode": 420,
+      "sha256": "cd7cf69f282f19dede1cd5aeae9c829a44b587f86f9518a51343dba264a81d85"
+    },
+    {
+      "path": ".claude/skills/huashu-design/scripts/verify.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 5451,
+      "mode": 420,
+      "sha256": "7a0a3243f51a1c816944a948a5caba239c63c9890327a60d80934d493153e9e4"
+    },
+    {
+      "path": ".claude/skills/huashu-design/test-prompts.json",
+      "kind": "file",
+      "excluded": false,
+      "size": 2760,
+      "mode": 420,
+      "sha256": "1b09dd756a0c3673b9f0b2fd8a83ce04fa21095af3d2b522e364285b3775ea68"
+    },
+    {
+      "path": ".claude/skills/independent-review",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".claude/skills/independent-review/SKILL.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 12013,
+      "mode": 420,
+      "sha256": "cc84951ae240186ddc6776e288883535cc5ac82351677d1518ea5cd4536a1bc7"
+    },
+    {
+      "path": ".claude/skills/independent-review/references",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".claude/skills/independent-review/references/增量报告协议.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 6519,
+      "mode": 420,
+      "sha256": "c6f52f879eace7d99689e6df3e916427ce59ac2fa5d99aed574ba604e8142d97"
+    },
+    {
+      "path": ".claude/skills/independent-review/templates",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".claude/skills/independent-review/templates/增量报告.json",
+      "kind": "file",
+      "excluded": false,
+      "size": 272,
+      "mode": 420,
+      "sha256": "9aaf5a35a6afc986b95bb1f803cc555d96d21d734fd6bff4929173dea01fd093"
+    },
+    {
+      "path": ".claude/skills/knowledge-connectors",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".claude/skills/knowledge-connectors/SKILL.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 3283,
+      "mode": 420,
+      "sha256": "174af162abb11d1a44f3a66fa03eb140d9f82d8688b6cce4785a7a34286424f4"
+    },
+    {
+      "path": ".claude/skills/project-control",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".claude/skills/project-control/SKILL.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 21604,
+      "mode": 420,
+      "sha256": "728993d2ac707ff798a198bc8bd6642d159cb71748fe803203a0a6fe9ba45e20"
+    },
+    {
+      "path": ".claude/skills/project-import-template",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".claude/skills/project-import-template/SKILL.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 4545,
+      "mode": 420,
+      "sha256": "a3ac92e387009486999393eee3aa2049d39e0e9da34ccefeb1c8c0a425e43543"
+    },
+    {
+      "path": ".claude/skills/project-import-template/assets",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".claude/skills/project-import-template/assets/openclaw-gantt-import-template.xlsx",
+      "kind": "file",
+      "excluded": false,
+      "size": 14928,
+      "mode": 420,
+      "sha256": "ae3c8d041ff8aa9a2fcc48a7ceb32d2c0b7e54950b4a307a132b7e19f5a0d59d"
+    },
+    {
+      "path": ".claude/skills/proposal-script",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".claude/skills/proposal-script/SKILL.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 11327,
+      "mode": 420,
+      "sha256": "bbb99208e5ee1ea84a56ac9ab181521fc78a11a8f3419ee07f49970a813d6bab"
+    },
+    {
+      "path": ".claude/skills/research-evidence",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".claude/skills/research-evidence/SKILL.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 13748,
+      "mode": 420,
+      "sha256": "b7f557c4e80611ef88d7529b93e90e998d491da5921ec68ff7d7cb4d57f592cd"
+    },
+    {
+      "path": ".claude/skills/research-evidence/references",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".claude/skills/research-evidence/references/调研情境验收.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 6445,
+      "mode": 420,
+      "sha256": "ae97af294f5346ab57f755476d118daec40a63161759a1fd6d912776e8c5cb38"
+    },
+    {
+      "path": ".claude/skills/research-evidence/references/资料核验.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 3865,
+      "mode": 420,
+      "sha256": "0cd0f748bfbbd53ec10c1069b278424e2f419ce1c0c88444bcf9ebf7416a973a"
+    },
+    {
+      "path": ".claude/skills/task-brief",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".claude/skills/task-brief/SKILL.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 10848,
+      "mode": 420,
+      "sha256": "1e8c8dbc2a88125c542eefcac6bf5575a098335d1d3862701e981213fcdd2103"
+    },
+    {
+      "path": ".claude/skills/version-impact",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".claude/skills/version-impact/SKILL.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 7919,
+      "mode": 420,
+      "sha256": "7e371853b7b76730b3993906081b18ce9ff6788107fdb994b22c50edbb98e1dc"
+    },
+    {
+      "path": ".claude/skills/方法来源.json",
+      "kind": "file",
+      "excluded": false,
+      "size": 2851,
+      "mode": 420,
+      "sha256": "ee4ec6982686a6bafeef63f7e6dcd02be429b9fe58d8db42d61c46cffa1c2f0e"
+    },
+    {
+      "path": ".claude/宿主同步清单.json",
+      "kind": "file",
+      "excluded": false,
+      "size": 29533,
+      "mode": 420,
+      "sha256": "f6bb60463f7e20397f3818dfe6b90710a268d67cccf47e1de14578fd137c5ed3"
+    },
+    {
+      "path": ".codex",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".codex/agents",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".codex/agents/deck-builder.toml",
+      "kind": "file",
+      "excluded": false,
+      "size": 7109,
+      "mode": 420,
+      "sha256": "c0f2c6308228199e051a6a10067650c3694d2fce517e923f0fbd52906d93e4cb"
+    },
+    {
+      "path": ".codex/agents/design-expression-reviewer.toml",
+      "kind": "file",
+      "excluded": false,
+      "size": 4566,
+      "mode": 420,
+      "sha256": "e85b886244a746e02e3c6ce5b7b6bf035af73c4353b99d8a138c5e09b7b916c6"
+    },
+    {
+      "path": ".codex/agents/independent-reviewer.toml",
+      "kind": "file",
+      "excluded": false,
+      "size": 9727,
+      "mode": 420,
+      "sha256": "f7051e69dd4e137644074eb2884f406840287663acdf702fd90852ab120aee91"
+    },
+    {
+      "path": ".codex/agents/project-controller.toml",
+      "kind": "file",
+      "excluded": false,
+      "size": 17532,
+      "mode": 420,
+      "sha256": "1b88a06995633528e7593fb7e0154768b0da02d1b535fafe542a1d1cc8a2eab3"
+    },
+    {
+      "path": ".codex/agents/proposal-author.toml",
+      "kind": "file",
+      "excluded": false,
+      "size": 4637,
+      "mode": 420,
+      "sha256": "ebf656c6fd8d4a30707c8d4b75beca859030142cdd6e3fc6d5fee15a64673081"
+    },
+    {
+      "path": ".codex/agents/strategy-author.toml",
+      "kind": "file",
+      "excluded": false,
+      "size": 4012,
+      "mode": 420,
+      "sha256": "de919467188c10447ec3216a93541c127e1b0e415319fa554e5137ed03836770"
+    },
+    {
+      "path": ".codex/config.toml",
+      "kind": "file",
+      "excluded": false,
+      "size": 262,
+      "mode": 420,
+      "sha256": "2442eddbad491c10dcd2695aa48d0eabf1433c6bf1d778a6991366de68f90d3b"
+    },
+    {
+      "path": ".codex/hooks",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".codex/hooks.json",
+      "kind": "file",
+      "excluded": false,
+      "size": 262,
+      "mode": 420,
+      "sha256": "59058c40b3179e6ad799771eabce6e7531be5c1781f96533969ec29a7d7e4b28"
+    },
+    {
+      "path": ".codex/hooks/validate-project.sh",
+      "kind": "file",
+      "excluded": false,
+      "size": 1453,
+      "mode": 420,
+      "sha256": "db35cde75dc3ccf748c2ae6abcbd99ee914e6fd95bc85ef2b0635dd4ba13f9b8"
+    },
+    {
+      "path": ".gitignore",
+      "kind": "file",
+      "excluded": false,
+      "size": 133,
+      "mode": 420,
+      "sha256": "87bfca20e5b793787b7bc71768b25c991f8b462749d989ebfd6eebae44a143cb"
+    },
+    {
+      "path": "AGENTS.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 57660,
+      "mode": 420,
+      "sha256": "5527bd22f53a933907c48fe10c18b80890d7f687defba243ed158c0684f67187"
+    },
+    {
+      "path": "CLAUDE.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 39,
+      "mode": 420,
+      "sha256": "0fe5eadf846451cbd902fb2851921efd310901de22e7967de8b11728d528117f"
+    },
+    {
+      "path": "README.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 15939,
+      "mode": 420,
+      "sha256": "6f88ee7ecebf25d8f603f67549f545ef327baf05d38c9f7bc4114922cb16007d"
+    },
+    {
+      "path": "project",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": "project/README.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 6168,
+      "mode": 420,
+      "sha256": "3b38d3f37b1554afe5d5874a073470977fd792e301803314c0155bbc6a917d31"
+    },
+    {
+      "path": "project/briefs",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": "project/briefs/README.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 1634,
+      "mode": 420,
+      "sha256": "6edbb8e57815b85cf521b1c11edaf20cc89198add740fc7e64f32d05ca7a170a"
+    },
+    {
+      "path": "project/exports",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": "project/exports/README.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 675,
+      "mode": 420,
+      "sha256": "2c107ec136ad2b23577cc01f713f167a24d8bf4140b37fd1a1eb46f4e650ad0e"
+    },
+    {
+      "path": "project/inputs",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": "project/inputs/README.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 191,
+      "mode": 420,
+      "sha256": "bff44bcf7882c933b95cbbead372211a7ec29c25469a77ba2d55f4004cea98fe"
+    },
+    {
+      "path": "project/records",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": "project/records/README.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 9886,
+      "mode": 420,
+      "sha256": "d24fb5b0b6d687340075bdaf42ec35b6cc55b26d7ceb2a1b1f80ff174fe2c9b0"
+    },
+    {
+      "path": "project/records/closure-checklist.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 1027,
+      "mode": 420,
+      "sha256": "ae8ad7a551967ed25de74927b511879e5233ac9aadd56a62fac86b56d7db88ad"
+    },
+    {
+      "path": "project/records/confirmations.jsonl",
+      "kind": "file",
+      "excluded": false,
+      "size": 0,
+      "mode": 420,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "project/records/dependencies.json",
+      "kind": "file",
+      "excluded": false,
+      "size": 52,
+      "mode": 420,
+      "sha256": "bc8ea07d941082d19ab4cada31d8d6995727f432b91c2dc1fb48e7a6738f7b68"
+    },
+    {
+      "path": "project/records/feedback.jsonl",
+      "kind": "file",
+      "excluded": false,
+      "size": 0,
+      "mode": 420,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "project/records/reviews.jsonl",
+      "kind": "file",
+      "excluded": false,
+      "size": 0,
+      "mode": 420,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "project/records/revision-counts.json",
+      "kind": "file",
+      "excluded": false,
+      "size": 97,
+      "mode": 420,
+      "sha256": "6f3a3cdb4f3afcb13192fefb473755bc1d637b5b60152d6d4168b248c5936f61"
+    },
+    {
+      "path": "project/records/system-imports.jsonl",
+      "kind": "file",
+      "excluded": false,
+      "size": 0,
+      "mode": 420,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "project/research",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": "project/research/README.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 1786,
+      "mode": 420,
+      "sha256": "308dd3cc9ee61a0d8e4e559c63d188f9548e76bfa196cbf616619925f1de71f8"
+    },
+    {
+      "path": "project/state.json",
+      "kind": "file",
+      "excluded": false,
+      "size": 1463,
+      "mode": 420,
+      "sha256": "6a45f2e1d5a7a3b8f77ee36f121f6d4d1a3f2262b4bcfb130b66f0ab583a589d"
+    },
+    {
+      "path": "project/tasks",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": "project/tasks/README.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 173,
+      "mode": 420,
+      "sha256": "9bf527410f012b0aea07793f86b767999590b126f790644aacda320051cab27b"
+    },
+    {
+      "path": "requirements.txt",
+      "kind": "file",
+      "excluded": false,
+      "size": 30,
+      "mode": 420,
+      "sha256": "fddb13edf996245c9f5aae59a7ea7c3ebc3a8931a60145428a696f2b9269de59"
+    },
+    {
+      "path": "scripts",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": "scripts/agent_dispatch.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 43208,
+      "mode": 420,
+      "sha256": "b7b0b88945e6c13720dd0d7c1f090eeae1eb35f7895d82e2d0c5099d40cd0eaa"
+    },
+    {
+      "path": "scripts/author_budget.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 341,
+      "mode": 420,
+      "sha256": "3bc9370c608a51e55e79e1a88ee18807a56a8d39aa5e1568ab80d2051ce90076"
+    },
+    {
+      "path": "scripts/banben_baoliu.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 26307,
+      "mode": 420,
+      "sha256": "fb8d2c5f33d55324860e04321f40dbe6ead39d9a607ea56689e96d43b9f784f8"
+    },
+    {
+      "path": "scripts/brand_house.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 2188,
+      "mode": 420,
+      "sha256": "c9eae679e57e75ee72573b20f882a9d791980fb8b0c454c34842edc27de6f1a3"
+    },
+    {
+      "path": "scripts/brand_house_app.js",
+      "kind": "file",
+      "excluded": false,
+      "size": 10973,
+      "mode": 420,
+      "sha256": "777435c28ae377bd262a535ded3612b30f53962c3db1f9d9246b006cd43f6c04"
+    },
+    {
+      "path": "scripts/brand_house_cache.js",
+      "kind": "file",
+      "excluded": false,
+      "size": 2879,
+      "mode": 420,
+      "sha256": "95f749e478e1d378a171644bec88852c9b88235bdf315c90bdb9a4676af06064"
+    },
+    {
+      "path": "scripts/brand_house_controls.js",
+      "kind": "file",
+      "excluded": false,
+      "size": 15453,
+      "mode": 420,
+      "sha256": "c078277e7d4fdf1b8689348837e85200f911c8197c4ace085e7a1e88ef8cd92a"
+    },
+    {
+      "path": "scripts/brand_house_core.js",
+      "kind": "file",
+      "excluded": false,
+      "size": 4766,
+      "mode": 420,
+      "sha256": "03c167ddad174243169a2cc6cd270e271bc70f73baf1cec16a4925fce1c3714e"
+    },
+    {
+      "path": "scripts/brand_house_data.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 6472,
+      "mode": 420,
+      "sha256": "37efae6a1babdf59b9be7dddc7069c41db61cbcc68152f5cd4ca7a1bd3d1441c"
+    },
+    {
+      "path": "scripts/brand_house_file.js",
+      "kind": "file",
+      "excluded": false,
+      "size": 5598,
+      "mode": 420,
+      "sha256": "471eec2db4e5602cdfb9412668999665ebfe0baac2650df586f99dd3565dd1b8"
+    },
+    {
+      "path": "scripts/brand_house_generate.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 5375,
+      "mode": 420,
+      "sha256": "06991afe2e2113085b63fa3bc64ea136a05d784672cbf92f02ee4704585c2255"
+    },
+    {
+      "path": "scripts/brand_house_guard.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 2650,
+      "mode": 420,
+      "sha256": "29f7005501e30f16914a1b7edc7d66bb70fabdbccba51d7205fa540481ce7ab7"
+    },
+    {
+      "path": "scripts/brand_house_history.mjs",
+      "kind": "file",
+      "excluded": false,
+      "size": 1820,
+      "mode": 420,
+      "sha256": "b06667fcbcdaae4e10321dda15f5fa3ada6e021ade2fcc4598208d484ac09a36"
+    },
+    {
+      "path": "scripts/brand_house_html.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 4323,
+      "mode": 420,
+      "sha256": "a084935a2518d4932b13de2cd9f78f68f0d9b8b3493fcf0d1574f5f929f945be"
+    },
+    {
+      "path": "scripts/brand_house_review.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 8078,
+      "mode": 420,
+      "sha256": "3db783b2488b5b903ab28d9e4513a5f89093d7da728deac7061a40bc9e542051"
+    },
+    {
+      "path": "scripts/brand_house_store.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 8218,
+      "mode": 420,
+      "sha256": "1a7701ff4ccb097d989e3b96c78a7c6918779da18b17ca12f91e3b83d851c457"
+    },
+    {
+      "path": "scripts/brand_house_sync.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 9214,
+      "mode": 420,
+      "sha256": "5e75c596833a526d2135f10fe46f70875afaf8e2043852f54927bddd76b2bcef"
+    },
+    {
+      "path": "scripts/brand_house_ui.js",
+      "kind": "file",
+      "excluded": false,
+      "size": 12337,
+      "mode": 420,
+      "sha256": "9d99a27f38ae36e3fa98a284f63c22e8cf8718bbbb1a8c25312d78b7a1a187ba"
+    },
+    {
+      "path": "scripts/brand_house_validate.js",
+      "kind": "file",
+      "excluded": false,
+      "size": 13595,
+      "mode": 420,
+      "sha256": "75307bc1e1c600df44a89eb73fa33009face041449fc27787faa65ef3b9f6d1a"
+    },
+    {
+      "path": "scripts/build_brand_house_template.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 4058,
+      "mode": 420,
+      "sha256": "fc91f773a5dc215c7a7086148965e14811fdb4ae393e5ca15e78493768d83b8c"
+    },
+    {
+      "path": "scripts/build_schedule.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 3923,
+      "mode": 420,
+      "sha256": "e51260329e4ef633d116ad8d779717392d718275a3e5a5f57e288e0250527015"
+    },
+    {
+      "path": "scripts/check_environment.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 1501,
+      "mode": 420,
+      "sha256": "46bcdfdcad679fa3802e1e96b638980178f63f283202178df429e0f0afbc4b5c"
+    },
+    {
+      "path": "scripts/check_export.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 5421,
+      "mode": 420,
+      "sha256": "c47c97290bf5c63c72278ae675ea59452668cd787af8b90cb880e9ec228003b1"
+    },
+    {
+      "path": "scripts/check_package_integrity.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 2192,
+      "mode": 420,
+      "sha256": "694c90ce8157a7837adf0aa1f3db6d72fa936905ad81f26fc5543f9f85e3ce92"
+    },
+    {
+      "path": "scripts/chengguo_shenfen.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 4765,
+      "mode": 420,
+      "sha256": "7597c01923bd42a357ed3c44c656c702fc7f7d418544bd6acdc9d169416f856c"
+    },
+    {
+      "path": "scripts/closure_impact.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 3813,
+      "mode": 420,
+      "sha256": "61e9398216581e3fa52b4e9c2bef0fdc8d5f21a928762487f5c639eb64ccd55e"
+    },
+    {
+      "path": "scripts/closure_tasks.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 5673,
+      "mode": 420,
+      "sha256": "c097d421d10ca9cf1db59a5a2d1d111db77424058cc1d50f37fab9cfb0ba68e8"
+    },
+    {
+      "path": "scripts/compare_import_template.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 7345,
+      "mode": 420,
+      "sha256": "6eb3e1576346fe89fd839b6d254769aef55c6d10c9bb4db59e15a7849cbb0f5b"
+    },
+    {
+      "path": "scripts/connector_host.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 8836,
+      "mode": 420,
+      "sha256": "bbd545eefdd5521da00e803e7ac928accdfdc25052acf4a897f1e1f61c4aa0cc"
+    },
+    {
+      "path": "scripts/connector_requests.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 4139,
+      "mode": 420,
+      "sha256": "acb9fa5eda5b9e6704fdb3f8228194fae3c44174fdc6b807e567026e5aac5e95"
+    },
+    {
+      "path": "scripts/connector_safety.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 5266,
+      "mode": 420,
+      "sha256": "4ca2a606a735ed99945d6faeb90e53c6cb92da422ae2977438c5fffc840c9da0"
+    },
+    {
+      "path": "scripts/connector_sources.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 8909,
+      "mode": 420,
+      "sha256": "ab5dc8bef920af8b75922248833388722b4bb60e10eaa92d30c6595deb87c79e"
+    },
+    {
+      "path": "scripts/connector_store.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 3553,
+      "mode": 420,
+      "sha256": "178409c15491d93ea32aac24f03d79b7b7ed36da0109e8afe960f1d48b8ce013"
+    },
+    {
+      "path": "scripts/connector_writes.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 5147,
+      "mode": 420,
+      "sha256": "61ba16e78b7bf0ed211b00afdafc48d97947aa819ccf3df5c81b0fcd65477db4"
+    },
+    {
+      "path": "scripts/contract_reader.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 6241,
+      "mode": 420,
+      "sha256": "1710b05c82d95110b8f3c4b3063b41ba85c02de1713591f6d8a6e75fdaec6cf8"
+    },
+    {
+      "path": "scripts/control_artifacts.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 8733,
+      "mode": 420,
+      "sha256": "49672569770c410cd43209b051d9c94c9c4b26ab0d99abb42cf4cfb2b8ebbc16"
+    },
+    {
+      "path": "scripts/control_review.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 5273,
+      "mode": 420,
+      "sha256": "ba17d3e5e34eda60b4d2bc99331d2a9e3089923ed9b65cf679341a75e0da092f"
+    },
+    {
+      "path": "scripts/current_dependencies.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 6831,
+      "mode": 420,
+      "sha256": "4f5d76b7e01f20a3a53aa66d067fcfe098100baa2a9313268b24ab3047fa82ee"
+    },
+    {
+      "path": "scripts/deck_browser.mjs",
+      "kind": "file",
+      "excluded": false,
+      "size": 9884,
+      "mode": 420,
+      "sha256": "5b415513ce21a2b6bad12678073c133592d2ea4eaf087e511d3fd4eba2dfdcfe"
+    },
+    {
+      "path": "scripts/deck_browser.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 8762,
+      "mode": 420,
+      "sha256": "3179a17273ebee2be290507dd6212ca91b57fcb4084c93c0d9f9f7dba8927cab"
+    },
+    {
+      "path": "scripts/deck_export.mjs",
+      "kind": "file",
+      "excluded": false,
+      "size": 10438,
+      "mode": 420,
+      "sha256": "89340874331a5a598dc4fae90039aee77c6cdc43c7c7a6f2b322eb1d9301b23f"
+    },
+    {
+      "path": "scripts/deck_export.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 13693,
+      "mode": 420,
+      "sha256": "6fb197a2ce1ef6cbf1e9b614f3bc4278fcd57737d0cc3ed941953177db323626"
+    },
+    {
+      "path": "scripts/deck_external.mjs",
+      "kind": "file",
+      "excluded": false,
+      "size": 39929,
+      "mode": 420,
+      "sha256": "d742102ef3e262de313049433fdd9a900755435463f2d0814666cd935b58e0a0"
+    },
+    {
+      "path": "scripts/deck_page_render.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 1919,
+      "mode": 420,
+      "sha256": "1ce5e94136f2ae02ffab253194c3cc4632831545f83c2343893f826212e841f0"
+    },
+    {
+      "path": "scripts/deck_plan.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 9328,
+      "mode": 420,
+      "sha256": "b4bbf4ce16e9b25d311ccb2636e7620caebb9df06e100e6ee785c4c833ee1996"
+    },
+    {
+      "path": "scripts/deck_shots.mjs",
+      "kind": "file",
+      "excluded": false,
+      "size": 3781,
+      "mode": 420,
+      "sha256": "40afde412958ffe68598bc8dc8772886a21911768d0855de65909fc19ab021ef"
+    },
+    {
+      "path": "scripts/deck_style.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 7202,
+      "mode": 420,
+      "sha256": "5e119d34064a82083331eaf7aeb28f6a1b8f0adc6afab5b2c41348eaf305639d"
+    },
+    {
+      "path": "scripts/deck_zijian.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 7597,
+      "mode": 420,
+      "sha256": "ec7d2f6120696a08fad84c7cfb26204eeb4dc57589126c96134df50d59b100a6"
+    },
+    {
+      "path": "scripts/design_expression.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 12364,
+      "mode": 420,
+      "sha256": "9770d2ca8dfb1b6d04e1a91ff8f2cf5521f0baeb1ab1186694a655487293dbc0"
+    },
+    {
+      "path": "scripts/design_input.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 5004,
+      "mode": 420,
+      "sha256": "1e5272c3730f084153d40b6f43a284ec021c0d6cd80bfb39230dd0b10c6b58fd"
+    },
+    {
+      "path": "scripts/dispatch_files.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 5553,
+      "mode": 420,
+      "sha256": "9542ea1270bfb8d70dbdcf6af02426a13376f6bb048b1b289026871040d8969a"
+    },
+    {
+      "path": "scripts/duiwai_daochu.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 17608,
+      "mode": 420,
+      "sha256": "56e4b39ad7af8e2fcdbeef21fcfe8150fe9258dec24410ed22e013d42bf917d5"
+    },
+    {
+      "path": "scripts/export_gantt.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 7404,
+      "mode": 420,
+      "sha256": "5f0e673b8a2a5317f4aada5d515534929f0758c7f59fe703a8755d850a8c6502"
+    },
+    {
+      "path": "scripts/gantt_model.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 4501,
+      "mode": 420,
+      "sha256": "a5f6a36673d299854beb3093813c8a962405b2756ed5af27c34191a8431786b7"
+    },
+    {
+      "path": "scripts/guidang.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 12835,
+      "mode": 420,
+      "sha256": "85d1162f7e66073880751dbaa39e3299e34037d2901d0b4cfd88665da6b52128"
+    },
+    {
+      "path": "scripts/handoff_history.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 4125,
+      "mode": 420,
+      "sha256": "02b0283e48584d9248f82077515269d7d0e543f8d5e5de0ba6291e6306ee2479"
+    },
+    {
+      "path": "scripts/handoff_inspection.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 9704,
+      "mode": 420,
+      "sha256": "0a6a2b3dc8d45d40f5581498af164be224ba0e9a96112df176b824fd3eaae0e9"
+    },
+    {
+      "path": "scripts/handoff_inventory.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 4723,
+      "mode": 420,
+      "sha256": "b697f4fb86f3687040aeebeef1ffe5d95e4ec88cfb69c8358f4196594fbc59b9"
+    },
+    {
+      "path": "scripts/handoff_package.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 6664,
+      "mode": 420,
+      "sha256": "5510c5b75bdf87dce87824900837ba6e165432b5cd36e3ce8bc0b4d728c476b5"
+    },
+    {
+      "path": "scripts/handoff_records.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 5718,
+      "mode": 420,
+      "sha256": "bef51c193f73e7c7811ffa09f78233f18d6f658fdd03d52a5ee99a862429a812"
+    },
+    {
+      "path": "scripts/handoff_transfer.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 9197,
+      "mode": 420,
+      "sha256": "fffe8cfdfe5779ec8a12512301819a594e82f6fdf53f74d77b589f05e7120808"
+    },
+    {
+      "path": "scripts/html_deck.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 12990,
+      "mode": 420,
+      "sha256": "13f6a349d397b7cc5afe9add80cf476492b815bab533c084f6cebbf005cadfc8"
+    },
+    {
+      "path": "scripts/html_huamian.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 14998,
+      "mode": 420,
+      "sha256": "b1fd247150c4a20bffd271e055e0c644b635f6bf0428c15f463d6bd27942cf24"
+    },
+    {
+      "path": "scripts/impact_scan.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 7936,
+      "mode": 420,
+      "sha256": "b868a2a535228a8f662b4baa477dfc9aa044b9e9e63eb9b35bc5e3c2fa67dc2f"
+    },
+    {
+      "path": "scripts/incremental_review.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 30479,
+      "mode": 420,
+      "sha256": "91ec6003f17e922f89356e5479627a0d540d23a8ebbe9271b85d93d1de0b695a"
+    },
+    {
+      "path": "scripts/inspect_contract.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 4743,
+      "mode": 420,
+      "sha256": "f8b38a6bbd34575eaa4340e626fd7f6945a26eaf3a240b1cb0c23598f7261f69"
+    },
+    {
+      "path": "scripts/jianhe_zhunbei.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 10730,
+      "mode": 420,
+      "sha256": "9c37c88885aa8c54399e466b5f2ce44f4d388d28c497ae38ef62b9c42b50a866"
+    },
+    {
+      "path": "scripts/jiaofu_guankou.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 15651,
+      "mode": 420,
+      "sha256": "8974d4b7554d72c94e853af9b63e365ffaca377526df1d174f5631dea1ceeef0"
+    },
+    {
+      "path": "scripts/jiaojie_shishi.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 14318,
+      "mode": 420,
+      "sha256": "8a271017bc19e35bb6dd412bded0c057e9ed3e679052ce55935b2e46bee5b49a"
+    },
+    {
+      "path": "scripts/jiyibi.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 3262,
+      "mode": 420,
+      "sha256": "f02347c154cda141e09f2d054da093a9f99542fdc31d441305d23cab9f6c5f11"
+    },
+    {
+      "path": "scripts/knowledge_connectors.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 5669,
+      "mode": 420,
+      "sha256": "9193d9dd62f73b7d3bcbd020ce171f6c00645c9409f3b4c16a705e76040be7dc"
+    },
+    {
+      "path": "scripts/lujing.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 3715,
+      "mode": 420,
+      "sha256": "085643ddac952018b60562660dc8820291e9984218c4696c40c0b3cd1aa80f92"
+    },
+    {
+      "path": "scripts/neibu_yongyu.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 5278,
+      "mode": 420,
+      "sha256": "d4af06b57fcb56ce19617785b65250357d7caaebc7b9734696e734ffe6d8287f"
+    },
+    {
+      "path": "scripts/package_audit.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 6514,
+      "mode": 420,
+      "sha256": "bbf5cef9d4c7570bd8d3773db7eeb0aa1a3beb80e1be3c5920b57ff56c850a19"
+    },
+    {
+      "path": "scripts/package_audit_copy.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 5574,
+      "mode": 420,
+      "sha256": "dd0236e5cba7996a0c9eeec2332d0551af40d86ba3df68a0a454cc86b388eea8"
+    },
+    {
+      "path": "scripts/package_checks.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 8978,
+      "mode": 420,
+      "sha256": "592de9a54870e9ffc78b687b4407598311b730088c2f533dd396bf7364273838"
+    },
+    {
+      "path": "scripts/package_checks_content.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 8423,
+      "mode": 420,
+      "sha256": "1430abb753d8e194872fc9c755e2a79a53264525aee5aed2a12e7b191210ccca"
+    },
+    {
+      "path": "scripts/package_checks_dependencies.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 7566,
+      "mode": 420,
+      "sha256": "b64a1579ed1c9ed1480999daf5fdf41dc18baa898eec1cf375141c40b07c8ea6"
+    },
+    {
+      "path": "scripts/package_checks_images.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 8473,
+      "mode": 420,
+      "sha256": "7403388735bdb8aea1a97aaaad9012a2c6c33db1831829a103b026d0128554a4"
+    },
+    {
+      "path": "scripts/package_checks_materials.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 10976,
+      "mode": 420,
+      "sha256": "8790bb60d761ab5a7b8d98b56c8aef45bfccaf1017d25d235920211dad97d9c6"
+    },
+    {
+      "path": "scripts/package_checks_office.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 5409,
+      "mode": 420,
+      "sha256": "0d882a7c98011242b3775a692442ef0fb4cebe7085229af6f8d9a748459673f4"
+    },
+    {
+      "path": "scripts/package_checks_references.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 7400,
+      "mode": 420,
+      "sha256": "d454fcdb884690422587206f36b5c06cbf12542c8817b422c23375a30194c280"
+    },
+    {
+      "path": "scripts/package_image_metadata.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 5295,
+      "mode": 420,
+      "sha256": "ee2e81dbf4b5e0ea6c64638925f46f6a0b623a4166558d451ccf9ffa2a53b696"
+    },
+    {
+      "path": "scripts/phase2_review.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 8172,
+      "mode": 420,
+      "sha256": "010820aa487ac53ea407ccb171a50af607bf8818f7541a7c53c38a0aee678f71"
+    },
+    {
+      "path": "scripts/phase2_review_guard.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 3957,
+      "mode": 420,
+      "sha256": "870330283adabc486972e28c6ccb5c8f5fa6f26827c08a7400ae2e6faedc4e04"
+    },
+    {
+      "path": "scripts/phase2_store.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 13226,
+      "mode": 420,
+      "sha256": "8685e03fefef95120c6058f2574c5a7b6b57bfd1de9ba9ac5d2ed6f63cf8d46d"
+    },
+    {
+      "path": "scripts/phase3.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 6432,
+      "mode": 420,
+      "sha256": "4ec3f9d26f641afba6a079da2a41337a15428ee3be623ed29906891fdefc2a92"
+    },
+    {
+      "path": "scripts/phase3_decisions.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 9132,
+      "mode": 420,
+      "sha256": "f71fb12c1fbc9fe2ca06069b39a485d30368ec721721f9613e75c1e9f06b2d57"
+    },
+    {
+      "path": "scripts/phase3_document.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 9346,
+      "mode": 420,
+      "sha256": "62f09b8adbcaa2840a092f375d8f8afe99edeae6b204eb58bd8d1c90f0f24c6f"
+    },
+    {
+      "path": "scripts/phase3_events.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 1113,
+      "mode": 420,
+      "sha256": "f02d1dc82c47f3a561612866bc664d099cfa239a2ff7bbfaaa8d8f9e699c2b13"
+    },
+    {
+      "path": "scripts/phase3_feedback.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 6724,
+      "mode": 420,
+      "sha256": "9eb28595f34247f68f117440ca8e44b28d9e7b215ad04935f34906409f5e6bcf"
+    },
+    {
+      "path": "scripts/phase3_io.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 4530,
+      "mode": 420,
+      "sha256": "ff86e3db1aa5d564d035f8f921e8743e315edd0a18b9e485f36af06686cce99c"
+    },
+    {
+      "path": "scripts/phase3_review.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 9208,
+      "mode": 420,
+      "sha256": "1b95e920746670a653c3375291635d9cd5ffc8c787f886df896e6904a71c09a9"
+    },
+    {
+      "path": "scripts/phase3_sources.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 8433,
+      "mode": 420,
+      "sha256": "ac1291e704691c927a578c60720013ad6d6d7e140aa6279db18764790dd3c8c7"
+    },
+    {
+      "path": "scripts/phase3_store.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 9089,
+      "mode": 420,
+      "sha256": "49376f1c4b3b08d88f5ea383d03b781ae30033fbd0d058b145a7cb7cb92f7eda"
+    },
+    {
+      "path": "scripts/phase3_tasks.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 12772,
+      "mode": 420,
+      "sha256": "27097a04439948356a1a75fc773de42df25b1353f50417707879a84d6813c52e"
+    },
+    {
+      "path": "scripts/phase5.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 6522,
+      "mode": 420,
+      "sha256": "04998ea92628031b169b84f20d120009899d771a13b09eab69ab4fbf5d27d751"
+    },
+    {
+      "path": "scripts/phase5_common.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 13203,
+      "mode": 420,
+      "sha256": "963bf5e9f6b9f5d0c70396b3cf2e1f0cec954fcb6112f6ad6af3a1dcf2a7a958"
+    },
+    {
+      "path": "scripts/phase5_decisions.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 2888,
+      "mode": 420,
+      "sha256": "50912324624a2d4c5dffd91624fefd29d5e05b30fd0d8342c036d72faa51c8a4"
+    },
+    {
+      "path": "scripts/phase5_io.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 2864,
+      "mode": 420,
+      "sha256": "eea3bc0b778f2457624b0e5cd700bb36a5ee6a2135f8c0ec7a594a2c82a64da0"
+    },
+    {
+      "path": "scripts/phase5_review.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 10616,
+      "mode": 420,
+      "sha256": "30c86d11480acd1743c62a58ba10b80123d9686402668ab2e6ef83a33065f9c0"
+    },
+    {
+      "path": "scripts/phase5_tasks.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 9435,
+      "mode": 420,
+      "sha256": "7b294b3f856b136f67e6fba96cea9db0babadea538c4019f59a5eba6952ee6af"
+    },
+    {
+      "path": "scripts/phase5_visual.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 11307,
+      "mode": 420,
+      "sha256": "e42c5f16c1584d583f9f5f01e1c8c7db17ca503a88cb17de8bf4ad998b0b624d"
+    },
+    {
+      "path": "scripts/phase6_events.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 3292,
+      "mode": 420,
+      "sha256": "a108de20cbc10ce6b87492192cac3d7acfdf3c9ab0264776f1fdd63601c3ab6b"
+    },
+    {
+      "path": "scripts/phase6_targets.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 8790,
+      "mode": 420,
+      "sha256": "a9bf34ff303e3a661e5ad18c02c9210b84f7085019d25e1efad1e902e6e4b989"
+    },
+    {
+      "path": "scripts/project_closure.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 12101,
+      "mode": 420,
+      "sha256": "f99032520d5a88bc7abc9a61fcb520242b077971206df184f473270a65840d91"
+    },
+    {
+      "path": "scripts/project_handoff.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 4944,
+      "mode": 420,
+      "sha256": "8d949464400b5fdec50d7f5b2e945d9beee890419cbd43f151dfe25a61aed4cb"
+    },
+    {
+      "path": "scripts/project_memory.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 1734,
+      "mode": 420,
+      "sha256": "89557b843370aaca254be1f407d7a3ad78fd0f117b194f500418b1246f4870e1"
+    },
+    {
+      "path": "scripts/project_memory_store.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 15368,
+      "mode": 420,
+      "sha256": "5d190cded03d8aae9ef144c80732e8631a71aaf841d4a33149b03916d8de4483"
+    },
+    {
+      "path": "scripts/proposal_input.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 2715,
+      "mode": 420,
+      "sha256": "b36dc8992056599c2a869dd83d96171c53e353c17ff689e24915a3ab5c5d805e"
+    },
+    {
+      "path": "scripts/proposal_plan.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 28640,
+      "mode": 420,
+      "sha256": "cf7f584fb4c257552e2c362b3513f7584f758f761a4a15d0ce8a925b9a89cd16"
+    },
+    {
+      "path": "scripts/proposal_script.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 11909,
+      "mode": 420,
+      "sha256": "cf6285e2379c2e01449fd1387d1fddb2b6be8cc82e45d5bae52b9fc3e6c1f1b8"
+    },
+    {
+      "path": "scripts/registration_guard.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 4267,
+      "mode": 420,
+      "sha256": "fd3f2584590fa29375d80b95cf841839bb8bbe151d97ad8cf4352d51023c7d28"
+    },
+    {
+      "path": "scripts/resolve_conflict.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 2766,
+      "mode": 420,
+      "sha256": "3616aa114a1cfecc40e8787b3261ca05680fe17902d31856e5e1344f16de9411"
+    },
+    {
+      "path": "scripts/review_gate.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 6696,
+      "mode": 420,
+      "sha256": "84c864e5be0ae81d9a30ef7daf8829b8ac3ad42b185a9e1ca5a2e2d10fb0bb78"
+    },
+    {
+      "path": "scripts/runtime_structure.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 11011,
+      "mode": 420,
+      "sha256": "2e68b464c85c3580f6330e407f514b92d3aa468351fc3c40b18994695cb041df"
+    },
+    {
+      "path": "scripts/shencha_zu.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 22511,
+      "mode": 420,
+      "sha256": "25ecbc325de15ad5449be1aadff512df0be2ff33f23a2e4d958cbccf7df0e43b"
+    },
+    {
+      "path": "scripts/shijue_zengliang.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 53710,
+      "mode": 420,
+      "sha256": "2d0f703aa6b4f24babf2a4c9becbc63c4013cdc7f67b4ff6e9b36de135c217eb"
+    },
+    {
+      "path": "scripts/shijue_zhiwen.mjs",
+      "kind": "file",
+      "excluded": false,
+      "size": 20204,
+      "mode": 420,
+      "sha256": "fd0cad4b74cad47bcc4394662220d46d2dbab7439de6f27a5eb448c8a125a5df"
+    },
+    {
+      "path": "scripts/shougai_dengji.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 16187,
+      "mode": 420,
+      "sha256": "be08eb7e449f4bed9a0c0de657626c813b85507a842c30c037b90981bfee47da"
+    },
+    {
+      "path": "scripts/source_verification.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 8862,
+      "mode": 420,
+      "sha256": "6b5a533721dbd5f64cdf4e231d77718653c194990047f41b546339a70e70dc67"
+    },
+    {
+      "path": "scripts/standalone_budget.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 5823,
+      "mode": 420,
+      "sha256": "66001100d68cab0c4ef2065a06617d81ac1afbe37ebaf15e64765ba357cffa66"
+    },
+    {
+      "path": "scripts/standalone_review.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 7219,
+      "mode": 420,
+      "sha256": "3f355c454ba28ed367484529ce656b1c9dd04b46a8c57f03a637cb847dd6b8e1"
+    },
+    {
+      "path": "scripts/standalone_store.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 20163,
+      "mode": 420,
+      "sha256": "2f39a4cec1451de7e47dcf784344c35b147ad670d1b810132b1e01bfd0c0213b"
+    },
+    {
+      "path": "scripts/standalone_tasks.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 27957,
+      "mode": 420,
+      "sha256": "4a120e7b59ade37730290c38e71bee4025218959301f5d9284ebe0d88041d682"
+    },
+    {
+      "path": "scripts/standalone_visual.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 10369,
+      "mode": 420,
+      "sha256": "077918b24757608dfb1b54986c5ce1c1607de3aaed6bcb3848cb3e551d8d9dd4"
+    },
+    {
+      "path": "scripts/sucai_ku.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 8476,
+      "mode": 420,
+      "sha256": "ee97334aacf2761e976a0388a928388ec1bab540cc5e31fdbca5c5b65d6354cc"
+    },
+    {
+      "path": "scripts/sync_hosts.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 5579,
+      "mode": 420,
+      "sha256": "c6527b44c01e9c0f50da3a93cce60f012e86c6bdc373f86a5de8cee485f425bd"
+    },
+    {
+      "path": "scripts/task_context.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 8212,
+      "mode": 420,
+      "sha256": "dccdf1186fb152b0beef8f903ce8b1366e31e9955d28151ae7f624efd0d86608"
+    },
+    {
+      "path": "scripts/task_receipts.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 13681,
+      "mode": 420,
+      "sha256": "bbbc98f434d379b149914c233511b474d2aa0b061eef9ffa59a7803b0df14842"
+    },
+    {
+      "path": "scripts/task_validation.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 3218,
+      "mode": 420,
+      "sha256": "09dd144e0910d0705ea240ecd0a22e5cc8250f32138b9d21331af6e6a341392c"
+    },
+    {
+      "path": "scripts/template_profile.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 6537,
+      "mode": 420,
+      "sha256": "79d7d640d738722652b794967d916b18203443fdd9b1e22771fb9bb5dffe1833"
+    },
+    {
+      "path": "scripts/validate_gantt.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 12280,
+      "mode": 420,
+      "sha256": "332941460e9c9201664b81b2c346e27882ef5cf4ca2cd4c2a3b25dd79da589df"
+    },
+    {
+      "path": "scripts/validate_project.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 22763,
+      "mode": 420,
+      "sha256": "6f9ef5760a32a5a2e6e895af859c60ec5c8fd95245a45c685fce01e332112747"
+    },
+    {
+      "path": "scripts/waibu_wendang.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 8872,
+      "mode": 420,
+      "sha256": "f4552cf48b5e4099ff82d127eae660e0540bebbbde34a54e2b1abb699dd6c143"
+    },
+    {
+      "path": "scripts/workbook_io.mjs",
+      "kind": "file",
+      "excluded": false,
+      "size": 4628,
+      "mode": 420,
+      "sha256": "4268104f9dfbffdc5b610eacedea5ae32b7bea4680de83258b824abfc7f35269"
+    },
+    {
+      "path": "scripts/workbook_validations.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 5719,
+      "mode": 420,
+      "sha256": "80d0c2425f58beef4ed79fb4c37cad9991e368a62cf4de8e36e51b73c48ce77e"
+    },
+    {
+      "path": "scripts/workflow_status.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 5397,
+      "mode": 420,
+      "sha256": "bf0d878fe0302444c81a1ebb79f51e019100ebcb42e2f8f3638fe7cdbc623579"
+    },
+    {
+      "path": "scripts/workspace_lock.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 3488,
+      "mode": 420,
+      "sha256": "85637af17ac00446ff9ed2e1086c0db3c55606b86805b2301421e6c64180a271"
+    },
+    {
+      "path": "scripts/workspace_resume.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 17126,
+      "mode": 420,
+      "sha256": "5e58a61cd81e4f4e4c36412081c2d6437363764109a696c3df04098548ad0127"
+    },
+    {
+      "path": "scripts/workspace_status.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 7644,
+      "mode": 420,
+      "sha256": "3b1766db2f65638f3b7d438d8dd2ac88195ab791f1ef445900c81b98cbf97a82"
+    },
+    {
+      "path": "scripts/xiugai_fenpai.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 11304,
+      "mode": 420,
+      "sha256": "9f114ad894278f8778f2b2f80fcefc86a77134be76b0d41ad7ff5c2e8f179b7f"
+    },
+    {
+      "path": "scripts/yunxing_chayi.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 1290,
+      "mode": 420,
+      "sha256": "fb9b91192e5cbae944b4174730aac673dc96993157939a24ac2f59988c68f649"
+    },
+    {
+      "path": "scripts/yunxing_fupan.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 22872,
+      "mode": 420,
+      "sha256": "37ca658ecfa1337db35a39559a54c352b3694f162333c43c11436ad6ca5f9a47"
+    },
+    {
+      "path": "scripts/yunxing_rizhi.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 35817,
+      "mode": 420,
+      "sha256": "8acdf685b0b5d6406c4688a6e19125f1dd3fd89d68424db0e6554f0da9bac00f"
+    },
+    {
+      "path": "templates",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": "templates/brand-house-model.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 98477,
+      "mode": 420,
+      "sha256": "2b8314dc320b640209cd838b574a0878699301eaaba9309dc9f0b5736c9cbf48"
+    },
+    {
+      "path": "templates/brand-house-shell.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 2299,
+      "mode": 420,
+      "sha256": "efc0a4a9df7ff7d50d9b4b91b1b38d4370e2d0c913f2107d751b07904666bbfa"
+    },
+    {
+      "path": "templates/brand-house.css",
+      "kind": "file",
+      "excluded": false,
+      "size": 9823,
+      "mode": 420,
+      "sha256": "16bfc1fbc9f3bffe766dfea7b783f95603c092382e36e4d83fb56c30e79ded48"
+    },
+    {
+      "path": "templates/proposal-deck.html",
+      "kind": "file",
+      "excluded": false,
+      "size": 10959,
+      "mode": 420,
+      "sha256": "420db3e79648c1deaa973620cd341d049439e7bfa046f21c101f60089fd28f1d"
+    },
+    {
+      "path": "品牌屋HTML运行说明.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 9622,
+      "mode": 420,
+      "sha256": "6eeccd302c389c552bf8ac0913e24eb48fda9fab74886434c0e4680a85cc6679"
+    },
+    {
+      "path": "外部连接说明.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 8229,
+      "mode": 420,
+      "sha256": "51116b15741f746f339e4cda2ba2977965a972cb4b4e418ed9c62e783be882d5"
+    },
+    {
+      "path": "工作包移交说明.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 14396,
+      "mode": 420,
+      "sha256": "4d272b9dffe83906912c05f03c1e566df188d136973976719f2df09db11ae9b0"
+    },
+    {
+      "path": "工作能力与流程总览.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 9899,
+      "mode": 420,
+      "sha256": "c46f26f3bddee4b3508869ce2350df5a76a441c8156666f77235a2bf544ff0ea"
+    },
+    {
+      "path": "提案与设计检核运行说明.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 27623,
+      "mode": 420,
+      "sha256": "fc577c7a2e06fa4722f9ef56375ee64b9eed2e2232449de239087bbcab741a3a"
+    },
+    {
+      "path": "策略与品牌屋运行说明.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 14937,
+      "mode": 420,
+      "sha256": "b7d710976555af1b4c9b57df9ff985c19e414774f0587e433defe9db9d6bd79b"
+    },
+    {
+      "path": "统一包说明.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 5898,
+      "mode": 420,
+      "sha256": "e26e19a94989cf8a5efda0ca0ccb96b03783d66f064626a536a66fec2ca710f1"
+    },
+    {
+      "path": "运行环境与命令.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 45640,
+      "mode": 420,
+      "sha256": "b28b7b30d72f552ee76517419e0cd822bcee02642e03ab9ae4988fc55ce960d4"
+    },
+    {
+      "path": "项目检核与结项运行说明.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 9868,
+      "mode": 420,
+      "sha256": "82061c947f5a9ae0b596af2c2f58a8a4e375cb954e2eb7d360904b94c7da27c1"
+    }
+  ],
+  "excluded_from_source": [
+    {
+      "path": ".DS_Store",
+      "reason": "runtime_cache"
+    }
+  ]
+}
