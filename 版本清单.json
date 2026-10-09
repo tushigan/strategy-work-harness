@@ -1,24 +1,27 @@
 {
   "name": "策略师工作包（Codex / Claude Code 统一包）",
   "repository": "https://github.com/tushigan/strategy-work-harness",
-  "version": "1.7.2",
-  "released": "2026-10-08",
+  "version": "1.7.3",
+  "released": "2026-10-09",
   "package_dir": "策略师工作包",
   "package_inventory": "策略师工作包/package-inventory.json",
-  "package_inventory_sha256": "58e0a41abb683e806f19d5b619b942aec0e0559a9d0e5e58bae73bd421d61b18",
+  "package_inventory_sha256": "a7e28b7af38330676c8c4e45c7ca2d8b432622f6ec07354781b7409a0e0a68b7",
   "release_zip": {
-    "name": "strategist-harness-v1.7.2-20261008.zip",
-    "url": "https://github.com/tushigan/strategy-work-harness/releases/download/v1.7.2/strategist-harness-v1.7.2-20261008.zip",
-    "sha256": "7ba47267a8229cc65a3ba08d8a709e36acb09b750c47a6b132a83f8c660b2a5d",
-    "bytes": 64467154,
+    "name": "strategist-harness-v1.7.3-20261009.zip",
+    "url": "https://github.com/tushigan/strategy-work-harness/releases/download/v1.7.3/strategist-harness-v1.7.3-20261009.zip",
+    "sha256": "c8543b3730891b7b4e0cbc63e45a6d8be9af87360c58ad54d48f14f3fc06da8d",
+    "bytes": 64472120,
     "files": 625,
     "zip_root": "统一包",
-    "note": "与开发仓库定稿包 策略师工作包-统一版-v1.7.2-定稿-20261008.zip 逐字节相同，仅附件名改为英文（GitHub 会改写中文附件名）"
+    "note": "与开发仓库定稿包 策略师工作包-统一版-v1.7.3-定稿-20261009.zip 逐字节相同，仅附件名改为英文（GitHub 会改写中文附件名）"
   },
-  "git_tag": "v1.7.2",
+  "git_tag": "v1.7.3",
   "requirements": {
     "python": ">=3.11",
-    "hosts": ["Codex", "Claude Code"],
+    "hosts": [
+      "Codex",
+      "Claude Code"
+    ],
     "optional": {
       "chrome_and_playwright": "演示稿视觉增量检核与对外导出；HARNESS_NODE_MODULES 指向含 playwright 的 node_modules",
       "pypdfium2": "PDF 逐页比对；缺它时 PDF 一律全页检核",
@@ -29,21 +32,57 @@
     "readme_regex": "当前版本：v([0-9]+\\.[0-9]+\\.[0-9]+)",
     "readme_path": "README.md",
     "inventory_sha256_map": {
-      "58e0a41abb683e806f19d5b619b942aec0e0559a9d0e5e58bae73bd421d61b18": "1.7.2"
-    }
+      "58e0a41abb683e806f19d5b619b942aec0e0559a9d0e5e58bae73bd421d61b18": "1.7.2",
+      "a7e28b7af38330676c8c4e45c7ca2d8b432622f6ec07354781b7409a0e0a68b7": "1.7.3",
+      "fbe96d2d38ddeaa27cb6ef7bf21ba04b011d5d61962b8830f2d8c4b829b28126": "1.7.2"
+    },
+    "note": "fbe96d2d… 为 v1.7.2 候选 r2（代码与 v1.7.2 定稿逐字节相同，只差 README 版本记录与一处注释），按 1.7.2 处理"
   },
   "upgrade_rules": {
-    "never_touch": ["project/"],
+    "never_touch": [
+      "project/"
+    ],
     "replace": "project/ 以外的全部工作包文件（含 .agents、.claude、.codex 隐藏目录）",
     "move_not_delete": "旧版有、新版没有的文件移到同级“<工作区名>-升级移出-<日期>/”",
     "backup_first": "同级“<工作区名>-升级前备份-v<旧版本>-<日期>/”，逐文件 SHA-256 核对一致后才继续",
-    "after": ["check_package_integrity", "sync_hosts check", "validate_project errors 必须为空", "project_handoff resume", "banben_baoliu --dry-run 试算并报告"]
+    "after": [
+      "check_package_integrity",
+      "sync_hosts check",
+      "validate_project errors 必须为空",
+      "project_handoff resume",
+      "banben_baoliu --dry-run 试算并报告"
+    ]
   },
   "history": [
-    {"version": "1.7.2", "date": "2026-10-08", "note": "修升级在途项目时发现的 4 项缺陷：成果目录里读不了的 JSON 不再阻断整个工作区；版本保留不移例外版共用文件、dry-run 与执行一致、受保护记录不再导致整版跳过"},
-    {"version": "1.7.1", "date": "2026-10-08", "note": "修渲染卡住：两次渲染依序进行、关浏览器限时、渲染超时按页数估算"},
-    {"version": "1.7.0", "date": "2026-10-07", "note": "演示稿视觉增量检核（只看像素有变化的页）；版本保留（成品只留最新 2 版，其余自动移到归档）"},
-    {"version": "1.6.0", "date": "2026-10-06", "note": "真实试用优化 U01—U18"},
-    {"version": "1.0.0", "date": "2026-09-23", "note": "首个公开版（仅 Codex，包内容在仓库根目录）"}
+    {
+      "version": "1.7.3",
+      "date": "2026-10-09",
+      "note": "修在途项目升级后发现的 4 项缺陷：已结束分派的输入文件后来变了不再阻断工作区；project/records/*.jsonl 追加式记录（如项目记忆）追加后旧引用不再失效；resume 的“有效独立检核”与发客户 gate 口径一致；重试守卫不把 resume / 启动检查如实报出的 blocked 当失败（v1.7.2 留下的旧计数也不再拦）"
+    },
+    {
+      "version": "1.7.2",
+      "date": "2026-10-08",
+      "note": "修升级在途项目时发现的 4 项缺陷：成果目录里读不了的 JSON 不再阻断整个工作区；版本保留不移例外版共用文件、dry-run 与执行一致、受保护记录不再导致整版跳过"
+    },
+    {
+      "version": "1.7.1",
+      "date": "2026-10-08",
+      "note": "修渲染卡住：两次渲染依序进行、关浏览器限时、渲染超时按页数估算"
+    },
+    {
+      "version": "1.7.0",
+      "date": "2026-10-07",
+      "note": "演示稿视觉增量检核（只看像素有变化的页）；版本保留（成品只留最新 2 版，其余自动移到归档）"
+    },
+    {
+      "version": "1.6.0",
+      "date": "2026-10-06",
+      "note": "真实试用优化 U01—U18"
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-09-23",
+      "note": "首个公开版（仅 Codex，包内容在仓库根目录）"
+    }
   ]
 }

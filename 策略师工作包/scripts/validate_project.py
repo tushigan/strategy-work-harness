@@ -452,7 +452,10 @@ def main() -> int:
         for item in warnings:
             print(f"提示: {item}")
         print("本地工作允许继续: " + ("是" if not errors else "否"))
-    return 1 if errors else 0
+    if errors:
+        from yunxing_rizhi import StateReport
+        raise StateReport(1)  # F08：启动检查如实报出 blocked，退出码仍 1，重试守卫不计数
+    return 0
 
 
 if __name__ == "__main__":

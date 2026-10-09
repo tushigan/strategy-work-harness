@@ -128,22 +128,47 @@ def _purpose_matches(root,target,report):
         raise WorkflowError(f'报告用途（{report.get("review_purpose")}）与派工记录（{recorded}）不一致{note}，不能登记')
 
 
+def _visuals(meta):
+    return [x for x in meta['task']['deliverables'] if 'path' in x and Path(x['path']).suffix.lower() in {'.html','.htm','.pdf'}]
+
+
+def _bound_entry(root,report,artifact):
+    """字段检查（不读成品、不渲染）：该 HTML/PDF 恰有一条绑定当前成品指纹的视觉证据、方法有效、有逐页记录。
+    validate 与 resume 的静态判断（static_problem）共用这一处，不另写规则。"""
+    entries=report.get('visual_evidence',[])
+    matches=[e for e in entries if isinstance(e,dict) and e.get('artifact')=={'path':artifact['path'],'sha256':artifact['sha256']}] if isinstance(entries,list) else []
+    if len(matches)!=1:raise WorkflowError('HTML/PDF 通过须绑定当前成品的逐页实际视觉证据')
+    entry=matches[0];method=entry.get('method')
+    if not isinstance(method,str) or not method.strip() or ('synthetic' in method.lower() and not (report['simulation'] and test_mode(root))):
+        raise WorkflowError('视觉方法无效，合成截图不得用于真实通过')
+    if not isinstance(entry.get('pages'),list) or not (entry['pages'] or entry.get('inherited_pages')):
+        raise WorkflowError('缺逐页视觉观察')
+    return entry
+
+
+def static_problem(root,meta,report):
+    """F07（v1.7.3）：resume 轻量核对用。按 gate 的当前规则做静态判断——报告格式版本与每个 HTML/PDF 的视觉证据字段，
+    不渲染、不读来源与成品原件。能过返回 None，否则返回原因（与 gate 拒绝时的原文相同）。"""
+    from incremental_review import schema
+    try:
+        schema(report)
+        for artifact in _visuals(meta):_bound_entry(root,report,artifact)
+    except WorkflowError as exc:
+        return str(exc)
+    return None
+
+
 def validate(root,meta,report,*,target=None,verify_render=False):
     _purpose_matches(root,target,report)
-    visuals=[x for x in meta['task']['deliverables'] if 'path' in x and Path(x['path']).suffix.lower() in {'.html','.htm','.pdf'}]
+    visuals=_visuals(meta)
     entries=report.get('visual_evidence',[])
     records={}
     for artifact in visuals:
-        matches=[e for e in entries if isinstance(e,dict) and e.get('artifact')=={'path':artifact['path'],'sha256':artifact['sha256']}]
-        if len(matches)!=1:raise WorkflowError('HTML/PDF 通过须绑定当前成品的逐页实际视觉证据')
-        entry=matches[0];method=entry.get('method')
-        if not isinstance(method,str) or not method.strip() or ('synthetic' in method.lower() and not (report['simulation'] and test_mode(root))):
-            raise WorkflowError('视觉方法无效，合成截图不得用于真实通过')
+        entry=_bound_entry(root,report,artifact)
         expected=set(required_pages(local(root,artifact['path'])));seen=set();digests=set()
         record=_record(root,entry,artifact,verify_render)
         if record is not None:records[artifact['path']]=record
         inherited=_inherited(root,target,report,entry,artifact,record)
-        if not isinstance(entry.get('pages'),list):raise WorkflowError('缺逐页视觉观察')
         for page in entry['pages']:
             if not isinstance(page,dict) or set(page)!={'page','file','observation'} or str(page['page']) not in expected or not isinstance(page['observation'],str) or not page['observation'].strip():
                 raise WorkflowError('逐页视觉记录字段或范围无效')

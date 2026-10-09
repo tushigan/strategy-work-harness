@@ -99,16 +99,25 @@ def dispatch_issues(root,current_only=False):
             return isinstance(value,dict) and (value.get('path'),value.get('sha256')) in dependencies
         live=[(label,ref) for label,ref in refs if matches(ref)]
         if item.get('status') in ACTIVE:
-            live=refs
-        elif any(label=='回传候选' for label,ref in live):
-            # Only an adopted candidate of the exact registered version retains
-            # its calling/controller proof. Shared inputs do not imply adoption.
-            # Inline originals are checked above by exact current references;
-            # do not reactivate other candidates/versions in an old readback.
-            live += [(label,ref) for label,ref in refs if label in {'调用凭证','返回调用凭证','回读凭证','接手证据'} and (label,ref) not in live]
-        retired=[pair for pair in refs if pair not in live]
+            live=refs;ended=[]
+        else:
+            # F05（v1.7.3）：已结束分派的输入与接手证据只是“当时用过的版本”。文件后来变了只记历史，
+            # 当前引用由任务自己的 file_issues 报一次，不按分派数重复、也不阻断工作区。
+            # （采纳候选的接手证据仍随下方凭证一起核对。）
+            ended=[(label,ref) for label,ref in live if label in {'输入文件','接手证据'}]
+            live=[pair for pair in live if pair not in ended]
+            if any(label=='回传候选' for label,ref in live):
+                # Only an adopted candidate of the exact registered version retains
+                # its calling/controller proof. Shared inputs do not imply adoption.
+                # Inline originals are checked above by exact current references;
+                # do not reactivate other candidates/versions in an old readback.
+                live += [(label,ref) for label,ref in refs if label in {'调用凭证','返回调用凭证','回读凭证','接手证据'} and (label,ref) not in live]
+            ended=[pair for pair in ended if pair not in live]
+        retired=[pair for pair in refs if pair not in live and pair not in ended]
         prefix=f"分派 {item['dispatch_id']}："
         current.extend(prefix+x for x in reference_issues(root,live))
+        for label,ref in ended:
+            historical.extend(prefix+'分派已结束，之后 '+x+'（只记历史；当前引用由任务自身核对）' for x in reference_issues(root,[(label,ref)]))
         if not current_only:
             historical.extend(prefix+x for x in reference_issues(root,retired))
         else:

@@ -4087,9 +4087,9 @@
       "path": "AGENTS.md",
       "kind": "file",
       "excluded": false,
-      "size": 57660,
+      "size": 60128,
       "mode": 420,
-      "sha256": "5527bd22f53a933907c48fe10c18b80890d7f687defba243ed158c0684f67187"
+      "sha256": "779b4a9571497a0b6a9141ac92a07fd499a8bc0ad932a1f9a6c6858fac09347d"
     },
     {
       "path": "CLAUDE.md",
@@ -4103,9 +4103,9 @@
       "path": "README.md",
       "kind": "file",
       "excluded": false,
-      "size": 15939,
+      "size": 17969,
       "mode": 420,
-      "sha256": "6f88ee7ecebf25d8f603f67549f545ef327baf05d38c9f7bc4114922cb16007d"
+      "sha256": "08d76a2ca0ceab51f6f948b4d5a88d37b194c63463f40a205fdf9dba63c33346"
     },
     {
       "path": "project",
@@ -4575,9 +4575,9 @@
       "path": "scripts/current_dependencies.py",
       "kind": "file",
       "excluded": false,
-      "size": 6831,
+      "size": 7664,
       "mode": 420,
-      "sha256": "4f5d76b7e01f20a3a53aa66d067fcfe098100baa2a9313268b24ab3047fa82ee"
+      "sha256": "6cb29d025f05e6539f0a2586a68bc8194bb28816b9617fd585a7f8ffbcd42540"
     },
     {
       "path": "scripts/deck_browser.mjs",
@@ -4679,9 +4679,9 @@
       "path": "scripts/dispatch_files.py",
       "kind": "file",
       "excluded": false,
-      "size": 5553,
+      "size": 6504,
       "mode": 420,
-      "sha256": "9542ea1270bfb8d70dbdcf6af02426a13376f6bb048b1b289026871040d8969a"
+      "sha256": "8ec1a363444b79bd4eff35431bef4031533a38b08078573b6b8f1461eaf63eba"
     },
     {
       "path": "scripts/duiwai_daochu.py",
@@ -4815,9 +4815,9 @@
       "path": "scripts/jiaofu_guankou.py",
       "kind": "file",
       "excluded": false,
-      "size": 15651,
+      "size": 16711,
       "mode": 420,
-      "sha256": "8974d4b7554d72c94e853af9b63e365ffaca377526df1d174f5631dea1ceeef0"
+      "sha256": "463af5ae8ea898c26c6ce5cdb4263707c2c6cbe5a2ce6b64f87d724b658e5de6"
     },
     {
       "path": "scripts/jiaojie_shishi.py",
@@ -5127,9 +5127,9 @@
       "path": "scripts/project_handoff.py",
       "kind": "file",
       "excluded": false,
-      "size": 4944,
+      "size": 5130,
       "mode": 420,
-      "sha256": "8d949464400b5fdec50d7f5b2e945d9beee890419cbd43f151dfe25a61aed4cb"
+      "sha256": "2b7fae91e0b10b61a9964566dbf38f551fb23b6b9eb63c338ce1e78d582a5b9d"
     },
     {
       "path": "scripts/project_memory.py",
@@ -5263,25 +5263,25 @@
       "path": "scripts/standalone_store.py",
       "kind": "file",
       "excluded": false,
-      "size": 20163,
+      "size": 20219,
       "mode": 420,
-      "sha256": "2f39a4cec1451de7e47dcf784344c35b147ad670d1b810132b1e01bfd0c0213b"
+      "sha256": "6acdee22d8b9b7edca2a0255ded3b4683264d831f39c580233804ed10a818d0b"
     },
     {
       "path": "scripts/standalone_tasks.py",
       "kind": "file",
       "excluded": false,
-      "size": 27957,
+      "size": 28673,
       "mode": 420,
-      "sha256": "4a120e7b59ade37730290c38e71bee4025218959301f5d9284ebe0d88041d682"
+      "sha256": "701eaf00b4e2acc7d22568b9a4801e704cdf420eee19d97138323b1be107634b"
     },
     {
       "path": "scripts/standalone_visual.py",
       "kind": "file",
       "excluded": false,
-      "size": 10369,
+      "size": 11447,
       "mode": 420,
-      "sha256": "077918b24757608dfb1b54986c5ce1c1607de3aaed6bcb3848cb3e551d8d9dd4"
+      "sha256": "6e60e22bfab36b9a80e0c2cf2d9fb113a1561b942d2406e68ca2a5c203c373ac"
     },
     {
       "path": "scripts/sucai_ku.py",
@@ -5319,9 +5319,9 @@
       "path": "scripts/task_validation.py",
       "kind": "file",
       "excluded": false,
-      "size": 3218,
+      "size": 4312,
       "mode": 420,
-      "sha256": "09dd144e0910d0705ea240ecd0a22e5cc8250f32138b9d21331af6e6a341392c"
+      "sha256": "35fc7f0212f5c9ccc9fb7800858b1f7ce3f30cc7701bbc5eb44629190dc0264c"
     },
     {
       "path": "scripts/template_profile.py",
@@ -5343,9 +5343,9 @@
       "path": "scripts/validate_project.py",
       "kind": "file",
       "excluded": false,
-      "size": 22763,
+      "size": 22919,
       "mode": 420,
-      "sha256": "6f9ef5760a32a5a2e6e895af859c60ec5c8fd95245a45c685fce01e332112747"
+      "sha256": "7ae245a2cfe609982745589141051422baf5fb11cd0d543b7819633dbf55d744"
     },
     {
       "path": "scripts/waibu_wendang.py",
@@ -5391,9 +5391,9 @@
       "path": "scripts/workspace_resume.py",
       "kind": "file",
       "excluded": false,
-      "size": 17126,
+      "size": 17232,
       "mode": 420,
-      "sha256": "5e58a61cd81e4f4e4c36412081c2d6437363764109a696c3df04098548ad0127"
+      "sha256": "20bcb251fa994dbbb3ffeca456a3a107f5f6747f531ff964743c11348a1cdb5d"
     },
     {
       "path": "scripts/workspace_status.py",
@@ -5431,9 +5431,9 @@
       "path": "scripts/yunxing_rizhi.py",
       "kind": "file",
       "excluded": false,
-      "size": 35817,
+      "size": 37405,
       "mode": 420,
-      "sha256": "8acdf685b0b5d6406c4688a6e19125f1dd3fd89d68424db0e6554f0da9bac00f"
+      "sha256": "8e553f69fc1e2c217037f3cb4db6b29ab8a95eebe70cf2497bc349a1c0db6250"
     },
     {
       "path": "templates",

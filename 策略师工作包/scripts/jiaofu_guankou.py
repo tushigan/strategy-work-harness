@@ -92,7 +92,15 @@ def review_state(root, task_id, light=False):
             records = [r for r in review_events(root, "standalone_review") if r.get("target") == target]
             last = records[-1] if records else None
             if last and last.get("status") in {"passed", "passed_with_yellow"} and decision_valid(root, last):
-                return {"reviewed": True, "record_id": last["record_id"], "checked": "记录与报告原件（resume 轻量核对）"}
+                # F07（v1.7.3）：再按 gate 的当前规则做静态判断（报告格式与视觉证据字段），不渲染、不读来源原件；
+                # 过不了就不说“有效”，与发客户 / 导出时 gate 的口径一致。
+                from phase2_store import read_json
+                from standalone_visual import static_problem
+                reason = static_problem(root, catalog(root)[f"standalone/{task_id}"]["meta"], read_json(local(root, last["evidence"]["path"])))
+                if reason:
+                    return {"reviewed": False, "record_id": last["record_id"], "reason": reason,
+                            "review_revision": target.get("version"), "review_date": str(last.get("created_at", ""))[:10]}
+                return {"reviewed": True, "record_id": last["record_id"], "checked": "记录与报告原件、视觉证据字段（resume 轻量核对）"}
             return {"reviewed": False}
         except (ValueError, OSError, KeyError, IndexError):
             return {"reviewed": False}
@@ -153,6 +161,9 @@ def status(root, task_id, light=False, file_issues=None):
         label = "该版本未检核；且当前文件与登记不符：" + "、".join(sorted(set(stale))[:3])
     elif review["reviewed"]:
         label = "当前版本已有有效独立检核"
+    elif review.get("reason"):
+        label = (f"检核记录在（r{review.get('review_revision') or current['revision']}，{review.get('review_date')}），"
+                 f"但按当前规则不完整：{review['reason']}；发客户、导出前须重检或补视觉证据")
     elif waivers:
         label = "该版本未检核，原因：策略师豁免（" + "、".join(sorted({w["purpose_label"] for w in waivers})) + "）"
     else:

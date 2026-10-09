@@ -84,6 +84,10 @@ def required_refs(item):
     return refs
 
 
+# F06（v1.7.3 r2）：前缀宽容只对输入 / 来源类引用；调用、返回调用、回读凭证与回传候选照旧整文件核对。
+APPENDABLE={'输入文件','接手证据','回读原件'}
+
+
 def reference_issues(root,refs):
     errors=[]
     from guidang import archived_index
@@ -93,9 +97,22 @@ def reference_issues(root,refs):
         except (OSError,ValueError,KeyError,TypeError) as exc:
             # U13：已按授权归档到工作区外的历史文件判“已归档”，不是缺失。
             if isinstance(value,dict) and (value.get('path'),value.get('sha256')) in archived:continue
+            # F06：只追加的 project/records/*.jsonl，登记部分原样、之后只是追加，不算指纹不符（限 APPENDABLE）。
+            if label in APPENDABLE and isinstance(value,dict) and appended(root,value) is not None:continue
             path=value.get('path','未提供') if isinstance(value,dict) else str(value)
             errors.append(f'{label} {path}：{exc}')
     return errors
+
+
+def appended(root,value):
+    """F06：引用的是 project/records/*.jsonl 且登记指纹是当前文件按行边界的某个前缀 → 返回之后追加的条数，否则 None。"""
+    from task_validation import appended_records
+    try:
+        path=local(root,value.get('path'))
+        if path.is_symlink() or not path.is_file():return None
+        return appended_records(path,value['path'],value.get('sha256'))
+    except (OSError,ValueError,KeyError,TypeError):
+        return None
 
 
 def readback_ref(root, evidence, candidates):

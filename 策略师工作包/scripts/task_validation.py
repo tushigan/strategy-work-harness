@@ -100,3 +100,21 @@ def file_digest(path):
     result=h.hexdigest()
     if cache is not None:cache[key]=result
     return result
+
+
+def appended_records(path, relative, expected):
+    """F06（v1.7.3）：project/records/ 下的 .jsonl 只追加。整文件指纹不符时由调用方再问这里：
+    按行边界（每个换行之后）逐步算前缀指纹，某个前缀等于登记指纹即“登记部分未改，之后追加了 N 条”，返回 N；
+    前缀都对不上（改写、删行、不在换行处）返回 None，仍按原规则报指纹不符；之后只多了空白行（N=0）也返回 None。
+    流式读，不整份进内存。"""
+    parts=Path(relative).parts if isinstance(relative,str) else ()
+    if len(parts)!=3 or parts[:2]!=('project','records') or not parts[2].endswith('.jsonl') or not isinstance(expected,str):
+        return None
+    h=hashlib.sha256();matched=h.hexdigest()==expected;added=0
+    with Path(path).open('rb') as stream:
+        for line in stream:
+            if matched:
+                added+=bool(line.strip());continue
+            h.update(line)
+            matched=line.endswith(b'\n') and h.hexdigest()==expected
+    return added if matched and added else None

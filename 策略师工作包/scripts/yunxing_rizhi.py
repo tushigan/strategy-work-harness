@@ -55,7 +55,8 @@ GUARD_LIMIT=2  # U18：同一命令同类报错连续 2 次即停
 
 @contextmanager
 def probe():
-    """状态探测（如 resume 内查看检核/影响状态）：被拒是正常状态，记为 blocked，不记 error。"""
+    """状态探测（如 resume 内查看检核/影响状态）：被拒是正常状态，记为 blocked，不记 error。
+    整条命令层面的对应做法是 StateReport：resume 等探测入口如实报出 blocked 时抛它，退出码仍为 1，重试守卫不计数（F08）。"""
     state=_state.get()
     if not state:
         yield;return
@@ -454,6 +455,23 @@ class RetryBlocked(SystemExit):
     reason_code='retry_limit'
 
 
+class StateReport(SystemExit):
+    """F08（v1.7.3）：状态探测命令（resume、inspect、启动检查）如实报出 blocked 是成功，不是失败。
+    退出码仍为 1（既有约定）；cli 的重试守卫看到它不计数、不清零、不写放行记录、不打印“已停止重试”。
+    命令自身崩溃（未捕获异常）仍按原规则计数；记录损坏被命令捕获并如实列进 blocked 报告的，属于状态，同样不计数。
+    运行日志仍按 v1.7.2 记 error / workflow_error（复盘统计口径不变），只是守卫不计数。"""
+
+
+# v1.7.2 及以前把这些探测入口的 blocked 计成失败；这些旧计数（无 rule=2 标记）不再据以拦截，
+# 下一次如实报出状态时顺手清掉（只清旧版计数，新版守卫记录照常保留）。
+STATE_PROBES=('project_handoff:resume','project_handoff:inspect','validate_project:')
+
+
+def _legacy_probe(key,entry):
+    return (isinstance(entry,dict) and entry.get('rule')!=2
+            and any(key==p or key.startswith(p+'|') for p in STATE_PROBES))
+
+
 OVERRIDES='project/records/重试放行.jsonl'
 OVERRIDE_KEEP=200   # 放行记录滚动保留最近 200 条
 USED_KEEP=64        # 守卫记住最近 64 次“键 + 理由”，同键同理由不重复放行
@@ -532,7 +550,7 @@ def cli(function,filename):
         try:previous=_guard_io(Path(root)).get(key) if (Path(root)/ROOT_NAME/GUARD_NAME).is_file() else None
         except Exception:previous=None  # 守卫尽力而为：诊断目录不可用时不改变业务结果
         holder['previous']=previous
-        if not previous or previous.get('count',0)<GUARD_LIMIT:return
+        if not previous or previous.get('count',0)<GUARD_LIMIT or _legacy_probe(key,previous):return
         reused=False
         if override and reason_valid(override):
             digest=override_digest(key,override)
@@ -578,19 +596,24 @@ def cli(function,filename):
         sys.stdout,sys.stderr=out,err
         cmd=holder['key'];previous=holder['previous']
         code=getattr(error,'code',None) if isinstance(error,SystemExit) else None
-        failed=(error is not None and not (isinstance(error,SystemExit) and code in (None,0))) or (type(result) is int and result!=0)
+        state_report=isinstance(error,StateReport)
+        failed=(error is not None and not state_report and not (isinstance(error,SystemExit) and code in (None,0))) or (type(result) is int and result!=0)
         message=(str(error) if error is not None and not isinstance(error,SystemExit) or isinstance(code,str) else '')+''.join(sink)[-1200:]
         def update(data):
+            if state_report:
+                if _legacy_probe(cmd,data.get(cmd)):data.pop(cmd,None)
+                return
             if not failed:
                 data.pop(cmd,None);return
             signature=error_signature(message);old=data.get(cmd) or {}
             count=old.get('count',0)+1 if old.get('signature')==signature else 1
-            data[cmd]={'signature':signature,'count':count,'updated':datetime.now(timezone.utc).isoformat(),
+            data[cmd]={'signature':signature,'count':count,'rule':2,'updated':datetime.now(timezone.utc).isoformat(),
                        **({'override':True} if override else {})}
         sealed=False
         try:sealed=json.loads((Path(root)/ROOT_NAME/'index.json').read_text()).get('sealed') is True
         except (OSError,ValueError,AttributeError):pass
-        if not holder['blocked'] and (failed or previous is not None) and not sealed:  # 被拦那次不再计数；封顶即停采
+        if state_report and not _legacy_probe(cmd,previous):pass  # F08：状态探测不计数、不清零
+        elif not holder['blocked'] and (failed or previous is not None) and not sealed:  # 被拦那次不再计数；封顶即停采
             try:
                 data=_guard_io(Path(root),update)
                 if failed and data.get(cmd,{}).get('count',0)>=GUARD_LIMIT:

@@ -13,6 +13,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from phase2_store import local
 from workspace_lock import serialized
+from yunxing_rizhi import StateReport
 from handoff_package import inspect_package
 from handoff_history import history_errors, storage_errors
 
@@ -84,11 +85,15 @@ def main() -> int:
         from workspace_resume import resume
         result = resume(root, args.task_id, args.details)
         print_result(result, args.json)
-        return int(not result["local_work_allowed"])
+        if not result["local_work_allowed"]:
+            raise StateReport(1)  # F08：如实报出 blocked，退出码仍 1，重试守卫不计数
+        return 0
     if args.command == "inspect":
         result = inspect_workspace(root)
         print_result(result, args.json)
-        return 1 if result["errors"] else 0
+        if result["errors"]:
+            raise StateReport(1)
+        return 0
     from registration_guard import actor_check
     try:
         actor_check(args.actor)

@@ -8,7 +8,7 @@ import tempfile
 
 from phase2_store import WorkflowError, now
 from workspace_lock import serialized
-from standalone_store import (JOURNAL, digest, history, identifier, reference_path,
+from standalone_store import (ACTIVE_STATUSES, JOURNAL, digest, history, identifier, reference_path,
                               storage, task_value, text)
 
 
@@ -329,7 +329,7 @@ def inspect(root, include_archived=False, current_only=False):
             if not any((r.get("path"),r.get("sha256")) in current_references(root, exclude_task=event["task_id"])
                        for r in task["sources"] + task["deliverables"]):
                 continue
-        issues, links, archived_refs = [], [], []
+        issues, links, archived_refs, appended = [], [], [], []
         from guidang import archived_index
         archived = archived_index(root)
         for ref in task["sources"] + task["deliverables"] + task.get("process_refs",[]) + task.get("decision_refs",[]):
@@ -348,7 +348,14 @@ def inspect(root, include_archived=False, current_only=False):
                 elif not path.is_file():
                     issues.append({"path": ref["path"], "issue": "文件缺失" + ("（已归档，但任务仍在进行，需核对是否误归档）" if (ref["path"], ref["sha256"]) in archived else "")})
                 elif __import__("task_validation").file_digest(path) != ref["sha256"]:
-                    issues.append({"path": ref["path"], "issue": "文件已变化，需回读并登记新版本"})
+                    # F06（v1.7.3）：project/records/*.jsonl 只追加；登记部分原样、之后只是追加不算变化。
+                    # 进行中任务给一句提示（resume 的 warnings），已结束任务不提示。
+                    added = __import__("task_validation").appended_records(path, ref["path"], ref["sha256"])
+                    if added is None:
+                        issues.append({"path": ref["path"], "issue": "文件已变化，需回读并登记新版本"})
+                    elif task["status"] in ACTIVE_STATUSES:
+                        appended.append({"path": ref["path"], "added": added,
+                                         "notice": f"{ref['path']} 自登记后新增 {added} 条记录，下次登记时顺手更新引用"})
             except (OSError, ValueError):
                 issues.append({"path": ref["path"], "issue": "文件不可读取或引用不安全"})
         issues.extend(words_issues(root, [e for e in events if e["task_id"] == event["task_id"]]))
@@ -356,11 +363,11 @@ def inspect(root, include_archived=False, current_only=False):
                 "updated_at": event["created_at"], "actor": event["actor"],
                 "reason": event["reason"], "file_issues": issues, "external_links": links,
                 **({"archived_refs": archived_refs} if archived_refs else {}),
+                **({"record_appends": appended} if appended else {}),
                 "effective_status": "needs_attention" if issues else task["status"]}
         result["tasks"].append(item)
     result["count"] = len(result["tasks"])
-    result["active_count"] = sum(t["status"] in {"planned", "in_progress", "waiting"}
-                                  for t in result["tasks"])
+    result["active_count"] = sum(t["status"] in ACTIVE_STATUSES for t in result["tasks"])
     if latest:
         result["status"] = "attention" if any(t["file_issues"] for t in result["tasks"]) else "recorded"
     return result

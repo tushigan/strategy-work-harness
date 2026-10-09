@@ -124,6 +124,7 @@ def resume(root, task_id=None, details=False):
     for t in tasks:
         if task_id is None or selected_space=='standalone' and t['task_id']==task_id:
             errors.extend(f"任务 {t['task_id']}：{x['path']}：{x['issue']}" for x in t['file_issues'])
+            warnings.extend(f"任务 {t['task_id']}：{x['notice']}" for x in t.get('record_appends',[]))
     for name in ('standalone','project_memory','task_receipts','connectors'):
         errors.extend(workflows.get(name,{}).get('errors', []))
     formal_artifacts=workflows.get('phase5',{}).get('artifacts',{})

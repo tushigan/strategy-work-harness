@@ -12,6 +12,7 @@ from phase2_store import WorkflowError, local
 JOURNAL = "project/records/standalone-tasks.jsonl"
 HEAD = "project/records/standalone-tasks.head.json"  # 截尾核对锚点：记录条数与末条摘要
 STATUSES = {"planned", "in_progress", "waiting", "completed", "paused", "cancelled", "archived"}
+ACTIVE_STATUSES = {"planned", "in_progress", "waiting"}
 FIELDS = {"title", "project_label", "request_text", "goal", "status", "summary",
           "next_action", "owner", "due_date", "sources", "deliverables",
           "completion_evidence"}
