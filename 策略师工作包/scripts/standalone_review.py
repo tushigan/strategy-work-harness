@@ -50,7 +50,16 @@ def checks(root, target, report, *, new_report=False, release=False):
                 or any(not isinstance(finding[name], str) or not finding[name].strip()
                        for name in ("location", "evidence", "action"))):
             raise WorkflowError("检核意见缺等级、定位、证据或动作")
-    if any(not valid_file(root, value) for value in report["checked_sources"]):
+    # F09（v1.7.4 r2）：checked_sources 里的 project/records/*.jsonl 须写登记时的指纹（报告模板给的那个）；
+    # 登记部分原样、之后只追加的现场文件照样算有效，追加的部分不在本次检核范围。
+    from phase6_events import valid_or_appended
+    from task_validation import is_records_path
+    registered = {value["path"]: value["sha256"] for value in expected_sources}
+    for value in report["checked_sources"]:
+        if (isinstance(value, dict) and is_records_path(value.get("path")) and value["path"] in registered
+                and value.get("sha256") != registered[value["path"]]):
+            raise WorkflowError(f"{value['path']} 请按报告模板列登记时的指纹（登记后追加的部分不在本次检核范围）")
+    if any(not valid_or_appended(root, value) for value in report["checked_sources"]):
         raise WorkflowError("已检查文件缺失或指纹不符")
     inherited = coverage(root,target,report,expected_sources,item["meta"],item["authors"])
     actual = {(value["path"], value["sha256"]) for value in report["checked_sources"] + inherited}

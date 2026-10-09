@@ -9,12 +9,22 @@ from task_context import business_signature
 
 DECISIONS = "project/records/standalone-decisions.jsonl"
 
+def _records_loose(refs):
+    """F09（v1.7.4）：project/records/*.jsonl（项目记忆等追加式记录）换指纹不算实质改稿：比较时只看路径不看指纹。
+    不读文件，历史各版的比较结果固定；旧记录里已存的预算（count 只会比新算法大或相等）仍按原值读回。"""
+    return [{k:v for k,v in r.items() if k!="sha256"} if isinstance(r,dict) and _is_records(r.get("path")) else r for r in refs]
+
+def _is_records(path):
+    from task_validation import is_records_path
+    return is_records_path(path)
+
 def substantive(task):
     deps={a["artifact_id"]:a["dependencies"] for a in task.get("artifact_versions",[])}
     paths={p for values in deps.values() for p in values}
-    effective=[r for r in task.get("process_refs",[]) if r.get("path") in paths]
+    effective=_records_loose([r for r in task.get("process_refs",[]) if r.get("path") in paths])
     extra={"artifact_dependencies":deps,"artifact_dependency_files":effective} if deps else {}
-    return {**extra,**{k: task[k] for k in ("request_text", "goal", "sources", "deliverables")}, **({"decision_refs":task["decision_refs"]} if "decision_refs" in task else {})}
+    return {**extra,**{k: task[k] for k in ("request_text", "goal")},"sources":_records_loose(task["sources"]),"deliverables":task["deliverables"],
+            **({"decision_refs":_records_loose(task["decision_refs"])} if "decision_refs" in task else {})}
 
 def derive(events, task_id):
     own = [e for e in events if e['task_id'] == task_id]

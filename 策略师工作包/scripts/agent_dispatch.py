@@ -12,7 +12,7 @@ import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 
-from dispatch_files import file_ref, local, text_ref, verify_refs, readback_ref
+from dispatch_files import file_ref, input_ref, local, same_inputs, text_ref, verify_refs, readback_ref
 from phase2_store import WorkflowError, atomic_json, local as phase2_local
 from workspace_lock import serialized
 from registration_guard import actor_check, dispatch_write, request_metadata
@@ -218,7 +218,7 @@ def validate_request(root: Path, request: dict) -> dict:
     issues = write_conflicts(text, request["permissions"]) + (constraint_on_screen(text, request) if role in AUTHOR_ROLES else [])
     if issues:
         raise WorkflowError("派工请求自相矛盾，未登记分派：" + "；".join(issues))
-    input_refs = [file_ref(root, value, "输入文件") for value in inputs]
+    input_refs = [input_ref(root, value) for value in inputs]
     required = request.get("required_reading")
     if required is not None:
         if not isinstance(required, list) or not required:
@@ -290,7 +290,7 @@ def validate_request(root: Path, request: dict) -> dict:
         from shencha_zu import context_packet
         payload['review_context']=context_packet(root,{**review_plan,'base_review':review_plan.get('base_review'),
              'changed_scope':review_plan.get('changed_scope',[])},{'paths':[f['path'] for f in review_plan['checked_sources_required']]})
-        if review_plan['dispatch_required'] and input_refs!=review_plan['checked_sources_required']:
+        if review_plan['dispatch_required'] and not same_inputs(root,input_refs,review_plan['checked_sources_required']):
             raise WorkflowError('分派原文须精确对应累计增量计划；不复制无关全文或聊天')
     return payload
 

@@ -1,21 +1,21 @@
 {
   "name": "策略师工作包（Codex / Claude Code 统一包）",
   "repository": "https://github.com/tushigan/strategy-work-harness",
-  "version": "1.7.3",
+  "version": "1.7.4",
   "released": "2026-10-09",
   "package_dir": "策略师工作包",
   "package_inventory": "策略师工作包/package-inventory.json",
-  "package_inventory_sha256": "a7e28b7af38330676c8c4e45c7ca2d8b432622f6ec07354781b7409a0e0a68b7",
+  "package_inventory_sha256": "66118d46d38137496ee9cb712f253deba124b991e38f5fbc3fb1731414f76d12",
   "release_zip": {
-    "name": "strategist-harness-v1.7.3-20261009.zip",
-    "url": "https://github.com/tushigan/strategy-work-harness/releases/download/v1.7.3/strategist-harness-v1.7.3-20261009.zip",
-    "sha256": "c8543b3730891b7b4e0cbc63e45a6d8be9af87360c58ad54d48f14f3fc06da8d",
-    "bytes": 64472120,
+    "name": "strategist-harness-v1.7.4-20261009.zip",
+    "url": "https://github.com/tushigan/strategy-work-harness/releases/download/v1.7.4/strategist-harness-v1.7.4-20261009.zip",
+    "sha256": "3b166416b3d4ba2ed157d4d4a1a333120fe08d32736b086f6a03d2891afe8b52",
+    "bytes": 64476840,
     "files": 625,
     "zip_root": "统一包",
-    "note": "与开发仓库定稿包 策略师工作包-统一版-v1.7.3-定稿-20261009.zip 逐字节相同，仅附件名改为英文（GitHub 会改写中文附件名）"
+    "note": "与开发仓库定稿包 策略师工作包-统一版-v1.7.4-定稿-20261009.zip 逐字节相同，仅附件名改为英文（GitHub 会改写中文附件名）"
   },
-  "git_tag": "v1.7.3",
+  "git_tag": "v1.7.4",
   "requirements": {
     "python": ">=3.11",
     "hosts": [
@@ -34,7 +34,8 @@
     "inventory_sha256_map": {
       "58e0a41abb683e806f19d5b619b942aec0e0559a9d0e5e58bae73bd421d61b18": "1.7.2",
       "a7e28b7af38330676c8c4e45c7ca2d8b432622f6ec07354781b7409a0e0a68b7": "1.7.3",
-      "fbe96d2d38ddeaa27cb6ef7bf21ba04b011d5d61962b8830f2d8c4b829b28126": "1.7.2"
+      "fbe96d2d38ddeaa27cb6ef7bf21ba04b011d5d61962b8830f2d8c4b829b28126": "1.7.2",
+      "66118d46d38137496ee9cb712f253deba124b991e38f5fbc3fb1731414f76d12": "1.7.4"
     },
     "note": "fbe96d2d… 为 v1.7.2 候选 r2（代码与 v1.7.2 定稿逐字节相同，只差 README 版本记录与一处注释），按 1.7.2 处理"
   },
@@ -54,6 +55,11 @@
     ]
   },
   "history": [
+    {
+      "version": "1.7.4",
+      "date": "2026-10-09",
+      "note": "修在途项目使用中发现的 1 项缺陷：任务来源含项目记忆时，检核派出后追加一条记忆不再让检核员报告登记不进、再派检核失败、增量检核登记不进、接受新记忆被判连续改稿、在线改稿与进度更新被拒；检核员按报告模板列登记时的指纹；交付物仍按整文件核对"
+    },
     {
       "version": "1.7.3",
       "date": "2026-10-09",

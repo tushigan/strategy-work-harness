@@ -2,6 +2,7 @@
 import argparse
 import subprocess
 import sys
+import tempfile
 from yunxing_chayi import TEXT_TYPES, MAX_BYTES, MAX_LINES
 import hashlib
 import json
@@ -44,6 +45,10 @@ def context(root,target,meta):
         product={x['path'] for x in task['deliverables'] if 'path' in x}
         if task.get('artifact_versions'):
             business['artifact_dependencies']={a['artifact_id']:a['dependencies'] for a in task['artifact_versions']}
+        # F09（v1.7.4 r2）：来源登记了项目记忆的任务，记忆版本按登记的那份（之后只追加不算变化）；没登记记忆的仍用整份指纹。
+        registered=next((r for r in task['sources'] if r.get('path')==memory['record_path'] and 'sha256' in r),None)
+        if registered and (registered['sha256']==memory['digest'] or _appended(root,registered)):
+            return {'business':business,'memory_digest':registered['sha256']},product
     elif target['space']=='phase3':
         business={'kind':meta['kind'],'task_id':meta['task_id'],'dependencies':meta.get('dependencies',[])}
         product={meta[x] for x in ('path','snapshot_path','markdown_path','markdown_snapshot')}
@@ -54,6 +59,23 @@ def context(root,target,meta):
         business={'kind':meta['kind'],'task_id':meta['task_id'],'dependencies':meta.get('dependencies',[])}
         product={x['path'] for x in meta['current_files']+meta['snapshot_files']}
     return {'business':business,'memory_digest':memory['digest']},product
+
+
+def _appended(root,ref):
+    from dispatch_files import appended
+    return appended(root,ref) is not None
+
+
+def _registered_part(root,ref,scratch):
+    """F09（v1.7.4 r2）：records 来源比较“登记那部分”——现场文件是登记指纹的前缀扩展时，截到登记长度写进临时目录给差异比对用；
+    不是前缀（改写、删行）照旧报指纹已改变。其他文件原样返回现场路径。"""
+    path=local(root,ref['path'])
+    from task_validation import is_records_path,records_prefix
+    if not is_records_path(ref['path']) or sha(path)==ref['sha256']:return path
+    raw=path.read_bytes();found=records_prefix(path,ref['path'],ref['sha256'])
+    if not found or hashlib.sha256(raw[:found['length']]).hexdigest()!=ref['sha256']:raise WorkflowError('当前文件指纹已改变')
+    part=Path(scratch)/Path(ref['path']).name;part.write_bytes(raw[:found['length']])
+    return part
 
 
 def excluded_instances(root,target,authors):
@@ -97,7 +119,13 @@ def capture(root,target,report,evidence,expected,meta,authors):
     files=[]
     for ref in expected:
         path=local(root,ref['path']);raw=path.read_bytes()
-        if sha(path)!=ref['sha256']:raise WorkflowError('保存基线期间来源发生变化')
+        if sha(path)!=ref['sha256']:
+            # F09（v1.7.4）：project/records/*.jsonl 登记部分原样、之后只追加 → 快照只存登记那部分（指纹等于登记指纹）。
+            from task_validation import records_prefix
+            found=records_prefix(path,ref['path'],ref['sha256'])
+            if not found or hashlib.sha256(raw[:found['length']]).hexdigest()!=ref['sha256']:
+                raise WorkflowError('保存基线期间来源发生变化')
+            raw=raw[:found['length']]
         # U16：快照按内容指纹存一份，多次检核共用；从不覆盖，已有同名快照必须字节一致。
         snapshot=f"project/records/review-baselines/blobs/{ref['sha256']}{path.suffix.lower()}"
         stored_path=local(root,snapshot)
@@ -283,6 +311,11 @@ def independent_dependency_scope(target,base,meta,expected,product,mapped,change
 
 
 def plan(root,target,base_review,expected,meta,authors,simulation,reviewer,change_kind='local_text'):
+    with tempfile.TemporaryDirectory(prefix='review-plan-') as scratch:
+        return _plan(root,target,base_review,expected,meta,authors,simulation,reviewer,change_kind,scratch)
+
+
+def _plan(root,target,base_review,expected,meta,authors,simulation,reviewer,change_kind,scratch):
     base=load_base(root,target,base_review,simulation,reviewer,authors)
     old={x['original']['path']:x for x in base['files']};ctx,product=context(root,target,meta)
     mapped=snapshot_correspondence(root,target,base,meta)
@@ -297,13 +330,13 @@ def plan(root,target,base_review,expected,meta,authors,simulation,reviewer,chang
                 previous=None;force=True;reasons.append('product_identity_unknown')
         if previous and previous['original']==ref:continue
         before_path=local(root,previous['snapshot']['path']) if previous else None
-        after_path=local(root,ref['path'])
+        after_path=_registered_part(root,ref,scratch)
         difference=bounded_difference(before_path, after_path,previous['original']['sha256'] if previous else None,ref['sha256'])
         limited=bool(difference.get('preview_omitted'))
         before=before_path.read_bytes() if before_path and not limited else b''
         after=after_path.read_bytes() if not limited else b''
         if limited: force=True;reasons.append('preview_unavailable_expand_scope')
-        if sha(local(root,ref['path']))!=ref['sha256']:raise WorkflowError('当前文件指纹已改变')
+        if sha(after_path)!=ref['sha256']:raise WorkflowError('当前文件指纹已改变')
         reason='changed' if previous else 'new'
         changes.append({'path':ref['path'],'baseline':previous['original'] if previous else None,
                         'current':ref,'change':reason,

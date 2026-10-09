@@ -48,6 +48,15 @@ def valid_file(root, item):
         local(root, item["path"]).is_file() and sha(local(root, item["path"])) == item.get("sha256"))
 
 
+def valid_or_appended(root, item):
+    """F09（v1.7.4）：检核登记 / gate / 基线核对任务来源时，project/records/*.jsonl 登记部分原样、之后只追加也算有效
+    （与 F06 的 dispatch_files.appended 同一判定）；其他文件仍须整文件指纹相符。"""
+    if valid_file(root, item):
+        return True
+    from dispatch_files import appended
+    return isinstance(item, dict) and appended(root, item) is not None
+
+
 def archive(root, path):
     path = Path(path)
     raw = path.read_bytes()

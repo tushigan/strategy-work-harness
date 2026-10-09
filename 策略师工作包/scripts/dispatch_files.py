@@ -39,11 +39,45 @@ def file_ref(root: Path, value: object, label: str) -> dict[str, str]:
         raise WorkflowError(f"{label}必须是工作包内真实文件，不能是符号链接或目录")
     actual = sha(path)
     if expected is not None and expected != actual:
-        raise WorkflowError(f"{label}指纹与当前文件不符")
+        raise WorkflowError(f"{label}指纹与当前文件不符" + records_hint(root, value))
     # macOS may expose one temporary directory through two equivalent aliases.
     # Compare and store the canonical path so a valid local file is not rejected
     # merely because the workspace spelling differs.
     return {"path": path.resolve().relative_to(root.resolve()).as_posix(), "sha256": actual}
+
+
+def records_hint(root: Path, value: dict) -> str:
+    """F09（v1.7.4 r2）：只追加的记录（如项目记忆）指纹不符时，说清是追加还是改写、该怎么办。"""
+    from task_validation import is_records_path
+    if not is_records_path(value.get("path")):
+        return ""
+    try:
+        added = appended(root, value)
+    except OSError:
+        return ""
+    if added:
+        return (f"（{value['path']} 自登记后已追加 {added} 条、登记部分未变：检核派工会自动按前缀接受；"
+                "其他分派把这条引用改成当前指纹或只写路径后重新准备分派，不必改任务记录）")
+    return (f"（{value['path']} 是只追加的记录，登记那部分已被改写、删行或截断，不是单纯追加：先核对原因；"
+            "确需采用新版，用 standalone_tasks.py save 显式 accept_changed_references 登记后再准备分派）")
+
+
+def input_ref(root: Path, value: object) -> dict[str, str]:
+    """F09（v1.7.4 r2）：分派输入文件里 project/records/*.jsonl 的登记指纹是当前文件按行边界的前缀（之后只追加）也收，
+    按当前指纹登记（与 APPENDABLE 含“输入文件”同一口径：之后的核对照样按前缀判定）；其余照 file_ref 整文件核对。"""
+    try:
+        return file_ref(root, value, "输入文件")
+    except WorkflowError:
+        if isinstance(value, dict) and appended(root, value) is not None:
+            return file_ref(root, value["path"], "输入文件")
+        raise
+
+
+def same_inputs(root: Path, refs: list, planned: list) -> bool:
+    """检核派工的输入须精确对应累计计划；计划给的是登记指纹，records 输入按当前指纹登记，登记指纹是当前文件前缀即同一份。"""
+    return len(refs) == len(planned) and all(
+        r == p or (isinstance(p, dict) and r.get("path") == p.get("path") and appended(root, p) is not None)
+        for r, p in zip(refs, planned))
 
 
 def text_ref(root: Path, evidence: object) -> dict[str, str]:
@@ -98,20 +132,27 @@ def reference_issues(root,refs):
             # U13：已按授权归档到工作区外的历史文件判“已归档”，不是缺失。
             if isinstance(value,dict) and (value.get('path'),value.get('sha256')) in archived:continue
             # F06：只追加的 project/records/*.jsonl，登记部分原样、之后只是追加，不算指纹不符（限 APPENDABLE）。
-            if label in APPENDABLE and isinstance(value,dict) and appended(root,value) is not None:continue
+            try:
+                if label in APPENDABLE and isinstance(value,dict) and appended(root,value) is not None:continue
+            except OSError as again:
+                exc=again  # 读记录出错：报读文件的原因，不报成指纹不符
             path=value.get('path','未提供') if isinstance(value,dict) else str(value)
             errors.append(f'{label} {path}：{exc}')
     return errors
 
 
 def appended(root,value):
-    """F06：引用的是 project/records/*.jsonl 且登记指纹是当前文件按行边界的某个前缀 → 返回之后追加的条数，否则 None。"""
+    """F06：引用的是 project/records/*.jsonl 且登记指纹是当前文件按行边界的某个前缀 → 返回之后追加的条数，否则 None。
+    读文件出错（OSError）不吞，交呼叫方按各自的 OSError 分支报原因（v1.7.4 r2）；引用结构不对仍返回 None。"""
     from task_validation import appended_records
     try:
         path=local(root,value.get('path'))
-        if path.is_symlink() or not path.is_file():return None
+    except (ValueError,KeyError,TypeError,AttributeError):
+        return None
+    if path.is_symlink() or not path.is_file():return None
+    try:
         return appended_records(path,value['path'],value.get('sha256'))
-    except (OSError,ValueError,KeyError,TypeError):
+    except (KeyError,TypeError):
         return None
 
 

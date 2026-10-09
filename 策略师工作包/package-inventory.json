@@ -4087,9 +4087,9 @@
       "path": "AGENTS.md",
       "kind": "file",
       "excluded": false,
-      "size": 60128,
+      "size": 61575,
       "mode": 420,
-      "sha256": "779b4a9571497a0b6a9141ac92a07fd499a8bc0ad932a1f9a6c6858fac09347d"
+      "sha256": "40c2feabb14afb7f57e71f4744df3e4e8eda1c4fad2ed3f9fc4d75d2161b3d42"
     },
     {
       "path": "CLAUDE.md",
@@ -4103,9 +4103,9 @@
       "path": "README.md",
       "kind": "file",
       "excluded": false,
-      "size": 17969,
+      "size": 20782,
       "mode": 420,
-      "sha256": "08d76a2ca0ceab51f6f948b4d5a88d37b194c63463f40a205fdf9dba63c33346"
+      "sha256": "94632f8a8dbd453c190a5ea73bce774e11f1ccdeedebb50211e5a910773ce499"
     },
     {
       "path": "project",
@@ -4279,9 +4279,9 @@
       "path": "scripts/agent_dispatch.py",
       "kind": "file",
       "excluded": false,
-      "size": 43208,
+      "size": 43238,
       "mode": 420,
-      "sha256": "b7b0b88945e6c13720dd0d7c1f090eeae1eb35f7895d82e2d0c5099d40cd0eaa"
+      "sha256": "64154addc81a2d532086061d1216ac61fd00d3ce90351bc1a69931e22223fbec"
     },
     {
       "path": "scripts/author_budget.py",
@@ -4679,9 +4679,9 @@
       "path": "scripts/dispatch_files.py",
       "kind": "file",
       "excluded": false,
-      "size": 6504,
+      "size": 8884,
       "mode": 420,
-      "sha256": "8ec1a363444b79bd4eff35431bef4031533a38b08078573b6b8f1461eaf63eba"
+      "sha256": "954d04477e9034c28a00a41a964352edc646790135086b052aa4333597e51166"
     },
     {
       "path": "scripts/duiwai_daochu.py",
@@ -4791,9 +4791,9 @@
       "path": "scripts/incremental_review.py",
       "kind": "file",
       "excluded": false,
-      "size": 30479,
+      "size": 32609,
       "mode": 420,
-      "sha256": "91ec6003f17e922f89356e5479627a0d540d23a8ebbe9271b85d93d1de0b695a"
+      "sha256": "c7c9adfa85026d522918aee010ba4dd6a99eb904d24ca1c8447d3ce2b81ef1eb"
     },
     {
       "path": "scripts/inspect_contract.py",
@@ -5103,17 +5103,17 @@
       "path": "scripts/phase6_events.py",
       "kind": "file",
       "excluded": false,
-      "size": 3292,
+      "size": 3748,
       "mode": 420,
-      "sha256": "a108de20cbc10ce6b87492192cac3d7acfdf3c9ab0264776f1fdd63601c3ab6b"
+      "sha256": "57bfd5ed17d7c5d008610fb9f78e8986644967ff2a56197a1018b29e01842d47"
     },
     {
       "path": "scripts/phase6_targets.py",
       "kind": "file",
       "excluded": false,
-      "size": 8790,
+      "size": 9276,
       "mode": 420,
-      "sha256": "a9bf34ff303e3a661e5ad18c02c9210b84f7085019d25e1efad1e902e6e4b989"
+      "sha256": "c7603404dd3a0d2cedbe03c2471c59ccf9df532efacf92ab3732d5e12e4f7e44"
     },
     {
       "path": "scripts/project_closure.py",
@@ -5247,17 +5247,17 @@
       "path": "scripts/standalone_budget.py",
       "kind": "file",
       "excluded": false,
-      "size": 5823,
+      "size": 6479,
       "mode": 420,
-      "sha256": "66001100d68cab0c4ef2065a06617d81ac1afbe37ebaf15e64765ba357cffa66"
+      "sha256": "a5d0960bfeca593ef01272da6cf718019bfb7e277f340c3ccc5bb451489769df"
     },
     {
       "path": "scripts/standalone_review.py",
       "kind": "file",
       "excluded": false,
-      "size": 7219,
+      "size": 8020,
       "mode": 420,
-      "sha256": "3f355c454ba28ed367484529ce656b1c9dd04b46a8c57f03a637cb847dd6b8e1"
+      "sha256": "9d2652cd4d5ddd039e3200fd0c7a291ff6fb9a6d655b43b64cd8a120fbcb02f6"
     },
     {
       "path": "scripts/standalone_store.py",
@@ -5271,9 +5271,9 @@
       "path": "scripts/standalone_tasks.py",
       "kind": "file",
       "excluded": false,
-      "size": 28673,
+      "size": 29608,
       "mode": 420,
-      "sha256": "701eaf00b4e2acc7d22568b9a4801e704cdf420eee19d97138323b1be107634b"
+      "sha256": "3c21373327916515908941cbebb2709852e05ac77033575cef3c4199b71a7655"
     },
     {
       "path": "scripts/standalone_visual.py",
@@ -5319,9 +5319,9 @@
       "path": "scripts/task_validation.py",
       "kind": "file",
       "excluded": false,
-      "size": 4312,
+      "size": 4919,
       "mode": 420,
-      "sha256": "35fc7f0212f5c9ccc9fb7800858b1f7ce3f30cc7701bbc5eb44629190dc0264c"
+      "sha256": "f3d4f0ac7bf61e103a04c69cac42f556242af49b588555f86af840665289617f"
     },
     {
       "path": "scripts/template_profile.py",
@@ -5548,6 +5548,34 @@
   "excluded_from_source": [
     {
       "path": ".DS_Store",
+      "reason": "runtime_cache"
+    },
+    {
+      "path": "scripts/__pycache__/phase2_store.cpython-311.pyc",
+      "reason": "runtime_cache"
+    },
+    {
+      "path": "scripts/__pycache__/phase5_common.cpython-311.pyc",
+      "reason": "runtime_cache"
+    },
+    {
+      "path": "scripts/__pycache__/phase6_events.cpython-311.pyc",
+      "reason": "runtime_cache"
+    },
+    {
+      "path": "scripts/__pycache__/standalone_store.cpython-311.pyc",
+      "reason": "runtime_cache"
+    },
+    {
+      "path": "scripts/__pycache__/task_validation.cpython-311.pyc",
+      "reason": "runtime_cache"
+    },
+    {
+      "path": "scripts/__pycache__/workspace_lock.cpython-311.pyc",
+      "reason": "runtime_cache"
+    },
+    {
+      "path": "scripts/__pycache__",
       "reason": "runtime_cache"
     }
   ]

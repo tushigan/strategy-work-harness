@@ -124,9 +124,15 @@ def save(root, request, actor, *, _observations=None, _commit_observations=None,
                     raise WorkflowError("登记期间观察版改变；重新核对后形成新请求，未写业务事件")
                 commit_references[ref_path] = observed_sha
             try:
+                from dispatch_files import appended
+                delivered = {ref["path"] for ref in normalized_task["deliverables"] if "path" in ref}
                 for ref_path, expected_sha in commit_references.items():
                     live = reference_path(root, ref_path)
                     if not live.is_file() or hashlib.sha256(live.read_bytes()).hexdigest() != expected_sha:
+                        # F09（v1.7.4）：来源 / 过程 / 决定引用里的 project/records/*.jsonl 登记部分原样、之后只追加 → 仍按登记指纹写入，
+                        # 不算改变；交付物不放宽（r2，与 unchanged_elsewhere 一致）。
+                        if ref_path not in delivered and live.is_file() and appended(root, {"path": ref_path, "sha256": expected_sha}) is not None:
+                            continue
                         raise WorkflowError(f"{ref_path} 与登记指纹不符（登记期间或之前已改变）；先核对并显式接受新版，未写业务事件")
             except WorkflowError:
                 raise  # 已指名文件与原因的业务错误原样给出，不换成笼统说法
@@ -171,6 +177,10 @@ def unchanged_elsewhere(root, task, accepted):
             try:
                 path = reference_path(root, ref["path"])
                 ok = path.is_file() and sha(path) == ref["sha256"]
+                # F09（v1.7.4）：project/records/*.jsonl 登记部分原样、之后只追加 → 不算变化，仍绑定登记时的指纹。
+                from dispatch_files import appended
+                if not ok and name != "deliverables" and appended(root, ref) is not None:
+                    continue
             except (OSError, ValueError):
                 ok = False
             if not ok and name != "deliverables":
