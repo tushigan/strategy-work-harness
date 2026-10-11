@@ -17,7 +17,8 @@ FIELDS={'schema_version','event_id','utc_time','run_id','invocation_id','span_id
  'observation_source','business_version','review_mode'}
 
 def event_valid(e):
-    if not isinstance(e,dict) or set(e) not in (FIELDS,FIELDS|{"file_counts"}) or e['schema_version']!=1:return False
+    if not isinstance(e,dict) or set(e)-FIELDS-{"file_counts","message"} or not FIELDS<=set(e) or e['schema_version']!=1:return False
+    if 'message' in e and (not isinstance(e['message'],str) or not e['message'].strip() or len(e['message'])>200 or e['event_type']!='error'):return False
     if 'file_counts' in e and (not isinstance(e['file_counts'],dict) or set(e['file_counts'])-{'compared','changed','required','inherited','uncovered'} or any(type(v) is not int or not 0<=v<=1000000 for v in e['file_counts'].values())):return False
     if e['operation'] not in OPERATIONS or e['reason_code'] not in REASONS:return False
     for name in ('event_id','run_id','invocation_id','span_id'):
@@ -191,6 +192,13 @@ def inspect(root,task_id=None,run_id=None):
     elapsed=(datetime.fromisoformat(times[-1])-datetime.fromisoformat(times[0])).total_seconds()*1000 if times else None
     counts=Counter(e['operation'] for e in records if e['event_type']=='start')
     reasons=[{'event_id':e['event_id'],'reason_code':e['reason_code'],'operation':e['operation']} for e in records if e['reason_code']!='none']
+    # G04（v1.7.5）：按原因码列出代表性报错首行（同一句只列一次并计次数），复盘可查“当时为什么失败”
+    messages={}
+    for e in records:
+        if e.get('message'):
+            item=messages.setdefault((e['reason_code'],e['message']),{'reason_code':e['reason_code'],'message':e['message'],
+                                                                         'operation':e['operation'],'count':0,'first_event_id':e['event_id']})
+            item['count']+=1
     relationships=business_dispatches(root,target) if task_id else []
     version='未知'
     description=root/'统一包说明.md'
@@ -201,7 +209,7 @@ def inspect(root,task_id=None,run_id=None):
     result={'package_version':version,'status':'recorded' if records else 'no_matching_records','schema_version':1,'task_id':target if task_id else None,
      'run_ids':[x['run_id'] for _,x in selected],'read_scope':[name for name,_ in selected], 'time_range':times[::len(times)-1] if len(times)>1 else times,
      'elapsed_ms':elapsed,'observed_union_ms':union_ms(intervals),'steps':sorted(steps,key=lambda x:x['duration_ms'] or 0,reverse=True),
-     'attempt_counts':dict(counts),'waits':[{'duration_ms':e['duration_ms'],'event_id':e['event_id'],'status':e['status']} for e in records if e['event_type']=='wait'],'reasons':reasons,'dispatch_intervals':relationships,'interrupted_event_ids':interrupted,
+     'attempt_counts':dict(counts),'error_messages':sorted(messages.values(),key=lambda x:(-x['count'],x['reason_code']))[:20],'waits':[{'duration_ms':e['duration_ms'],'event_id':e['event_id'],'status':e['status']} for e in records if e['event_type']=='wait'],'reasons':reasons,'dispatch_intervals':relationships,'interrupted_event_ids':interrupted,
      'unbound_event_ids':unknown,
      'gaps':gaps+(['已封顶，详细采集停止，覆盖不完整'] if idx['sealed'] else []),
      'not_observed':['模型内部思考与用量/费用','未经过本包的直接读写','网络浏览细项','缺边界的用户等待'],
@@ -231,23 +239,59 @@ def label(op):return LABELS.get(op,op)
 
 def reason_label(reason):return REASON_LABELS.get(reason,reason)
 
+def local_time(value):
+    """给策略师看的时间：换成本机时区的“10 月 9 日 15:30”，不出现英文与时区缩写。"""
+    try:
+        t=datetime.fromisoformat(value).astimezone()
+        return f"{t.month} 月 {t.day} 日 {t:%H:%M}"
+    except (TypeError,ValueError):
+        return '时间未知'
+
+
+def for_strategist(r):
+    """v1.7.5 G15：复盘上半部给策略师，三段白话（发生了什么 / 对你有什么影响 / 要你做什么）；技术细节在下半部附录。"""
+    steps=len(r['steps']);failed=sum(1 for x in r['steps'] if x['status']!='ok')
+    span=r['time_range']
+    when=(f"{local_time(span[0])} 到 {local_time(span[-1])}（本机时间）" if len(span)>1 else
+          f"{local_time(span[0])}（本机时间）" if span else '这段时间')
+    if not steps:
+        happened=f"{when}没有找到这项工作的操作记录，所以说不出当时做了什么、为什么慢。"
+    else:
+        happened=f"{when}一共记录了 {steps} 个步骤，其中 {failed} 个没有做成"+("。" if failed else "，全部做成了。")
+        if failed:
+            happened+="没做成的原因写在下面给助手看的附录里，助手会先核对再跟你说。"
+    unfinished=len(r['interrupted_event_ids']);gaps=len(r['gaps'])
+    if unfinished:
+        impact=f"有 {unfinished} 个步骤开始了却没有结束的记录，结果不确定；核对清楚之前，相关的稿子先不要当作已经登记好。"
+    elif failed:
+        impact="没做成的步骤不会改动你的稿子；已经登记好的版本不受影响。"
+    else:
+        impact="没有发现卡住或中断的步骤，你的稿子和登记都不受影响。"
+    if gaps:
+        impact+=f"另外有 {gaps} 处记录不完整，这部分只能说“没看到”，不能当作没发生。"
+    todo=("不用做。我会先核对没结束的步骤，再告诉你要不要重做。" if unfinished else
+          "不用做。"+("没做成的步骤我来处理，需要你决定时会再问你。" if failed else ""))
+    return ['## 给策略师','',f"**发生了什么**：{happened}",'',f"**对你有什么影响**：{impact}",'',f"**要你做什么**：{todo}",'']
+
+
 def markdown(r):
-    rows=['# 运行复盘（确定性摘要）','',f"工作包版本：{r['package_version']}；日志协议版本：1；任务：{r['task_id'] or '按运行选定'}。",
+    rows=['# 运行复盘','']+for_strategist(r)+['## 技术附录（给 Agent）','','运行复盘（确定性摘要）。','',f"工作包版本：{r['package_version']}；日志协议版本：1；任务：{r['task_id'] or '按运行选定'}。",
       f"时间范围：{' — '.join(r['time_range']) or '无记录'}。",
       f"总区间历时：{r['elapsed_ms']} 毫秒；已观测区间去重：{r['observed_union_ms']} 毫秒。",
-      '父子和并行步骤没有重复累加为总耗时。分派到返回含排队和等待，不是模型生成耗时。','', '## 事实与证据','']
+      '父子和并行步骤没有重复累加为总耗时。分派到返回含排队和等待，不是模型生成耗时。','', '### 事实与证据','']
     for x in r['steps'][:10]:rows.append(f"- {label(x['operation'])}：{x['duration_ms']} 毫秒，{'完成' if x['status']=='ok' else '未完成'}；事件 {x['event_id']}，业务版本 {x['business_version'] if x['business_version'] is not None else '未观测'}，检核模式 {review_label(x['review_mode'])}。")
     for x in r['steps']:
         if x.get('file_counts'):rows.append('- 实测文件范围 '+label(x['operation'])+'：'+json.dumps(x['file_counts'],ensure_ascii=False)+'；required=本轮必查，inherited=有效继承，uncovered=未覆盖。')
     rows+=['', '操作尝试次数：'+json.dumps({label(k):v for k,v in r['attempt_counts'].items()},ensure_ascii=False)+'。']
     for x in r['waits']:rows.append(f"- 已观测业务锁等待：{x['duration_ms']} 毫秒；状态 {'繁忙' if x['status']=='busy' else x['status']}；事件 {x['event_id']}。")
     for x in r['reasons']:rows.append(f"- 已记录原因 {reason_label(x['reason_code'])}；事件 {x['event_id']}。")
+    for x in r.get('error_messages',[]):rows.append(f"- 报错首行（{reason_label(x['reason_code'])}，{label(x['operation'])}，{x['count']} 次，首见事件 {x['first_event_id']}）：{x['message']}")
     for x in r['dispatch_intervals']:rows.append(f"- 分派 {x['dispatch_id']}：{x['elapsed_ms']} 毫秒；业务事件 {', '.join(x['evidence_ids'])}。")
-    rows+=['', '## 缺口与待核','',r['notice'], '未观测：'+'；'.join(r['not_observed'])+'。',
+    rows+=['', '### 缺口与待核','',r['notice'], '未观测：'+'；'.join(r['not_observed'])+'。',
       '真实修订、用户反馈追加、新范围与技术重试，仅在原因事件已采集时分类；缺少原因不能自行归因。',
       '中断或尚未结束的开始事件：'+(', '.join(r['interrupted_event_ids']) or '选定记录内未发现')+'。']
     rows+=['- '+x for x in r['gaps']]
-    rows+=['','## 推断与建议（最多五项）','']
+    rows+=['','### 推断与建议（最多五项）','']
     repeats=[op for op,count in r['attempt_counts'].items() if count>1]
     if repeats:rows.append('- 推断：有重复执行迹象，先核对对应事件和业务版本；重复次数本身不能证明无效返工。证据操作：'+', '.join(label(x) for x in repeats)+'。')
     if r['interrupted_event_ids']:rows.append('- 优先核对未结束事件，再决定是否重做；不要直接重试未知结果。')
@@ -255,10 +299,138 @@ def markdown(r):
     if not repeats and not r['interrupted_event_ids']:rows.append('- 本次记录不足以断言存在可删除的重复工作；先继续真实项目观测。')
     return '\n'.join(rows)+'\n'
 
+ROLE_LABELS={'project-controller':'主控','strategy-author':'策略作者','proposal-author':'提案作者','deck-builder':'演示稿制作',
+ 'design-expression-reviewer':'设计表达检核','independent-reviewer':'独立检核'}
+# 取消原因、豁免来源、先交后检的代码表只在源模块（agent_dispatch.CANCEL_CODES、jiaofu_guankou.WAIVER_SOURCES / REVIEW_PURPOSE），
+# 这里引用，不另写文字（v1.7.5 批次二返修 #13）。
+def cancel_label(code):
+    from agent_dispatch import CANCEL_CODES,CANCEL_UNKNOWN
+    return CANCEL_UNKNOWN if code=='unknown' else CANCEL_CODES.get(code,CANCEL_CODES['other'])
+
+
+def source_label(code):
+    from jiaofu_guankou import WAIVER_SOURCES
+    return WAIVER_SOURCES.get(code,'来源不明')
+
+
+def basis_label(code):
+    """发客户依据（白话）。策略师明确不检核写“你说这版不用检查”（批次二返修 #6）；检核没跑成沿用豁免来源的说法。
+    以“事后补登记”豁免为依据的写“发出时没检查、也没说不用检查”，与同一行“其中发出后才补记的”（按登记方式算）分开（P2-4）。"""
+    from jiaofu_guankou import REVIEW_PURPOSE,WAIVER_SOURCES
+    labels={'review':'有通过的检核','external_waiver':'你说这版不用检查','behind':REVIEW_PURPOSE+'（已交出、背后检核）',
+            'retroactive':'发出时没检查、也没说不用检查'}
+    return labels.get(code) or WAIVER_SOURCES.get(code) or '依据不明'
+
+
+def business_stats(root):
+    """G05（v1.7.5）：复盘用的统计数字由程序从业务记录算出（分派、取消与原因、交出版本的检核覆盖、发客户依据、豁免来源、体积、提醒），
+    复盘直接引用，不手数。只读记录，不写任何文件，不写运行日志。"""
+    root=Path(root).resolve()
+    from agent_dispatch import read_log,replay
+    from jiaofu_guankou import events as gate_events,waiver_source,deliveries,PASS,REVIEW_PURPOSE
+    from phase6_events import events as phase6,decision_valid
+    dispatches=list(replay(read_log(root)).values())
+    roles=Counter(d.get('role','unknown') for d in dispatches)
+    gate=gate_events(root)
+    reviews=[r for r in phase6(root,'standalone_review') if isinstance(r.get('target'),dict)]
+    # 候选 r2 #11：检核结果已经登记、只是交出新版时收尾的检核分派单列，不算取消、不进取消率
+    # 候选 r3 #7：按“这个分派自己有没有登记结果”认——同一检核目标、在这条分派准备之后到它收尾之前登记的结果才算它的；
+    # 同一版先没跑成取消、再派出才有结果的，前一次仍算取消。旧分派没有准备时间的，退回按同一检核目标认（同 r2）。
+    def result_registered(d):
+        t=d.get('review_target')
+        if d.get('role')!='independent-reviewer' or not isinstance(t,dict):return False
+        start,end=d.get('prepared_at'),d.get('created_at')  # replay 后 created_at 是最后一条事件（取消）的时间
+        def inside(r):
+            if not start:return True
+            try:
+                at=datetime.fromisoformat(r.get('created_at',''))
+                return datetime.fromisoformat(start)<=at<=datetime.fromisoformat(end or r.get('created_at',''))
+            except (TypeError,ValueError):return True
+        return any(r.get('target')==t and inside(r) for r in reviews)
+    ended=[d for d in dispatches if d.get('status')=='cancelled']
+    closed=[d for d in ended if result_registered(d)]
+    cancelled=[d for d in ended if not result_registered(d)]
+    reasons=Counter(d.get('reason_code') or 'unknown' for d in cancelled)
+    def passed(task,version,before=None):
+        return any(r['target'].get('key')==task and r['target'].get('version')==version and r.get('status') in PASS and decision_valid(root,r)
+                   and (before is None or r.get('created_at','')<before) for r in reviews)
+    handed={}
+    for e in gate:
+        if e['event']=='handover':handed.setdefault((e['task_id'],e.get('version')),e['created_at'])
+    covered=[k for k in handed if passed(*k)]
+    before=[k for k,at in handed.items() if passed(k[0],k[1],at)]
+    waiver_rows={e['record_id']:e for e in gate if e['event']=='waiver'}
+    def basis(e):
+        """发客户依据按三类豁免来源分开（批次二返修 #1）：以豁免为依据的，按那条豁免的来源计（旧版程序曾把检核没跑成、事后补登记当发客户依据）。"""
+        b=e.get('basis') or {}
+        if 'review_record_id' in b:return 'review'
+        if 'external_waiver' in b:
+            source=waiver_source(waiver_rows.get(b['external_waiver'],{}))
+            return 'external_waiver' if source=='strategist' else source
+        if b.get('mode')==REVIEW_PURPOSE:return 'behind'
+        if 'retroactive_waiver' in b:return 'retroactive'
+        return 'unknown'
+    delivered=[e for e in gate if e['event']=='delivered']
+    waivers=Counter(waiver_source(e) for e in gate if e['event']=='waiver')
+    from workspace_resume import volume
+    size=volume(root)
+    try:
+        from workspace_resume import resume
+        state=resume(root)
+        warnings={'count':state.get('warnings_count',len(state.get('warnings',[]))),'groups':len(state.get('warning_groups',[]))}
+    except Exception as exc:  # 统计不因续做检查失败而中断，如实写“没算出来”
+        warnings={'count':None,'groups':None,'error':str(exc)[:160]}
+    stats={'dispatches':{'total':len(dispatches),'by_role':dict(roles),'cancelled':len(cancelled),
+                         'cancel_rate':round(len(cancelled)/len(dispatches),3) if dispatches else 0.0,'cancel_reasons':dict(reasons),
+                         'closed_after_result':len(closed)},
+           'handover':{'versions':len(handed),'with_passed_review':len(covered),'passed_before_handover':len(before),
+                       'passed_after_handover':len(covered)-len(before)},
+           'delivered':{'total':len(delivered),'by_basis':dict(Counter(basis(e) for e in delivered)),
+                        'retroactive':sum(1 for e in delivered if e.get('retroactive'))},
+           'waivers':dict(waivers),'volume':{'mb':size['mb'],'files':size['files']},'warnings':warnings,
+           'deliveries':[{'task_id':tid,**d} for tid in dict.fromkeys(e['task_id'] for e in delivered) for d in deliveries(root,tid)]}
+    stats['report']=stats_markdown(stats)
+    return stats
+
+
+def stats_markdown(x):
+    """统计表（白话，复盘直接引用）。"""
+    d=x['dispatches'];h=x['handover'];v=x['delivered'];w=x['warnings']
+    roles='、'.join(f"{ROLE_LABELS.get(k,'其他')} {n}" for k,n in sorted(d['by_role'].items(),key=lambda kv:(-kv[1],kv[0]))) or '无'
+    reasons='、'.join(f"{cancel_label(k)} {n}" for k,n in sorted(d['cancel_reasons'].items(),key=lambda kv:(-kv[1],kv[0]))) or '无'
+    bases='、'.join(f"{basis_label(k)} {n}" for k,n in sorted(v['by_basis'].items(),key=lambda kv:(-kv[1],kv[0]))) or '无'
+    waivers='、'.join(f"{source_label(k)} {n}" for k,n in sorted(x['waivers'].items(),key=lambda kv:(-kv[1],kv[0]))) or '无'
+    rate=f"占全部的 {round(d['cancel_rate']*100)}%"
+    rows=['## 统计（程序生成，复盘直接引用）','','| 项目 | 数字 |','|---|---|',
+          f"| 派出的分工 | {d['total']} 个（{roles}） |",
+          f"| 取消的分工 | {d['cancelled']} 个，{rate}；原因：{reasons} |",
+          f"| 结果已登记后收尾的检查分工 | {d.get('closed_after_result',0)} 个（检查结果已经记下，交出新版时顺手收尾，不算取消） |",
+          f"| 交给你的版本 | {h['versions']} 版，其中检查通过的 {h['with_passed_review']} 版（交出前通过 {h['passed_before_handover']}、交出后通过 {h['passed_after_handover']}） |",
+          f"| 发给客户的登记 | {v['total']} 条（依据：{bases}）；其中发出后才补记的 {v['retroactive']} 条（发出时间是你说的） |",
+          f"| 这次不检查的书面说明 | {waivers} |",
+          f"| 项目大小 | {x['volume']['mb']} MB、{x['volume']['files']} 个文件 |",
+          f"| 看进度时的提醒 | " + (f"{w['count']} 条，归并为 {w['groups']} 组" if w.get('count') is not None else '没算出来') + " |",'']
+    if x['deliveries']:
+        # 候选 r3 #4：用给策略师看的序号（只数有成品的版本）；与内部版本号不同时末尾的技术附录一节写对应
+        shown=[e for e in x['deliveries'][-20:]]
+        rows+=['发给客户的时间：','']+[f"- 第 {e.get('shown_version',e['version'])} 版：{e['when']}" for e in shown]
+        differ=list(dict.fromkeys((e['task_id'],e['version'],e['shown_version']) for e in shown if e.get('shown_version') not in (None,e['version'])))
+        rows+=['']
+        # 候选 r4 #7：技术附录单独成一节（“## 技术附录（给 Agent）”），放在统计末尾，说人话扫描到此为止
+        if differ:rows+=['## 技术附录（给 Agent）','','上面说的第 K 版只数有成品的版本；'+'、'.join(f"{t} 说的第 {k} 版 = 内部第 {n} 版" for t,n,k in differ)+'。','']
+    return '\n'.join(rows)
+
+
 def main():
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--workspace',type=Path,required=True)
     p.add_argument('--task-id');p.add_argument('--run-id');p.add_argument('--json',action='store_true')
-    p.add_argument('--output',nargs='?',const='auto');p.add_argument('--rebuild-index',action='store_true');args=p.parse_args()
+    p.add_argument('--output',nargs='?',const='auto');p.add_argument('--rebuild-index',action='store_true')
+    p.add_argument('--stats',action='store_true',help='v1.7.5 G05：只输出复盘统计（分派、取消原因、检核覆盖、发客户依据、豁免来源、体积、提醒）')
+    args=p.parse_args()
+    if args.stats:
+        stats=business_stats(args.workspace)
+        print(json.dumps(stats,ensure_ascii=False,indent=2) if args.json else stats['report'])
+        return
     if args.rebuild_index:rebuild(args.workspace)
     result=inspect(args.workspace,args.task_id,args.run_id)
     if args.output and result.get('report'):

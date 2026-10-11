@@ -25,6 +25,34 @@ def identity(target):
     return f"{target['space']}/{target['key']}"
 
 
+def standalone_versions(task_history):
+    """独立任务各条记录对应的检核版本号（v1.7.5 从 catalog 原样抽出，供补登记按版本号找历史版本）：
+    返回 [(记录, 版本号, 签名)]；签名不变的记录同属一版。"""
+    from standalone_store import digest as standalone_digest
+    signatures, out = [], []
+    previous_business = None
+    changed_business = False
+    for item in task_history:
+        value = item["task"]
+        business = {k:value[k] for k in ("request_text", "goal")}
+        if item.get("revision_budget") and previous_business is not None and business != previous_business:
+            changed_business = True
+        payload = {"sources": value["sources"], "deliverables": value["deliverables"],
+                   "completion_evidence": value["completion_evidence"]}
+        if "decision_refs" in value: payload["decision_refs"] = value["decision_refs"]
+        if "artifact_versions" in value:
+            payload["artifact_versions"] = value["artifact_versions"]
+            dependency_paths={p for a in value["artifact_versions"] for p in a["dependencies"]}
+            payload["artifact_dependency_files"]=[r for r in value.get("process_refs",[]) if r.get("path") in dependency_paths]
+        if changed_business: payload["business"] = business
+        signature = standalone_digest(payload)
+        previous_business = business
+        if not signatures or signatures[-1] != signature:
+            signatures.append(signature)
+        out.append((item, len(signatures), signature))
+    return out
+
+
 def catalog(root):
     from phase3_sources import catalog as source_catalog, source_ref
     from brand_house_guard import registry as html_registry
@@ -76,28 +104,9 @@ def catalog(root):
         if task["status"] == "archived":
             continue
         task_history = [item for item in standalone_events if item["task_id"] == task_id]
-        signatures = []
-        previous_business = None
-        changed_business = False
-        for item in task_history:
-            value = item["task"]
-            business = {k:value[k] for k in ("request_text", "goal")}
-            if item.get("revision_budget") and previous_business is not None and business != previous_business:
-                changed_business = True
-            payload = {"sources": value["sources"], "deliverables": value["deliverables"],
-                       "completion_evidence": value["completion_evidence"]}
-            if "decision_refs" in value: payload["decision_refs"] = value["decision_refs"]
-            if "artifact_versions" in value:
-                payload["artifact_versions"] = value["artifact_versions"]
-                dependency_paths={p for a in value["artifact_versions"] for p in a["dependencies"]}
-                payload["artifact_dependency_files"]=[r for r in value.get("process_refs",[]) if r.get("path") in dependency_paths]
-            if changed_business: payload["business"] = business
-            signature = standalone_digest(payload)
-            previous_business = business
-            if not signatures or signatures[-1] != signature:
-                signatures.append(signature)
+        numbered = standalone_versions(task_history)
         target = {"space": "standalone", "key": task_id,
-                  "version": len(signatures), "sha256": signatures[-1]}
+                  "version": numbered[-1][1], "sha256": numbered[-1][2]}
         dependency_paths={p for a in task.get("artifact_versions",[]) for p in a["dependencies"]}
         files = [item for item in task["sources"] + task["deliverables"] + task.get("decision_refs",[]) + [r for r in task.get("process_refs",[]) if r.get("path") in dependency_paths] if "path" in item]
         authors = [item["actor"] for item in standalone_events if item["task_id"] == task_id]

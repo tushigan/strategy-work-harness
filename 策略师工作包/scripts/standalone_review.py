@@ -94,7 +94,12 @@ def _record_review(root, target, report_path):
     meta, item, expected = _required(root,target)
     baseline = capture(root,target,report,evidence,expected,meta,item["authors"])
     checks(root,target,report,new_report=True)
-    return append(root, "standalone_review", {**report, "evidence": evidence, "baseline":baseline})
+    # 批次四开工补修 5：把本版检核准备时写下的台账截止时间记进检核记录；下一轮“上次通过之后改过的说法”从这一刻算起，
+    # 同一版之后重新准备（覆盖视觉必看页）也不会让起点变晚
+    from shijue_zengliang import registration_cutoff
+    cutoff = registration_cutoff(root, target, report.get("reviewer_instance"))
+    return append(root, "standalone_review", {**report, "evidence": evidence, "baseline":baseline,
+                                              **({"ledger_cutoff": cutoff} if cutoff else {})})
 
 
 def gate(root, key):

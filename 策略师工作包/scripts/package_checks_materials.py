@@ -19,6 +19,9 @@ ROOT_DOCS = {"README.md", "AGENTS.md", "CLAUDE.md", "统一包说明.md", GUIDE,
 PROJECT_DOCS = {f"project/{x}README.md" for x in (
     "", "inputs/", "tasks/", "briefs/", "research/", "outputs/", "exports/", "records/", "reviews/")}
 PROJECT_DOCS.add("project/records/closure-checklist.md")
+# v1.7.5 E7：随包的说人话词表、事实台账慎用说法模板与给策略师的三份文字模板是工具资产，不是客户业务资料
+TEMPLATE_DOCS = {"templates/说人话词表.tsv", "templates/台账慎用说法.txt", "templates/给策略师-交稿说明.md",
+                 "templates/给策略师-报错说明.md", "templates/给策略师-复盘.md"}
 EMPTY_STATUS = {"not_initialized", "not_started", "not_applicable", "not_requested",
                 "not_configured", "project_setup"}
 BASELINE = ".agents/skills/project-import-template/assets/openclaw-gantt-import-template.xlsx"
@@ -51,7 +54,7 @@ def infrastructure(name):
     if name.startswith(VENDORED_SKILL_PREFIX):
         return True
     path = PurePosixPath(name)
-    if name in ROOT_DOCS or name in PROJECT_DOCS or name in SKILL_REFERENCE_DOCS:
+    if name in ROOT_DOCS or name in PROJECT_DOCS or name in SKILL_REFERENCE_DOCS or name in TEMPLATE_DOCS:
         return True
     if path.suffix in {".py", ".js", ".mjs", ".cjs"} and path.parts[0] == "scripts":
         return True

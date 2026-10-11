@@ -19,7 +19,8 @@ def dispatch_write(function):
     def run(*args, request_id=None, **kwargs):
         bound=signature.bind(*args, **kwargs); bound.apply_defaults()
         root=bound.arguments['root'];actor_check(bound.arguments['actor'])
-        values={k:v for k,v in bound.arguments.items() if k!='root'}
+        # v1.7.5 G03：return 新增的 ledger_refs 没给时不进指纹，升级前登记的回传原样重试仍认得出（指纹与 v1.7.4 相同）
+        values={k:v for k,v in bound.arguments.items() if k!='root' and not (k=='ledger_refs' and v is None)}
         request = values.get('request', {})
         explicit=request_id or request.get('request_id')
         if explicit is not None and (not isinstance(explicit,str) or not explicit.strip()):
@@ -41,6 +42,16 @@ def dispatch_write(function):
                 fingerprint=digest({'action':function.__name__,'arguments':{k:v for k,v in values.items() if k not in {'actor','words'}},'words':said})
             key=explicit or default
             previous=next((x for x in records if x.get('request_key')==key),None)
+            if function.__name__=='prepare' and not explicit:
+                # 候选 r3 #5（v1.7.4 起就有）：同一份分派请求上一次准备的那条分派已取消（如宿主没派成、被新版取代）时，
+                # 再准备新建一条分派，不把取消掉的那条当成“已准备”原样返回；仍在进行中的（或已有其他结局的）照旧复用。
+                # 新建的那条用“原请求键 + 被取消分派编号”作键：同一次再准备原样重试仍认得出，再取消、再准备时依次往后接。
+                # 候选 r4 #5：对所有角色（作者分派同样）都这样接，只在上一条是“已取消”时生效。
+                from agent_dispatch import replay
+                states=replay(records)
+                while previous and states.get(previous.get('dispatch_id'),{}).get('status')=='cancelled':
+                    key=f"{key}:after:{previous['dispatch_id']}"
+                    previous=next((x for x in records if x.get('request_key')==key),None)
             if previous:
                 if previous.get('request_hash')!=fingerprint:
                     if function.__name__=='extend' and not explicit:

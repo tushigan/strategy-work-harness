@@ -11,7 +11,11 @@ import tomllib
 from pathlib import Path
 from typing import Any
 from workspace_status import inspect_workflows
-from runtime_structure import (PROJECT_MEMORY_RUNTIME_FILES, STANDALONE_RUNTIME_FILES,
+try:
+    from dengji_qingqiu import REQUESTS_DIR, USED_DIR
+except ImportError:  # r3 #7：缺这个必需文件时照常报“缺少必需文件”，不在导入时崩掉（登记请求按普通记录核对）
+    REQUESTS_DIR = USED_DIR = None
+from runtime_structure import (PROJECT_MEMORY_RUNTIME_FILES, STANDALONE_RUNTIME_FILES, V175_RUNTIME_FILES,
                                runtime_requirements_for_root, startup_structure_errors)
 REQUIRED_FILES = (
     "AGENTS.md",
@@ -73,10 +77,6 @@ SENSITIVE_NAME = re.compile(
     r"^(?:\.env(?:\..*)?|id_[^/]+|.*(?:credential|secret|token|password|private[-_]?key).*|.*\.(?:pem|key|p12|pfx|crt))$",
     re.IGNORECASE,
 )
-SENSITIVE_KEY = re.compile(
-    r"(?:api[_-]?key|access[_-]?token|refresh[_-]?token|password|secret|private[_-]?key|authorization)",
-    re.IGNORECASE,
-)
 ALLOWED_FIELD_STATUS = {
     "task_status": {"not_started", "in_progress", "blocked", "completed", "cancelled"},
     "artifact_status": {"not_started", "draft", "ready_for_review", "approved", "stale", "blocked", "archived"},
@@ -95,11 +95,11 @@ ALLOWED_FIELD_STATUS = {
 #   project/inputs/登记请求/           登记请求（guidang 受保护）
 #   project/outputs/versions/、conflicts/、brand-house/、proposal/、control/  程序登记的版本快照、冲突副本、品牌屋、逐字稿与演示稿数据、总控产出
 #   project/assets/index.json          素材库登记（sucai_ku 写入，对外导出时按它核对指纹）；素材文件本身不算记录
-RECORD_LOCATIONS = (
+RECORD_LOCATIONS = tuple(x for x in (
     "project/state.json", "project/records", "project/tasks", "project/reviews", "project/briefs", "project/research",
-    "project/inputs/登记请求", "project/outputs/versions", "project/outputs/conflicts", "project/outputs/brand-house",
+    REQUESTS_DIR, "project/outputs/versions", "project/outputs/conflicts", "project/outputs/brand-house",
     "project/outputs/proposal", "project/outputs/control", "project/assets/index.json",
-)
+) if x)
 
 
 def is_record_location(root: Path, path: Path) -> bool:
@@ -112,7 +112,7 @@ def is_record_location(root: Path, path: Path) -> bool:
 def artifact_unreadable(root: Path, path: Path, reason: str, errors: list[str], warnings: list[str],
                         capabilities: dict[str, Any]) -> None:
     """成果目录里读不成 JSON 的文件：每个文件只告警 1 条并登记为单个产物问题；按文本做疑似凭据检查，命中仍阻断。"""
-    from package_checks_content import ASSIGNMENT, SECRET, placeholder
+    from package_checks_content import text_has_secret
     rel = str(path.relative_to(root))
     warnings.append(f"仅影响该产物：无法按 JSON 读取 {rel}（{reason}）")
     issues_list = capabilities.setdefault("artifact_path_issues", [])
@@ -121,12 +121,21 @@ def artifact_unreadable(root: Path, path: Path, reason: str, errors: list[str], 
     try:
         with path.open(encoding="utf-8", errors="replace") as handle:  # 逐行扫描，大文件不整份读进内存
             for line in handle:
-                if SECRET.search(line) or any(not placeholder(next((x for x in m.groups()[1:] if x is not None), ""))
-                                              for m in ASSIGNMENT.finditer(line)):
+                if text_has_secret(line):
                     errors.append(f"{rel} 中疑似凭据（无法按 JSON 读取，按文本检查）")
                     return
     except OSError:
         return
+
+
+def registered_requests(root: Path) -> dict[str, str]:
+    """独立任务记录里已登记过的请求编号 → 任务编号；记录读不了时返回空（照旧核对引用，记录本身的问题由任务核对报）。"""
+    try:
+        from standalone_store import history
+        events, _ = history(root)
+    except Exception:
+        return {}
+    return {e["request_id"]: e["task_id"] for e in events if isinstance(e.get("request_id"), str)}
 
 
 def load_json(path: Path) -> Any:
@@ -161,17 +170,23 @@ def walk_paths(value: Any, key: str = "") -> list[tuple[str, str]]:
 
 
 def walk_sensitive_keys(value: Any, prefix: str = "") -> list[str]:
+    """JSON/TOML 里的疑似凭据位置（v1.7.5 r3 #2）：与发行检查同一键名规则 secret_key_name（连同值判尾巴豁免，r4 #3）；
+    占位用 startup_placeholder（r4 #3：保持 v1.7.4 启动检查口径，v1.7.4 发行检查专有的固定占位串照报，只多放过列出的规范写法）；
+    字符串值（与键名文字）再过 text_has_secret（值里的 Bearer、带凭据网址、凭据键名的赋值照拦）；记一笔也调用本函数。"""
+    from package_checks_content import secret_key_name, startup_placeholder, text_has_secret
     found: list[str] = []
     if isinstance(value, dict):
         for key, child in value.items():
-            child_path = f"{prefix}.{key}" if prefix else key
-            if SENSITIVE_KEY.search(key) and child not in (None, "", [], {}):
+            child_path = f"{prefix}.{key}" if prefix else str(key)
+            if (secret_key_name(key, child) and not startup_placeholder(child)) or (isinstance(key, str) and text_has_secret(key)):
                 found.append(child_path)
             found.extend(walk_sensitive_keys(child, child_path))
     elif isinstance(value, list):
         for index, child in enumerate(value):
             found.extend(walk_sensitive_keys(child, f"{prefix}[{index}]"))
-    return found
+    elif isinstance(value, str) and text_has_secret(value):
+        found.append(prefix or "（顶层文字）")
+    return list(dict.fromkeys(found))
 
 
 def path_is_inside(root: Path, value: str) -> bool:
@@ -203,6 +218,9 @@ def inspect_structured_data(
             errors.append(f"{source} 中路径越界 ({key}): {value}")
             continue
         target = (root / value).resolve(strict=False)
+        if not target.exists() and value not in required_paths and source.endswith("/报告模板.json") \
+                and source.startswith("project/reviews/") and value.rsplit("/", 1)[-1].startswith("填写"):
+            continue  # 候选 r3 #3：检核报告模板里的截图占位（“截图/填写截图文件”，检核员照模板填写）不是引用，不报
         if not target.exists():
             message = f"{source} 引用目标不存在: {value}"
             (errors if value in required_paths else warnings).append(message)
@@ -217,7 +235,7 @@ def check(root: Path, current_only=False) -> tuple[list[str], list[str], dict[st
     capabilities: dict[str, Any] = {}
 
     runtime_required = set(runtime_requirements_for_root(root))
-    optional_generation_files = set(STANDALONE_RUNTIME_FILES + PROJECT_MEMORY_RUNTIME_FILES)
+    optional_generation_files = set(STANDALONE_RUNTIME_FILES + PROJECT_MEMORY_RUNTIME_FILES + V175_RUNTIME_FILES)
     required_files = [relative for relative in REQUIRED_FILES
                       if relative not in optional_generation_files or relative in runtime_required]
     for relative in required_files:
@@ -261,6 +279,7 @@ def check(root: Path, current_only=False) -> tuple[list[str], list[str], dict[st
 
     project_dir = root / "project"
     if project_dir.is_dir():
+        registered = None  # G10 返修：任务记录里已登记过的请求编号（按需读一次）
         for path in (p for p in business_paths(root) if p.is_relative_to(project_dir) and p.suffix == ".json"):
             # Dedicated generated fact summaries are process outputs, not a second
             # business registry. Explicit registered file references still verify bytes.
@@ -276,6 +295,18 @@ def check(root: Path, current_only=False) -> tuple[list[str], list[str], dict[st
                     if is_record_location(root, path):
                         raise
                     artifact_unreadable(root, path, str(exc), errors, warnings, capabilities)
+                    continue
+                archived = USED_DIR is not None and path.is_relative_to(root / USED_DIR)
+                if not archived and REQUESTS_DIR is not None and path.is_relative_to(root / REQUESTS_DIR) and isinstance(data, dict):
+                    if registered is None:
+                        registered = registered_requests(root)
+                    task = data.get("task_id")
+                    archived = isinstance(task, str) and registered.get(data.get("request_id")) == task
+                if archived:
+                    # G10（v1.7.5）：登记成功后移入“已用”的请求只是存档，不再核对其中引用（疑似凭据仍阻断）；
+                    # 返修：仍留在 登记请求/ 下、但请求编号已在任务记录里登记过的旧请求同样只查疑似凭据，不自动移动
+                    for key_path in walk_sensitive_keys(data):
+                        errors.append(f"{path.relative_to(root)} 中疑似凭据字段: {key_path}")
                     continue
                 local_errors = []
                 inspect_structured_data(
@@ -432,7 +463,10 @@ def main() -> int:
     else:
         errors, warnings, capabilities = check(root)
     if not args.structure_only:
-        capabilities.update(inspect_workflows(root, warnings))
+        try:
+            capabilities.update(inspect_workflows(root, warnings))
+        except ImportError as exc:  # r3 #7：缺必需运行文件时如实报错（上面已报“缺少必需文件”），不崩
+            errors.append(f"工作流状态未检查：运行文件缺失（{exc.name or exc}）")
     status = "fail" if errors else ("warn" if warnings else "pass")
     result = {
         "status": status,

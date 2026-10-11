@@ -26,6 +26,13 @@ def record(root, kind, summary, result, actor, task_id=None, refs=(), url=None):
         path = local(root, value)
         if not path.is_file():
             raise WorkflowError(f"证据文件不存在：{value}")
+        from mingan_xinxi import credential_file
+        why = credential_file(path)
+        if why:
+            # G14（v1.7.5）：凭据不进项目、不当证据；报错按说人话三段写，文件位置放技术附录
+            raise WorkflowError(f"这份证据{why}，这一笔没有记下来。凭据请放在工作包外面，不要放进项目文件夹，也不用当证据；"
+                                f"这不影响你已经做完的上传或发送。要你做的：把这份文件移到工作包外，证据换成上传结果或回执再记一次。"
+                                f"技术附录（给 Agent）：--ref {value} 被 mingan_xinxi.credential_file 判为疑似凭据（文件名或内容）")
         import hashlib
         evidence.append({"path": value, "sha256": hashlib.sha256(path.read_bytes()).hexdigest()})
     row = {"schema_version": 1, "kind": kind, "summary": summary, "result": result, "task_id": task_id, "url": url,

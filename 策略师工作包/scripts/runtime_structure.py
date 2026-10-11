@@ -29,15 +29,18 @@ REQUIRED_RUNTIME_FILES = (
     "scripts/incremental_review.py", "scripts/shencha_zu.py", "scripts/standalone_visual.py",
     "scripts/workspace_resume.py", "scripts/current_dependencies.py", "scripts/registration_guard.py",
     "scripts/runtime_structure.py", "scripts/project_handoff.py", "scripts/workspace_lock.py",
-    "scripts/agent_dispatch.py", "scripts/standalone_store.py", "scripts/standalone_tasks.py",
+    "scripts/agent_dispatch.py", "scripts/standalone_store.py", "scripts/standalone_tasks.py", "scripts/dengji_qingqiu.py",
     "scripts/task_context.py", "scripts/project_memory_store.py", "scripts/project_memory.py",
     "scripts/task_receipts.py", "scripts/standalone_review.py",
+    "scripts/mingan_xinxi.py", "scripts/shuo_renhua.py", "scripts/shishi_taizhang.py", "scripts/pptx_hedui.py", "scripts/zifu_yujian.py",
+    "templates/说人话词表.tsv", "templates/台账慎用说法.txt",
     ".agents/skills/README.md", *MANUALS,
     *(f".codex/agents/{name}.toml" for name in AGENTS),
     *(f".agents/skills/{name}/SKILL.md" for name in SKILLS),
 )
 STANDALONE_RUNTIME_FILES = (
     "scripts/standalone_store.py", "scripts/standalone_tasks.py",
+    "scripts/dengji_qingqiu.py",  # v1.7.5 r3 #7：独立任务登记、启动检查、运行日志守卫都依赖它
 )
 PROJECT_MEMORY_RUNTIME_FILES = (
     "scripts/task_context.py", "scripts/project_memory_store.py",
@@ -48,8 +51,12 @@ EFFICIENCY_RUNTIME_FILES = (
     "scripts/current_dependencies.py", "scripts/registration_guard.py",
 )
 DIAGNOSTIC_RUNTIME_FILES = ("scripts/yunxing_rizhi.py", "scripts/yunxing_fupan.py", "scripts/yunxing_chayi.py", "scripts/standalone_budget.py")
+# v1.7.5 E7：本版新增、各入口会调用的模块与模板（凭据判定、说人话扫描、事实台账、PPT 核对、字符预检）；发行清单列了其中任何一个就全部必需
+V175_RUNTIME_FILES = ("scripts/mingan_xinxi.py", "scripts/shuo_renhua.py", "scripts/shishi_taizhang.py", "scripts/pptx_hedui.py",
+                      "scripts/zifu_yujian.py", "templates/说人话词表.tsv", "templates/台账慎用说法.txt")
 BASE_RUNTIME_FILES = tuple(name for name in REQUIRED_RUNTIME_FILES
-                           if name not in STANDALONE_RUNTIME_FILES + PROJECT_MEMORY_RUNTIME_FILES + EFFICIENCY_RUNTIME_FILES + DIAGNOSTIC_RUNTIME_FILES)
+                           if name not in STANDALONE_RUNTIME_FILES + PROJECT_MEMORY_RUNTIME_FILES + EFFICIENCY_RUNTIME_FILES
+                           + DIAGNOSTIC_RUNTIME_FILES + V175_RUNTIME_FILES)
 ROUTING_FILES = ("AGENTS.md", ".agents/skills/project-control/SKILL.md",
                  ".codex/agents/project-controller.toml")
 DEVELOPMENT_ROOTS = {"tests", "outputs", "harness-template", "Product-Spec.md",
@@ -108,6 +115,8 @@ def required_runtime_files_for(names):
         required.extend(EFFICIENCY_RUNTIME_FILES)
     if names.intersection(DIAGNOSTIC_RUNTIME_FILES):
         required.extend(DIAGNOSTIC_RUNTIME_FILES)
+    if names.intersection(V175_RUNTIME_FILES):
+        required.extend(V175_RUNTIME_FILES)
     return tuple(required)
 
 

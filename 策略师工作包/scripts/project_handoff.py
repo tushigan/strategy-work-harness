@@ -42,6 +42,15 @@ def print_result(result: dict[str, object], as_json: bool) -> None:
     print(f"项目交接检查: {result.get('status', 'unknown')}")
     report = result.get("report", result)
     project = report.get("project", {})
+    for item in result.get("strategist_reminders") or []:
+        # G02（v1.7.5）：先交后检发现的问题置顶，策略师确认前一直显示
+        print("要你看的检查提醒（任务 " + str(item.get("task_id")) + "）：")
+        print(str(item.get("text", "")))
+    for item in result.get("final_unchecked") or []:
+        # G07（v1.7.5；候选 r5）：最终版没有一次检查通过的记录时只摆一行事实；给 Agent 的技术附录另起一行
+        print("最终版未查（任务 " + str(item.get("task_id")) + "）：" + str(item.get("text", "")))
+        if item.get("appendix"):
+            print(str(item["appendix"]))
     print(f"项目: {project.get('project_name') or '未初始化'}")
     print(f"阶段: {project.get('current_stage') or '未知'}")
     print(f"下一步: {project.get('next_action') or '未知'}")
@@ -50,8 +59,19 @@ def print_result(result: dict[str, object], as_json: bool) -> None:
             print(f"独立任务 {item['task_id']}：{item['title']} / {item['effective_status']} / {item['next_action']}")
     for item in dict.fromkeys([*report.get("errors", []), *result.get("errors", [])]):
         print(f"阻断: {item}")
-    for item in dict.fromkeys([*report.get("warnings", []), *result.get("warnings", [])]):
-        print(f"提示: {item}")
+    if result.get("mode") == "resume" and isinstance(result.get("warning_groups"), list):
+        # G10 返修 #5：resume 的文字输出按组打印（类型、目录、次数、一条示例），每组一行；逐条提醒在 --details --json 的 warnings 里（候选 r4 #8）
+        groups = result["warning_groups"]
+        total = result.get("warnings_count", len(result.get("warnings", [])))
+        if total:
+            print(f"提示：共 {total} 条，归并为 {len(groups)} 组（逐条见 --details --json 的 warnings）")
+        for group in groups:
+            example = str(group.get("example", ""))
+            example = example if len(example) <= 80 else example[:79] + "…"
+            print(f"提示组 {group.get('count')} 条｜{group.get('type')}｜目录 {group.get('directory')}｜例：{example}")
+    else:
+        for item in dict.fromkeys([*report.get("warnings", []), *result.get("warnings", [])]):
+            print(f"提示: {item}")
     blocked = result.get("status") == "blocked" or report.get("errors")
     if result.get("mode") == "resume":
         print("日常部分检查；正式交接请另行运行 inspect/prepare/accept。")
@@ -79,7 +99,9 @@ def main() -> int:
         from jiaojie_shishi import generate
         try:
             result=generate(root,args.task_id);print(json.dumps(result,ensure_ascii=False,indent=2));return int(result["status"]=="blocked")
-        except (OSError,ValueError,TypeError,KeyError):
+        except (OSError,ValueError,TypeError,KeyError) as exc:
+            from yunxing_rizhi import command_error
+            command_error(exc)  # G04 r3：命令级运行日志记首行（业务报错记首行，其他只记类别）
             print(json.dumps({"status":"blocked","written":False,"errors":["当前记录或摘要存储无法安全核实，保留原件核对"]},ensure_ascii=False));return 1
     if args.command == "resume":
         from workspace_resume import resume
@@ -98,6 +120,8 @@ def main() -> int:
     try:
         actor_check(args.actor)
     except ValueError as exc:
+        from yunxing_rizhi import command_error
+        command_error(exc)  # G04 r3：执行者检查不过，命令级运行日志记这条首行
         print_result({"status":"blocked","errors":[str(exc)],"written":False},args.json)
         return 1
     if args.command == "prepare":

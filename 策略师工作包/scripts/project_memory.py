@@ -34,11 +34,18 @@ def main():
                   if args.command == "save"
                   else inspect(args.workspace, args.include_retired))
         print(json.dumps(result, ensure_ascii=False, indent=2, allow_nan=False))
-        return 1 if result.get("errors") else 0
+        failed = bool(result.get("errors"))
     except (OSError, ValueError, TypeError, RecursionError) as exc:
+        from yunxing_rizhi import command_error
+        command_error(exc)  # G04：命令级运行日志记这条报错首行
         print(json.dumps({"status": "blocked", "errors": [str(exc)]}, ensure_ascii=False))
-        return 1
+        failed = True
+    if failed and args.command == "inspect":
+        from yunxing_rizhi import StateReport
+        raise StateReport(1)  # F08（r4 #1）：查询如实报出 blocked，退出码仍 1，重试守卫不计数；真崩（未捕获异常）照常计数
+    return 1 if failed else 0
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    from yunxing_rizhi import cli  # G04 r3：与其他入口一样套上运行日志，入口捕获的报错由 command_error 记首行
+    raise SystemExit(cli(main, __file__))

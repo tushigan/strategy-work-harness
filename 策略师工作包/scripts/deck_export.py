@@ -268,6 +268,8 @@ def main():
             print(json.dumps(external_export(args.workspace, args.task_id, args.actor, args.html), ensure_ascii=False, indent=2))
             return 0
         except (c.WorkflowError, OSError, ValueError) as exc:
+            from yunxing_rizhi import command_error
+            command_error(exc)  # G04 r3：入口捕获后返回 1 的报错，命令级运行日志记它的首行
             print(f"对外导出失败：{exc}", file=sys.stderr)
             return 1
     try:
@@ -276,6 +278,8 @@ def main():
         print(json.dumps(result, ensure_ascii=False, indent=2))
         return 0
     except Exception as exc:
+        from yunxing_rizhi import command_error
+        command_error(exc)  # G04 r3：同上（业务报错记首行，其他异常只记类别）
         code = str(exc).split(":", 1)[0] if isinstance(exc, c.WorkflowError) else "io_error"
         code = code if code in MESSAGES else "io_error"
         print(f"PDF 操作失败（{code}）：{MESSAGES[code]}", file=sys.stderr)

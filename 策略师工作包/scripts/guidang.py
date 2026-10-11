@@ -17,7 +17,12 @@ from standalone_store import text
 from workspace_lock import serialized
 
 LOG = "project/records/archive.jsonl"
-PROTECTED = ("project/records", "project/运行日志", "project/state.json", "project/inputs/登记请求")
+try:
+    from dengji_qingqiu import REQUESTS_DIR
+except ImportError:  # r3 #7：缺这个必需文件时不在导入时崩掉；宁可多保护——整个 project/inputs 都不归档（启动检查另报缺少必需文件）
+    REQUESTS_DIR = "project/inputs"
+
+PROTECTED = ("project/records", "project/运行日志", "project/state.json", REQUESTS_DIR)
 
 
 def destination_root(root):
@@ -115,7 +120,10 @@ def _hits_protected(root, path, ids):
     return False
 
 
-def _normalized(root, value):
+BLOB_DIR = "project/records/review-baselines/blobs/"  # v1.7.5 G11：检核基线副本，只供 banben_baoliu 判定没人再用后移出
+
+
+def _normalized(root, value, allow_blobs=False):
     """先解析（local：拒绝绝对路径与越界）再判断：./、..、重复斜杠、大小写、Unicode 形态都归一后才比对保护范围，
     并按 (设备, inode) 与受保护实体核对；路径上任何一级是符号链接都拒绝。"""
     if not isinstance(value, str) or not value.strip():
@@ -131,16 +139,21 @@ def _normalized(root, value):
         if current.is_symlink():
             raise WorkflowError(f"{value}：路径经过符号链接，不能归档")
     folded = _fold(rel)
+    if allow_blobs and folded.startswith(_fold(BLOB_DIR)) and "/" not in folded[len(BLOB_DIR):] and path.is_file():
+        st = os.stat(path)
+        if (st.st_dev, st.st_ino) in _protected_ids(root) or st.st_nlink != 1:
+            raise WorkflowError(f"{value}：检核基线副本有硬链接，不能归档")
+        return path, rel
     if not folded.startswith("project/") or any(folded == _fold(p) or folded.startswith(_fold(p) + "/") for p in PROTECTED) \
             or _hits_protected(root, path, _protected_ids(root)):
         raise WorkflowError(f"{value}（解析为 {rel}）：只能归档 project/ 下的成果或资料，不能归档记录、日志或状态文件")
     return path, rel
 
 
-def _expand(root, values):
+def _expand(root, values, allow_blobs=False):
     files = []
     for value in values:
-        path, rel = _normalized(root, value)
+        path, rel = _normalized(root, value, allow_blobs)
         if path.is_dir():
             ids = _protected_ids(root)
             for p in sorted(path.rglob("*")):
@@ -177,10 +190,10 @@ def _precheck(root, dest, plan):
         raise WorkflowError("移动前核对未通过，整批未移动：" + "；".join(problems[:5]))
 
 
-def _plan(root, values):
+def _plan(root, values, allow_blobs=False):
     """归档计划：目的地、路径解析与保护范围、展开目录、正在使用的文件；任何一项不符即抛出（不移动）。"""
     dest = _safe_destination(root)
-    files = _expand(root, values); busy = _current(root)
+    files = _expand(root, values, allow_blobs); busy = _current(root)
     busy = {_fold(b) for b in busy}
     in_use = [p.relative_to(root).as_posix() for p in files if _fold(p.relative_to(root).as_posix()) in busy]
     if in_use:
@@ -201,7 +214,7 @@ def preflight(root, values):
     return plan
 
 
-def archive(root, values, words, actor, dry_run=False, basis=None, extra=None):
+def archive(root, values, words, actor, dry_run=False, basis=None, extra=None, allow_blobs=False):
     from registration_guard import actor_check
     actor_check(actor)
     if not isinstance(words, str) or not words.strip():
@@ -209,7 +222,7 @@ def archive(root, values, words, actor, dry_run=False, basis=None, extra=None):
     text(words, "归档授权原话")
     root = Path(root).resolve()
     with serialized(root):
-        dest, plan = _plan(root, values)
+        dest, plan = _plan(root, values, allow_blobs)
         summary = {"files": len(plan), "bytes": sum(x["bytes"] for x in plan), "destination_root": f"{root.name}-归档/"}
         if dry_run:
             return {"status": "dry_run", **summary, "items": plan[:50]}

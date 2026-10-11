@@ -58,6 +58,8 @@ def _inherited(root,target,report,entry,artifact,record):
     kind='pdf' if artifact['path'].lower().endswith('.pdf') else 'html'
     base_review,base_record,reason,flagged=z.standalone_base(root,target,artifact['path'],kind,purpose,report.get('simulation'))
     reason=reason or z.page_mismatch(record,required_pages(local(root,artifact['path'])))
+    if not reason:  # G03（v1.7.5）：事实台账改过的说法所在页不能继承；按检核准备时写下的截止时间核对（之后再改的不影响本次登记）
+        flagged,_,reason=z._with_ledger(root,target,base_review,flagged,z.ledger_cutoff(root,target))
     if reason:raise WorkflowError(f'不能继承视觉结论：{reason}')
     if entry.get('base_review')!=base_review:
         raise WorkflowError('继承须绑定程序认定的基线报告与基线指纹（最近一份通过检核），引用不符')

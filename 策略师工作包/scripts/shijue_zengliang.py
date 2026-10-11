@@ -47,7 +47,9 @@ DECK_META = {"deck_ref", "script_ref", "upstream_refs", "page_plan", "visual_sty
 RADICALS = {"⻅": "见", "⻆": "角", "⻉": "贝", "⻋": "车", "⻓": "长", "⻔": "门", "⻙": "韦", "⻚": "页", "⻛": "风",
             "⻜": "飞", "⻢": "马", "⻥": "鱼", "⻦": "鸟", "⻧": "卤", "⻨": "麦", "⻩": "黄", "⻪": "黾", "⻬": "齐",
             "⻮": "齿", "⻰": "龙", "⻳": "龟", "⻄": "西", "⻑": "長", "⻘": "青", "⻟": "食", "⻣": "骨", "⻤": "鬼",
-            "⺟": "母", "⺠": "民", "⻗": "雨"}
+            "⺟": "母", "⺠": "民", "⻗": "雨",
+            # 候选 r2 #13：苹方导出 PDF 实测写成部首码位、上面没有的 5 个（验收/v1.7.5 原始数据 G12-字体实测，2026-10-10）
+            "⺐": "尢", "⺓": "幺", "⺕": "彐", "⻝": "食", "⻱": "龜"}
 _VERIFIED = {}
 
 
@@ -837,10 +839,121 @@ def page_mismatch(record, expected):
     return None if got == list(expected) else f"渲染得到的页（{len(got)} 页）与页面定义（{len(expected)} 页）不一致"
 
 
+LEDGER_REASON = "事实台账里本页用到的说法在上次通过检核之后改过"
+
+
+def prepared_at(root, record):
+    """批次三返修 r2 #1：一份检核的“准备截止时间”——台账“上次通过检核之后”从这一刻算起（检核期间改的条目下一轮必看）。
+    依次取：检核记录里登记时写下的 ledger_cutoff（批次四开工补修 5）；那一版检核准备写下的 视觉必看页.json 的 ledger.cutoff；那一版检核分派的准备时间（同一检核员的分派优先，
+    多份取最早，偏严）；都没有才退回登记时间（v1.7.5 之前准备的检核）。"""
+    target = record.get("target") or {}
+    if isinstance(record.get("ledger_cutoff"), str) and record["ledger_cutoff"]:  # 批次四开工补修 5：登记时写进记录的截止时间优先
+        return record["ledger_cutoff"]
+    try:
+        data = json.loads(local(root, f"project/reviews/{target['key']}/r{target['version']}/视觉必看页.json").read_text(encoding="utf-8"))
+        cutoff = (data.get("ledger") or {}).get("cutoff") if isinstance(data, dict) else None
+        if isinstance(cutoff, str) and cutoff:
+            return cutoff
+    except (OSError, ValueError, WorkflowError, KeyError, TypeError, AttributeError):
+        pass
+    try:
+        from agent_dispatch import read_log, replay
+        items = [i for i in replay(read_log(root)).values() if i.get("review_target") == target and isinstance(i.get("prepared_at"), str)]
+    except (WorkflowError, OSError, ValueError):
+        items = []
+    mine = [i for i in items if i.get("instance") and i.get("instance") == record.get("reviewer_instance")]
+    times = sorted(i["prepared_at"] for i in (mine or items))
+    return times[0] if times else record.get("created_at")
+
+
+def registration_cutoff(root, target, reviewer=None):
+    """批次四开工补修 5：登记检核时写进记录的台账截止时间——本版视觉计划的 ledger.cutoff 与本版检核分派的准备时间里最早的一个
+    （同一检核员的分派优先；同一版准备过两次时取第一次，偏严）。都没有返回 None。"""
+    if target.get("space") != "standalone":
+        return None
+    times = [t for t in [ledger_cutoff(root, target)] if t]
+    try:
+        from agent_dispatch import read_log, replay
+        items = [i for i in replay(read_log(root)).values() if i.get("review_target") == target and isinstance(i.get("prepared_at"), str)]
+    except (WorkflowError, OSError, ValueError):
+        items = []
+    mine = [i for i in items if reviewer and i.get("instance") == reviewer]
+    times += [i["prepared_at"] for i in (mine or items)]
+    return min(times) if times else None
+
+
+def ledger_base(root, target):
+    """台账核对的基线：本任务早于当前版本的最近一份通过检核（与视觉基线 _pick_base 选的是同一份），及其准备截止时间。
+    检核准备的文字提醒（jianhe_zhunbei ledger_changes）与视觉必看页都用它，二者同一个基线、同一组时间。没有返回 (None, None)。"""
+    if target.get("space") != "standalone":
+        return None, None
+    passed = [r for r in _standalone_records(root, target) if type(r.get("target", {}).get("version")) is int
+              and r["target"]["version"] < target["version"] and not _failed(r)]
+    if not passed:
+        return None, None
+    return passed[-1], prepared_at(root, passed[-1])
+
+
+def ledger_flags(root, target, base_review, until=None):
+    """G03（v1.7.5）：基线检核准备截止之后（批次三返修 r2 #1：不再从基线登记时间算，检核期间改的也算）、到 until 为止
+    （检核准备时为现在，登记报告时为准备那一刻）事实台账里改过的说法，本任务引用的整数页 → (页集合, {页: [编号…]})。
+    只对独立任务；没有台账或没改过返回空。台账读不出来抛 WorkflowError。"""
+    if target.get("space") != "standalone" or not base_review:
+        return set(), {}
+    base = next((r for r in _standalone_records(root, target) if r.get("record_id") == base_review.get("record_id")), None)
+    if base is None:
+        return set(), {}
+    from shishi_taizhang import changed_pages
+    return changed_pages(root, target["key"], prepared_at(root, base), until)
+
+
+def ledger_cutoff(root, target):
+    """登记报告时台账的截止时间：本版视觉计划写下的准备时间（没有计划文件为 None，按现在算，偏严）。"""
+    if target.get("space") != "standalone":
+        return None
+    try:
+        data = json.loads(local(root, f"project/reviews/{target['key']}/r{target['version']}/视觉必看页.json").read_text(encoding="utf-8"))
+    except (OSError, ValueError, WorkflowError):
+        return None
+    ledger = data.get("ledger") if isinstance(data, dict) else None
+    return ledger.get("cutoff") if isinstance(ledger, dict) and isinstance(ledger.get("cutoff"), str) else None
+
+
+def _with_ledger(root, target, base_review, flagged, until):
+    """把台账改过的页并进 flagged；返回 (flagged, 台账页 {页: [编号…]}, 全页原因)。"""
+    try:
+        pages, ids = ledger_flags(root, target, base_review, until)
+    except WorkflowError as exc:
+        return tuple(flagged), {}, f"事实台账读不出来（{exc}），按全页看"
+    return tuple(sorted(set(flagged) | pages, key=str)), ids, None
+
+
+def _relabel(result, record, ledger_ids, failed):
+    """台账页的必看原因写成台账（同时是退回报告指出的页照旧写退回原因）。"""
+    if not ledger_ids:
+        return result
+    names, pages = labels(record)
+    marked, _ = _flag_names(names, pages, set(ledger_ids), False)
+    failed_names, _ = _flag_names(names, pages, failed, False)
+    by_name = {}
+    for number, ids in ledger_ids.items():
+        got, _ = _flag_names(names, pages, {number}, False)
+        for n in got:
+            by_name.setdefault(n, []).extend(ids)
+    for m in result["must_see"]:
+        if m["page"] in marked and m["page"] not in failed_names and m["reason"] == "此前未通过的检核指出过本页问题":
+            m["reason"] = LEDGER_REASON + "（" + "、".join(sorted(set(by_name.get(m["page"], [])))) + "）"
+    return result
+
+
 def plan_standalone(root, target, meta, purpose="revision", record_refs=None, simulation=None):
-    """检核准备：为当前每份 HTML/PDF 生成（或读取）指纹并算出必看页；同时做 HTML/PDF 同版文字核对。"""
+    """检核准备：为当前每份 HTML/PDF 生成（或读取）指纹并算出必看页；同时做 HTML/PDF 同版文字核对。
+    v1.7.5 G03：上次通过检核之后事实台账里改过的说法所在页也列为必看（即使像素没变），截止时间写进计划，登记时按同一截止时间核对。"""
     from standalone_visual import required_pages
+    from phase2_store import now as _now
     root = Path(root).resolve()
+    cutoff = _now()
+    ledger_seen = {}
     visuals = [x for x in meta["task"]["deliverables"] if "path" in x and Path(x["path"]).suffix.lower() in {".html", ".htm", ".pdf"}]
     plans, records = [], {}
     for artifact in visuals:
@@ -861,7 +974,15 @@ def plan_standalone(root, target, meta, purpose="revision", record_refs=None, si
         records[artifact["path"]] = record
         base_review, base_record, reason, flagged = standalone_base(root, target, artifact["path"], kind, purpose, simulation)
         reason = reason or page_mismatch(record, names)
-        result = compare(base_record, record, reason_full=reason, flagged=flagged)
+        failed = set(flagged)
+        flagged, ledger_ids, ledger_reason = _with_ledger(root, target, base_review, flagged, cutoff) if not reason else (flagged, {}, None)
+        reason = reason or ledger_reason
+        ledger_seen.update({str(k): v for k, v in ledger_ids.items()})
+        result = _relabel(compare(base_record, record, reason_full=reason, flagged=flagged), record, ledger_ids, failed)
+        if ledger_ids and (result.get("full_reason") or "").startswith("此前未通过的检核指出的页对不上当前存在的页"):
+            result["full_reason"] = "事实台账改过的说法所在页对不上当前页（" + result["full_reason"].split("：", 1)[-1] + "）；认不出就全页"
+            for m in result["must_see"]:
+                m["reason"] = result["full_reason"]
         plans.append({**item, "fingerprint": ref, "base_review": base_review if result["inherited"] else None, **result})
     consistency = []
     pairs, unpaired = pair_documents(visuals)
@@ -879,7 +1000,10 @@ def plan_standalone(root, target, meta, purpose="revision", record_refs=None, si
     if unpaired:
         consistency.append({"html": None, "pdf": None, "problems": None, "unpaired": unpaired,
                             "notice": "这些 HTML/PDF 配不上对（不同名且不止一对），程序没有核对它们是否同一版；改成同名或由检核员人工确认"})
-    return {"artifacts": plans, "html_pdf_consistency": consistency}
+    base, since = ledger_base(root, target)
+    return {"artifacts": plans, "html_pdf_consistency": consistency,
+            "ledger": {"cutoff": cutoff, "since": since, "base_record_id": base.get("record_id") if base else None,
+                       "changed_pages": ledger_seen}}
 
 
 # ---------- 正式演示稿（phase5 html-deck）：页 = 第几个顶层 <section> ----------

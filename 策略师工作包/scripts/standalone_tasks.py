@@ -12,14 +12,24 @@ from standalone_store import (ACTIVE_STATUSES, JOURNAL, digest, history, identif
                               storage, task_value, text)
 
 
+class RequestIdConflict(WorkflowError):
+    """同一请求编号已登记过不同内容（r3 #8：原样重试读“已用”那份时据此改报白话，不靠匹配报错原文）。"""
+
+
 def save(root, request, actor, *, _observations=None, _commit_observations=None, _request_hash=None, _adoption=None, _iteration=None):
     root = Path(root).resolve()
     storage(root)  # Check before acquiring a lock that creates directories.
     required_fields = {"task_id", "request_id", "expected_revision", "reason", "task"}
-    if (not isinstance(request, dict)
-            or set(request) not in (required_fields,
-                                    required_fields | {"accept_changed_references"})):
-        raise WorkflowError("请求字段不完整或含未支持字段")
+    if not isinstance(request, dict):
+        raise WorkflowError("登记单的写法不对，这次没有登记。技术附录（给 Agent）：请求须为 JSON 对象（请求字段不完整或含未支持字段）")
+    if set(request) not in (required_fields, required_fields | {"accept_changed_references"}):
+        # G08（v1.7.5）：点名多了 / 少了哪几项
+        extra = sorted(set(request) - required_fields - {"accept_changed_references"})
+        missing = sorted(required_fields - set(request))
+        plain = "、".join(x for x in (f"多了 {len(extra)} 项不认识的内容" if extra else "", f"少了 {len(missing)} 项必填内容" if missing else "") if x)
+        raise WorkflowError(f"登记单{plain}，这次没有登记。技术附录（给 Agent）：请求顶层"
+                            + (f" 多余字段 {', '.join(extra)}" if extra else "") + (f" 缺字段 {', '.join(missing)}" if missing else "")
+                            + "；应为 task_id、request_id、expected_revision、reason、task，可选 accept_changed_references")
     accept_changed_references = request.get("accept_changed_references", False)
     if type(accept_changed_references) is not bool:
         raise WorkflowError("accept_changed_references 须为布尔值")
@@ -40,7 +50,7 @@ def save(root, request, actor, *, _observations=None, _commit_observations=None,
         prior = next((e for e in events if e["request_id"] == request["request_id"]), None)
         if prior:
             if prior["request_hash"] != request_hash:
-                raise WorkflowError("请求编号已用于不同内容，保留原记录")
+                raise RequestIdConflict("请求编号已用于不同内容，保留原记录")
             from yunxing_rizhi import note
             note("standalone_tasks.save","retry",reason_code="idempotent_request",version=prior["revision"])
             return prior
@@ -155,6 +165,39 @@ def save(root, request, actor, *, _observations=None, _commit_observations=None,
         return event
 
 
+from dengji_qingqiu import SameNameCopies, move_used, used_copy  # G10（v1.7.5）：登记请求目录与“已用”只在 dengji_qingqiu 定义
+
+
+def used_request(root, request_path):
+    """原路径已不在时“已用”里对应的那份；同名多份且请求编号不同（r3 #5）→ 报“有多份可能同名的登记单，请指明用哪一份”，不自动挑。"""
+    try:
+        return used_copy(root, request_path)
+    except SameNameCopies as exc:
+        listed = "、".join(f"{rel}（request_id {rid!r}）" for rel, rid in exc.copies)
+        raise WorkflowError("有多份可能同名的登记单，请指明用哪一份，这次没有登记。"  # r4 #6：提示文字（行为不变）
+                            f"技术附录（给 Agent）：{request_path} 已移走，“已用”里有 {len(exc.copies)} 份同名、请求编号不同：{listed}；"
+                            "用 --request 指向其中要用的那一份重试，或按任务当前版本另写新请求") from None
+
+
+def retry_used(root, request_path, used, actor):
+    """G10（v1.7.5 返修）：原路径已移到“已用”时的原样重试——读“已用”那份交给 save 走原有幂等：
+    同一请求编号、内容相同返回已有结果；那份不在任务记录里或与登记时内容不同则拒，不重复登记。"""
+    root = Path(root).resolve()
+    request = json.loads((root / used).read_text(encoding="utf-8"))
+    rid = request.get("request_id") if isinstance(request, dict) else None
+    events, _ = history(root)
+    prior = next((e for e in events if e["request_id"] == rid), None) if isinstance(rid, str) else None
+    tail = f"技术附录（给 Agent）：{request_path} 已移到 {used}"
+    if prior is None:
+        raise WorkflowError("这份登记单已经登记过，文件已移到“已用”里，但任务记录里找不到它，这次没有登记。要登记请按任务当前版本另写一份新的登记单。"
+                            + tail + f"（request_id {rid!r} 不在任务记录里）；重新读取任务当前版本后写新请求")
+    try:
+        return save(root, request, actor)
+    except RequestIdConflict:  # r3 #8：按异常子类判断，不匹配报错原文
+        raise WorkflowError("这份登记单已经登记过，文件已移到“已用”里，但那份与登记时的内容不同，这次没有重复登记。要改内容请按任务当前版本另写一份新的登记单。"
+                            + tail + "（同一 request_id 内容或记录者不同）；重新读取任务当前版本后写新请求") from None
+
+
 WORDS_DIR = "project/records/策略师原话"
 RETENTION = {}  # 本进程内最近一次自动保留结果（W02），供命令输出；不写入任务记录
 
@@ -231,7 +274,7 @@ def iterate(root, task_id, words, deliverables, changes, actor, label=None, requ
                     and sorted((r["path"], r["sha256"]) for r in prior["task"]["deliverables"] if "path" in r) == sorted(resolved))
             if not same:
                 raise WorkflowError("--request-id：请求编号已用于不同的原话、文件或改动摘要，保留原记录；新一轮请换编号或不填由程序生成")
-            return prior
+            return handed_over(root, task_id, prior, actor)
         if {h for _, h in resolved} <= {r["sha256"] for r in before}:
             raise WorkflowError("--deliverable：新版与上一版指纹相同，没有新改动可记")
         unchanged_elsewhere(root, current["task"], {v for v, _ in resolved})
@@ -249,14 +292,76 @@ def iterate(root, task_id, words, deliverables, changes, actor, label=None, requ
         task["deliverables"] = [{"label": label or f"在线改稿第{rounds}轮", "path": value} for value, _ in resolved]
         task["status"] = "in_progress"
         task["summary"] = f"迭代中：主控按策略师原话改稿第{rounds}轮（作者与主控同实例），未检核。改动：{changes.strip()[:200]}"
-        task["next_action"] = "等策略师看新版；对外交付前须有独立检核或针对对外交付的豁免原话"
+        task["next_action"] = ITERATE_NEXT
         task["completion_evidence"] = ""
         iteration = {"round": rounds, "mode": "主控改稿（作者与主控同实例，如实标注）",
                      "words_ref": {"path": WORDS_DIR + f"/{task_id}.jsonl", "request_id": request_id, "sha256": digest(words)},
                      "changes": changes.strip(), "previous": before, "reviewed": False}
-        return save(root, {"task_id": task_id, "request_id": request_id, "expected_revision": current["revision"],
-                           "reason": f"策略师在线改稿第{rounds}轮", "task": task},
-                    actor, _iteration=iteration, _observations=dict(resolved), _commit_observations=dict(resolved))
+        event = save(root, {"task_id": task_id, "request_id": request_id, "expected_revision": current["revision"],
+                            "reason": f"策略师在线改稿第{rounds}轮", "task": task},
+                     actor, _iteration=iteration, _observations=dict(resolved), _commit_observations=dict(resolved))
+        return handed_over(root, task_id, event, actor)
+
+
+# iterate / adopt 写进任务的下一步（候选 r2 #5）；候选 r3 #8：派出背后检核或已有结果后，查询时按实际情况改说（任务记录原样不改）
+ITERATE_NEXT = "已交给策略师（交出已登记）；接着派背后检核，结果出来告诉她（先交后检）"
+ADOPT_NEXT = "交给策略师时当场登记交出，接着派背后检核（先交后检）"
+
+
+def live_next_action(root, task_id, recorded):
+    """任务记录里的下一步若是 iterate / adopt 写的“接着派背后检核”，而当前版本已派出背后检核或已有检核结果，
+    返回按实际情况改说的下一步；其他情况（含读不出检核状态）返回 None，照记录原样显示。只读。"""
+    if recorded not in (ITERATE_NEXT, ADOPT_NEXT):
+        return None
+    try:
+        from jiaofu_guankou import _handed_for, _state, _target
+        target = _target(root, task_id)
+        state, _ = _state(root, task_id, target)
+        handed = bool(_handed_for(root, task_id, target))
+    except (OSError, ValueError, KeyError, TypeError, WorkflowError):
+        return None
+    said = {"checking": "背后检核已派出，结果出来告诉她", "passed": "背后检核已有结果：检查通过",
+            "passed_with_notes": "背后检核已有结果：通过，有可改进处，见给策略师的提醒",
+            "found_issues": "背后检核已有结果：发现问题，先把给策略师的提醒转述给她"}.get(state)
+    if not said:
+        return None
+    # adopt 登记的版本还没登记交出时照实说（交给她时当场登记交出）
+    return ("已交给策略师；" if handed else "还没登记交给策略师（交给她时当场登记交出）；") + said + "（先交后检）"
+
+
+def handed_over(root, task_id, event, actor):
+    """G01（v1.7.5）：在线改稿登记成功即登记“已交给策略师”，附给策略师的状态行与“下一步：派背后检核”的指引（G02）。
+    交出登记失败不影响已完成的改稿登记，如实给出原因。原样重试时，只在登记的仍是当前版本时补交出记录。"""
+    own = [e for e in history(root)[0] if e["task_id"] == task_id]
+    if not own or own[-1]["revision"] != event["revision"]:
+        return {**event, "handover_skipped": "这一轮已不是任务当前版本，没有补登记交出"}
+    try:
+        from jiaofu_guankou import handover
+        record = handover(root, task_id, actor, source="iterate")
+    except (OSError, ValueError, KeyError, TypeError) as exc:
+        return {**event, "handover_error": f"这一版已登记，但“已交给你”的记录没记上：{exc}"}
+    # 批次二返修 #4：交出新版这一步收尾旧版本未结束的检核分派（结果已登记的记“不需要了”，未登记的记“被新版取代”），
+    # 不在这里派新检核；续做状态因此不在“新版登记后、派背后检核前”报“当前分派无法核实”。
+    try:
+        from jiaofu_guankou import close_old_reviews
+        closed = {"closed_reviews": close_old_reviews(root, task_id, actor, "superseded",
+                                                      f"交出第 {record.get('version')} 版时收尾（先交后检：被新版取代）")}
+    except (OSError, ValueError, KeyError, TypeError) as exc:
+        closed = {"closed_reviews_error": f"这一版已登记、已交出，但旧版的检查派工没收尾：{exc}"}
+    return {**event, "handover": {k: record.get(k) for k in ("record_id", "version", "versions_since_pass", "last_pass_version", "status")},
+            "status_line": record["status_line"], **closed,
+            "next_step": {"behind_review": f"python scripts/jianhe_zhunbei.py --workspace . --task-id {task_id} --behind --actor {actor}",
+                          "notice": "先交后检：这一版已交给策略师，接着派背后检核（只看最后通过版以来的累计改动；旧的未完成检核会被取代）；"
+                                    "检核结果登记后，绿灯在下一次状态行顺带，发现问题时续做状态置顶给策略师的提醒"}}
+
+
+def handover_step(task_id, actor):
+    """save / adopt 登记新版后的下一步（候选 r2 #5）：交给策略师时当场登记交出，接着派背后检核（先交后检）。"""
+    import shlex
+    tid, who = shlex.quote(task_id), shlex.quote(actor)
+    return {"handover": f"python scripts/jiaofu_guankou.py handover --workspace . --task-id {tid} --actor {who}",
+            "behind_review": f"python scripts/jianhe_zhunbei.py --workspace . --task-id {tid} --behind --actor {who}",
+            "notice": "先交后检：把这一版交给策略师时当场登记交给策略师（交出），接着派背后检核；不用等检核通过再交。"}
 
 
 def adopt(root, task_id, dispatch_id, actor, reason=None):
@@ -291,7 +396,7 @@ def adopt(root, task_id, dispatch_id, actor, reason=None):
         task["deliverables"] = [{"label": f"分派候选 {Path(c['path']).parent.name or Path(c['path']).name}", "path": c["path"]} for c in item["candidates"]]
         task.update(status="in_progress", completion_evidence="",
                     summary=f"已把分派 {dispatch_id} 的候选登记为当前版本；未检核",
-                    next_action="准备独立检核（jianhe_zhunbei.py）或交策略师查看；对外交付前须检核或对外豁免")
+                    next_action=ADOPT_NEXT)
         accepted = {c["path"]: c["sha256"] for c in item["candidates"]}
         return save(root, {"task_id": task_id, "request_id": request_id, "expected_revision": current["revision"],
                            "reason": reason or f"登记分派 {dispatch_id} 的已回读候选为当前版本", "task": task},
@@ -330,6 +435,12 @@ def inspect(root, include_archived=False, current_only=False):
         result.update(status="blocked", errors=[str(exc)])
         return result
     latest = {e["task_id"]: e for e in events}
+    from guidang import archived_index
+    try:  # 批次四开工补修 7（F08 同类）：归档记录坏一行时如实报读不出（续做状态不再 Traceback），不当成崩溃
+        archived = archived_index(root) if latest else {}  # 没有任务时不读（同修前）
+    except (OSError, ValueError) as exc:
+        result.update(status="blocked", errors=[str(exc)])
+        return result
     for event in latest.values():
         task = event["task"]
         if task["status"] == "archived" and not include_archived:
@@ -340,8 +451,6 @@ def inspect(root, include_archived=False, current_only=False):
                        for r in task["sources"] + task["deliverables"]):
                 continue
         issues, links, archived_refs, appended = [], [], [], []
-        from guidang import archived_index
-        archived = archived_index(root)
         for ref in task["sources"] + task["deliverables"] + task.get("process_refs",[]) + task.get("decision_refs",[]):
             if "url" in ref:
                 links.append({**ref, "availability": "外部链接未随包复制；本次未联网核验"})
@@ -369,7 +478,9 @@ def inspect(root, include_archived=False, current_only=False):
             except (OSError, ValueError):
                 issues.append({"path": ref["path"], "issue": "文件不可读取或引用不安全"})
         issues.extend(words_issues(root, [e for e in events if e["task_id"] == event["task_id"]]))
-        item = {**task, "task_id": event["task_id"], "revision": event["revision"],
+        live = live_next_action(root, event["task_id"], task.get("next_action")) if task["status"] in ACTIVE_STATUSES else None
+        item = {**task, **({"next_action": live, "recorded_next_action": task["next_action"]} if live else {}),
+                "task_id": event["task_id"], "revision": event["revision"],
                 "updated_at": event["created_at"], "actor": event["actor"],
                 "reason": event["reason"], "file_issues": issues, "external_links": links,
                 **({"archived_refs": archived_refs} if archived_refs else {}),
@@ -425,19 +536,41 @@ def main():
             from standalone_budget import allow_more
             result = allow_more(args.workspace, args.task_id, args.evidence, args.actor, args.simulation)
         elif args.command == "save":
-            result = save(args.workspace, json.loads(args.request.read_text(encoding="utf-8")), args.actor)
+            used = used_request(args.workspace, args.request) if not args.request.exists() else None
+            if used is not None:
+                result = {**retry_used(args.workspace, args.request, used, args.actor), "request_moved_to": used}
+            else:
+                result = save(args.workspace, json.loads(args.request.read_text(encoding="utf-8")), args.actor)
+                if not result.get("errors"):
+                    moved = move_used(args.workspace, args.request)
+                    if moved:
+                        result = {**result, "request_moved_to": moved}
         else:
             result = inspect(args.workspace, args.include_archived)
+        if args.command in {"save", "adopt"} and not result.get("errors") and result.get("task_id") \
+                and (result.get("task") or {}).get("deliverables") and "next_step" not in result:
+            result = {**result, "next_step": handover_step(result["task_id"], args.actor)}
         if args.command in {"save", "iterate", "adopt"} and RETENTION.get(result.get("task_id")):
             result = {**result, "version_retention": RETENTION[result["task_id"]]}
         print(json.dumps(result, ensure_ascii=False, indent=2, allow_nan=False))
-        return 1 if result.get("errors") else 0
+        if result.get("errors"):
+            from yunxing_rizhi import command_error
+            command_error(WorkflowError(str(result["errors"][0])))
+            failed = True
+        else:
+            failed = False
     except (OSError, ValueError, TypeError, RecursionError) as exc:
         from workspace_lock import WorkspaceBusy
+        from yunxing_rizhi import command_error
+        command_error(exc)  # G04：入口自己捕获、打印后返回 1 的报错，命令级运行日志记它的首行
         if isinstance(exc,WorkspaceBusy):
             print(json.dumps({'status':'busy','reason_code':exc.reason_code,'message':str(exc),'written':False},ensure_ascii=False))
         else:print(json.dumps({"status": "blocked", "errors": [str(exc)]}, ensure_ascii=False))
-        return 1
+        failed = True
+    if failed and args.command == "inspect":
+        from yunxing_rizhi import StateReport
+        raise StateReport(1)  # F08 漏网（v1.7.5 批次三 B，写法同 r4 #1）：查询如实报出 blocked，退出码仍 1，重试守卫不计数；真崩（未捕获异常）照常计数
+    return 1 if failed else 0
 
 
 from yunxing_rizhi import observed

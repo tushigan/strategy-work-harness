@@ -198,6 +198,8 @@ def main():
         else:result=difference(a.workspace,{'path':a.before,'sha256':sha(reference_path(a.workspace,a.before))} if a.before else None,{'path':a.after,'sha256':sha(reference_path(a.workspace,a.after))})
         print(json.dumps(result,ensure_ascii=False,indent=2));return int(result.get('status')=='blocked')
     except (OSError,ValueError,TypeError,KeyError) as e:
+        from yunxing_rizhi import command_error
+        command_error(e)  # G04 r3：命令级运行日志记这条报错首行（RegistrationError 是业务报错；其他只记类别）
         print(json.dumps(dict(status='blocked',written=False,reason_code=getattr(e,'reason_code','io_or_structure_error'),issues=getattr(e,'issues',[issue('request','读取或结构失败')]),errors=[str(e)] if isinstance(e,RegistrationError) else ['文件或请求不可用']),ensure_ascii=False));return 1
 if __name__=='__main__':
     from yunxing_rizhi import cli

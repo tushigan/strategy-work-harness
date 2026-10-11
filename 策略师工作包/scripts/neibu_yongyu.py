@@ -46,14 +46,30 @@ def fold(text):
     return _INVISIBLE.sub("", "".join(c for c in text if unicodedata.category(c) != "Cf"))
 
 
-def scan_text(root, pages):
+def scan_text(root, pages, notices=None):
+    """内部用语 + 台账对照（v1.7.5 G03）：事实台账里“待核 / 不得对外”的条目派生的慎用说法（整句说法、关键词套慎用模板，
+    “不得对外”的关键词本身），命中即提示，类别写“台账对照（编号 状态）”。没有台账时与 v1.7.4 相同。
+    批次三返修 r2：#4 台账读不出来或模板某行写错时跳过台账对照（或只跳过那一行），白话提示放进 notices（扫描与对外导出都给），
+    不整条失败；#9 模板派生的命中若同一分句里否定词在前、或紧跟着还在接触 / 洽谈 / 探讨的写法，不提示。"""
+    from shishi_taizhang import caution_terms, softened
     hits, patterns = [], terms(root)
+    ledger = caution_terms(root, notices if notices is not None else [])
     for number, text in pages:
         text = fold(text)
         for label, pattern in patterns:
             for match in pattern.finditer(text):
                 start = max(0, match.start() - 12)
                 hits.append({"page": number, "category": label, "term": match.group(0), "context": text[start:match.end() + 12]})
+        seen = set()
+        for label, pattern, fact_id, status, derived in ledger:
+            for match in pattern.finditer(text):
+                key = (fact_id, match.start(), match.end())
+                if key in seen or (derived and softened(text, match.start(), match.end())):
+                    continue
+                seen.add(key)
+                start = max(0, match.start() - 12)
+                hits.append({"page": number, "category": "台账对照", "term": match.group(0), "context": text[start:match.end() + 12],
+                             "fact_id": fact_id, "fact_status": status, "label": label})
     return hits
 
 
@@ -75,11 +91,13 @@ def scan(root, path):
             pages.append((0, shown))  # 样式里 content 写出的文字也会上屏
     else:
         pages = [(1, raw)]
-    hits = scan_text(root, pages)
+    notices = []
+    hits = scan_text(root, pages, notices)
     basis = {"basis": "源码解析（未经浏览器核对）：CSS 隐藏、伪元素位置等以对外导出的浏览器核对为准"} if target.suffix.lower() in {".html", ".htm"} else {}
     return {"file": path, "hits": hits, "count": len(hits), "categories": sorted({h["category"] for h in hits}),
             "status": "attention" if hits else "ok", **basis,
-            "notice": "只提示，不自动删改；由检核者或主控判断是否属于需上屏披露"}
+            "notice": "只提示，不自动删改；由检核者或主控判断是否属于需上屏披露",
+            **({"ledger_notice": "\n".join(dict.fromkeys(notices))} if notices else {})}
 
 
 def main():

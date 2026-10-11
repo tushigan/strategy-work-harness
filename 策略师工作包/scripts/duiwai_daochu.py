@@ -235,6 +235,23 @@ def _publish(root, parent, temp, revision):
 
 
 def export(root, task_id, actor, html=None):
+    """对外导出；导出前先做字符映射预检（v1.7.5 G12，只提示不拦）：结果随输出 font_precheck，导出被拒时附在报错后面。"""
+    from zifu_yujian import check as font_check
+    from registration_guard import actor_check
+    actor_check(actor); root = Path(root).resolve()
+    _, _, raw = _current_html(root, task_id, html)
+    precheck = font_check(raw.decode("utf-8"))
+    try:
+        result = _export(root, task_id, actor, html)
+    except WorkflowError as exc:
+        if precheck["hits"]:
+            raise WorkflowError(f"{exc}。另外，导出前字符预检：{precheck['text']}") from None
+        raise
+    from banben_baoliu import retain_exports
+    return {**result, "font_precheck": precheck, "export_retention": retain_exports(root, task_id)}  # G11：导出后按保留规则整理旧导出
+
+
+def _export(root, task_id, actor, html=None):
     from registration_guard import actor_check
     from neibu_yongyu import scan_text
     from html_huamian import screen
@@ -291,9 +308,11 @@ def export(root, task_id, actor, html=None):
         if issues:
             raise WorkflowError("核对未通过，未写出、未登记：" + "；".join(issues[:8]))
         page_texts = checked["pageTexts"]
-        hits = scan_text(root, [(i, t) for i, t in enumerate(page_texts) if t and t.strip()])
+        notices = []  # 批次三返修 r2 #4：台账读不出来 / 慎用模板写错时跳过台账对照并提示，不让导出整条失败
+        hits = scan_text(root, [(i, t) for i, t in enumerate(page_texts) if t and t.strip()], notices)
         scan_result = {"file": "对外演示稿.html", "hits": hits, "count": len(hits), "categories": sorted({h["category"] for h in hits}),
-                       "status": "attention" if hits else "ok", "basis": "浏览器取出的全部对外文字（含伪元素、属性文字）"}
+                       "status": "attention" if hits else "ok", "basis": "浏览器取出的全部对外文字（含伪元素、属性文字）",
+                       **({"ledger_notice": "\n".join(dict.fromkeys(notices))} if notices else {})}
         base, folder = _publish(root, parent, temp, event["revision"])
         scan_result["file"] = f"{folder}/对外演示稿.html"
         files = [{"path": f"{folder}/{p}", "sha256": hashlib.sha256((base / p).read_bytes()).hexdigest(), "bytes": (base / p).stat().st_size}

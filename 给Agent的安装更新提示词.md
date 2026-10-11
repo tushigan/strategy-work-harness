@@ -53,6 +53,11 @@ python3 scripts/check_package_integrity.py --workspace .                 # 两�
 原则：**`project/` 是业务资料，一个文件都不改、不删、不移**；只替换工作包本身的文件；任何会动 `project/` 的事先给用户看清单。
 
 1. 只读盘点：确认没有别的会话在写这个工作区；磁盘够放一份完整备份。`python3 scripts/project_handoff.py resume --workspace . --json` 记下当前任务、未结束分派、成果版本。把 `project/` 每个文件的路径与 SHA-256 存成升级前清单（存到工作区外）。
+   - **从 v1.7.4 或更早升到 v1.7.5 及以后**：新版启动检查对 `project/inputs/` 下的 JSON 更严，值里写着认证头、网址里带 token 参数这类写法会被当成疑似凭据并挡住启动。替换前先只读预扫（不改、不移、不在工作区里运行工作包命令）：用**新版包副本**的判定逐个检查，
+     ```bash
+     python3 -I -B -c 'import sys,pathlib; sys.path.insert(0, sys.argv[1]+"/scripts"); from mingan_xinxi import credential_file; [print(p) for p in pathlib.Path(sys.argv[2], "project/inputs").rglob("*.json") if credential_file(p)]' "<新版包目录>" "<工作区>"
+     ```
+     有输出就把文件名和“为什么像凭据”告诉用户，请用户确认能不能移走或去掉那一段；**用户确认之前不动客户资料**，也先不替换。
 2. 备份：整个工作区（含隐藏文件）复制到同级 `<工作区名>-升级前备份-v<旧版本>-<日期>/`，逐文件哈希核对一致后才继续。
 3. 检查本机改动：工作区里 `project/` 以外的文件与**已装版本**的发行清单（`package-inventory.json`，或该版本的 git tag 内容）逐文件比对。有差异（自己加的脚本、改过的说明）先列给用户，用户说了才覆盖。
 4. 替换：用新版包里 `project/` 以外的全部内容覆盖工作区对应文件（含 `.agents`、`.claude`、`.codex`）；旧版有、新版没有的文件移到同级 `<工作区名>-升级移出-<日期>/`，不删。`__pycache__`、`.DS_Store` 可以直接移出。
@@ -65,7 +70,8 @@ python3 scripts/check_package_integrity.py --workspace .                 # 两�
    ```
    重算 `project/` 清单，必须与升级前完全一致（只允许多出 `project/运行日志/` 下的文件）。任务、分派、旧检核报告都要读得到，下一步和升级前一致。新版读不了旧记录（格式错误、记录损坏、要求迁移）→ **停下把原始错误给用户**，不要手动改记录。
 6. 版本保留试算（不执行）：对每个独立任务 `python3 scripts/banben_baoliu.py --workspace . --task-id <任务> --dry-run --json`（正式成果用 `--key <任务>::html-deck`），把“下次登记会被移到归档的旧版本、文件数、大小”汇总给用户。提醒：旧版本时期没有用 `jiaofu_guankou deliver` 登记“已发客户”的版本不受保护；列出看起来发过客户的版本问用户，**用户不确定的不要登记成已发**。
-7. 告诉用户升级后的变化（第一次检核仍整份看；之后只看变化页；需要 `HARNESS_NODE_MODULES`、`pypdfium2` 的地方）与回退方法（用备份目录整个换回）。
+7. 新版接口变化要提醒（v1.7.5 起）：取消派工必须写原因代码（`agent_dispatch.py cancel --reason-code <代码> --reason "<一句话>"`），用户自己的批处理或旧提示词里有取消派工的要补上；项目有事实台账时，作者交回要列出用到的台账编号。其余变化以新版包 `README.md` 的版本说明与 `AGENTS.md`“已知边界”为准。
+8. 告诉用户升级后的变化（第一次检核仍整份看；之后只看变化页；需要 `HARNESS_NODE_MODULES`、`pypdfium2` 的地方）与回退方法（用备份目录整个换回）。
 
 ## 三、不要做
 

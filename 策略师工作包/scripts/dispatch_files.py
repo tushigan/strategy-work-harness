@@ -27,19 +27,26 @@ def local(root: Path, relative: str) -> Path:
     return raw
 
 
-def file_ref(root: Path, value: object, label: str) -> dict[str, str]:
+def file_ref(root: Path, value: object, label: str, index: int | None = None) -> dict[str, str]:
+    # G08（v1.7.5）：写法不对或版本对不上时点名第几个、哪一项、应该怎么写；正文白话，路径与字段放技术附录。
+    name = f"第 {index} 个{label}" if index else label
     if isinstance(value, str):
         path_value, expected = value, None
     elif isinstance(value, dict):
         path_value, expected = value.get("path"), value.get("sha256")
+        if "path" not in value:
+            raise WorkflowError(f"{name}没写文件位置，这次没有准备。技术附录（给 Agent）：{label} 缺 path（工作包内相对路径）；"
+                                "应为路径字符串或 {path, sha256}")
     else:
-        raise WorkflowError(f"{label}必须是路径或路径指纹对象")
+        raise WorkflowError(f"{name}的写法不对，应写文件位置。技术附录（给 Agent）：{label}必须是路径或路径指纹对象（路径字符串或 {{path, sha256}}）")
     path = local(root, path_value)
     if path.is_symlink() or not path.is_file():
         raise WorkflowError(f"{label}必须是工作包内真实文件，不能是符号链接或目录")
     actual = sha(path)
     if expected is not None and expected != actual:
-        raise WorkflowError(f"{label}指纹与当前文件不符" + records_hint(root, value))
+        raise WorkflowError(f"{name}在登记之后改过，和写下的版本对不上，这次没有准备。技术附录（给 Agent）：{label} {path_value} "
+                            f"指纹与当前文件不符（请求写的 {str(expected)[:12]}…，当前 {actual[:12]}…；改成当前指纹或只写路径后重新准备）"
+                            + records_hint(root, value))
     # macOS may expose one temporary directory through two equivalent aliases.
     # Compare and store the canonical path so a valid local file is not rejected
     # merely because the workspace spelling differs.
@@ -62,14 +69,14 @@ def records_hint(root: Path, value: dict) -> str:
             "确需采用新版，用 standalone_tasks.py save 显式 accept_changed_references 登记后再准备分派）")
 
 
-def input_ref(root: Path, value: object) -> dict[str, str]:
+def input_ref(root: Path, value: object, index: int | None = None) -> dict[str, str]:
     """F09（v1.7.4 r2）：分派输入文件里 project/records/*.jsonl 的登记指纹是当前文件按行边界的前缀（之后只追加）也收，
     按当前指纹登记（与 APPENDABLE 含“输入文件”同一口径：之后的核对照样按前缀判定）；其余照 file_ref 整文件核对。"""
     try:
-        return file_ref(root, value, "输入文件")
+        return file_ref(root, value, "输入文件", index)
     except WorkflowError:
         if isinstance(value, dict) and appended(root, value) is not None:
-            return file_ref(root, value["path"], "输入文件")
+            return file_ref(root, value["path"], "输入文件", index)
         raise
 
 

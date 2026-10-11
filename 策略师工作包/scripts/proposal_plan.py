@@ -275,7 +275,12 @@ def inspect(root, plan_id=None, tasks=None):
     if not plans:
         return {"status": "empty", "plans": [], "record_path": LOG}
     tasks_given = tasks is not None
-    tasks = {t["task_id"]: t for t in (tasks if tasks is not None else task_inspect(root, include_archived=True)["tasks"])}
+    if not tasks_given:
+        found = task_inspect(root, include_archived=True)
+        if found.get("status") == "blocked":  # 候选 r2 #4：任务记录读不出来时如实报读不出，不当成“阶段任务缺失”
+            raise WorkflowError("独立任务记录读不出来，提案计划的阶段进度这次核对不了：" + "；".join(map(str, found.get("errors") or []))[:300])
+        tasks = found["tasks"]
+    tasks = {t["task_id"]: t for t in tasks}
     result = []
     for pid in plans:
         state = current(root, pid)
@@ -482,6 +487,18 @@ def main():
     elif args.command == "upgrade":
         result = upgrade(args.workspace, args.plan_id, args.context, args.actor, args.words)
     else:
+        try:  # 批次四开工补修 7（F08 同类）：提案计划记录读不出来时如实报 blocked，不计数；之后的报错照常计数
+            if _events(args.workspace):
+                # 候选 r2 #4：有提案计划时还要读独立任务记录（阶段进度）；读不出来同样如实报 blocked
+                from standalone_tasks import inspect as task_inspect
+                found = task_inspect(args.workspace, include_archived=True)
+                if found.get("status") == "blocked":
+                    raise WorkflowError("独立任务记录读不出来，提案计划的阶段进度这次核对不了：" + "；".join(map(str, found.get("errors") or []))[:300])
+        except (WorkflowError, OSError, ValueError) as exc:
+            from yunxing_rizhi import StateReport, command_error
+            command_error(exc)
+            print(json.dumps({"status": "blocked", "errors": [str(exc)]}, ensure_ascii=False, indent=2))
+            raise StateReport(1) from None
         result = inspect(args.workspace, args.plan_id)
     from standalone_tasks import with_retention
     print(json.dumps(with_retention(result), ensure_ascii=False, indent=2))

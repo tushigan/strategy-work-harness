@@ -5,3 +5,6 @@ __pycache__/
 # Local development workspace and acceptance artifacts
 .development-materials/
 outputs/
+
+# Runtime diagnostics (v1.7.5): 运行日志不入库
+project/运行日志/

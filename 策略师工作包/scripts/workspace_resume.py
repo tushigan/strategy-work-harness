@@ -1,12 +1,83 @@
 from workspace_lock import read_serialized
 """Read-only daily recovery. Formal handoff remains a separate full inventory."""
 import json
+import re
 from pathlib import Path
 from task_validation import evaluation
 from handoff_inventory import pending_files, root_extras
 from handoff_inspection import external_dependencies, state_attention, unsafe_storage_report
 from handoff_records import pending_markers
 from phase2_store import WorkflowError
+
+
+GROUP_LIMIT=15
+_PATHISH=re.compile(r"""[^\s：:，,；;（）()“”"'「」、]*/[^\s：:，,；;（）()“”"'「」、]*""")
+
+
+_SUFFIX=re.compile(r'\.[A-Za-z0-9]{1,8}$')
+
+
+def _is_path(fragment):
+    """带“/”的片段只有含 project/ 或带文件后缀才算路径（返修 #16：“检核/交付关口”之类中文词不算）。"""
+    return 'project/' in fragment or bool(_SUFFIX.search(fragment))
+
+
+_LINE_NO=re.compile(r':\d+(?=\s|$)')
+_MISSING=re.compile(r'^(?P<source>.+?) 引用目标不存在: (?P<target>\S.*)$')
+RARE_COUNT=2
+ARCHIVED_TYPE='已归档（可搬回）'
+
+
+def _folder(path):
+    """分组目录（候选 r3 #3）：版本数字归一——rN、vN 当作一类（r3、r10 同组；导出目录 r11-01 记 rN-N）；
+    视觉指纹记录的两位分片目录记 xx。其他目录原样。"""
+    parts=path.rsplit('/',1)[0].split('/') if '/' in path else ['']
+    out=[]
+    for k,part in enumerate(parts):
+        if re.fullmatch(r'[rv]\d+',part):part=part[0]+'N'
+        elif re.fullmatch(r'[rv]\d+-\d+',part):part=part[0]+'N-N'
+        elif k and parts[k-1]=='visual-fingerprints' and re.fullmatch(r'[0-9a-f]{2}',part):part='xx'
+        out.append(part)
+    return '/'.join(out)
+
+
+def warning_groups(warnings, archived=()):
+    """G10（v1.7.5）：提醒按“类型 + 目录”归并计数，每组给 1 条示例，一屏可读（最多 15 组，其余并为一组）；原 warnings 仍保留供 Agent 读。
+    类型 = 去掉路径（连同紧跟的“:行号”）与数字后的提醒文字；目录 = 提醒里第一个路径所在的目录（只认含 project/ 或带文件后缀的片段），
+    版本数字归一（rN、vN 当作一类）。候选 r3 #3：
+    - 引用目标在归档记录（archive.jsonl，archived 为已归档的路径集合）里有记录的，单列一组“已归档（可搬回）”，不算“引用目标不存在”；
+    - 只有一两条的少见类型排在最前面、不参与折叠（未登记的对外版本、外部能力这类不被大量同类提醒淹没）；
+    - 其余按条数从多到少，超过 15 组的部分并为一组（少见类型与已归档组占的位置先扣除，至少留一组给“其余”）。"""
+    groups,archived_rows={},[]
+    archived=set(archived)
+    for text in warnings:
+        hit=_MISSING.match(text)
+        if hit and hit.group('target').strip() in archived:
+            archived_rows.append(text);continue
+        found=next((m.group(0) for m in _PATHISH.finditer(text) if _is_path(m.group(0))),None)
+        folder=_folder(_LINE_NO.sub('',found)) if found else '（无路径）'
+        kind=_PATHISH.sub(lambda m:'' if _is_path(m.group(0)) else m.group(0),text)
+        kind=re.sub(r'(?:(?<=\s)|^):\d+(?=\s|$)','',kind)  # 路径去掉后剩下的“:行号”
+        kind=re.sub(r'\d+','N',kind)
+        kind=re.sub(r'\s+',' ',kind).strip(' ：:，,；;。')[:60] or '其他提醒'
+        item=groups.setdefault((kind,folder),{'type':kind,'directory':folder,'count':0,'example':text})
+        item['count']+=1
+    totals={}
+    for (kind,_),item in groups.items():totals[kind]=totals.get(kind,0)+item['count']
+    rare=sorted((x for x in groups.values() if totals[x['type']]<=RARE_COUNT),key=lambda x:(x['type'],x['directory']))
+    for x in rare:x['rare']=True
+    common=sorted((x for x in groups.values() if totals[x['type']]>RARE_COUNT),key=lambda x:(-x['count'],x['directory'],x['type']))
+    tail=[]
+    if archived_rows:
+        folders={(_folder(_MISSING.match(t).group('source')) if _MISSING.match(t) else '') for t in archived_rows}
+        tail=[{'type':ARCHIVED_TYPE,'directory':folders.pop() if len(folders)==1 else '（多处）','count':len(archived_rows),
+               'example':archived_rows[0],'archived':True}]
+    room=max(1,GROUP_LIMIT-len(rare)-len(tail))
+    if len(common)>room:
+        rest=common[room-1:]
+        common=common[:room-1]+[{'type':f'其余 {len(rest)} 类提醒','directory':'（多处）','count':sum(x['count'] for x in rest),
+                                 'example':rest[0]['example']}]
+    return rare+common+tail
 
 
 def brief(value, limit=400):
@@ -72,12 +143,20 @@ def volume(root):
             if info.st_mtime>=cutoff:recent[key]=recent.get(key,0)+info.st_size
     over=total>VOLUME_BYTES or files>VOLUME_FILES
     mb=lambda b:round(b/1024**2,1)
+    largest=[{'dir':k,'mb':mb(v)} for k,v in sorted(by_dir.items(),key=lambda x:-x[1])[:5]]
+    # 批次三返修 r2 #6：占地大的目录里有检核留存的资料副本时，建议里给出先预览、再整理的命令（命令放技术附录，正文白话）
+    baselines=any(d['dir']=='records/review-baselines' for d in largest)
+    advice=(f"项目已 {mb(total)}MB、{files} 个文件，超过提示线（{mb(VOLUME_BYTES)}MB 或 {VOLUME_FILES} 个文件）；"
+            "建议请策略师同意后，把用不到的旧稿移到项目旁边的归档文件夹（移走不删，要用可以搬回）。"
+            +("占地多的还有检查时留存的资料副本：可以先看一眼哪些已经没人再用，再整理到归档（不删，下次检查照常）。" if baselines else "")
+            +"技术附录（给 Agent）：旧稿按策略师当次授权用 guidang.py 归档"
+            +("；检核基线副本先预览 python3 scripts/banben_baoliu.py --workspace . --baselines --dry-run --json，"
+              "确认后执行 python3 scripts/banben_baoliu.py --workspace . --baselines --json（只移没人再用的副本）" if baselines else ""))
     return {'bytes':total,'mb':mb(total),'files':files,'threshold':{'mb':mb(VOLUME_BYTES),'files':VOLUME_FILES},
-            'largest_dirs':[{'dir':k,'mb':mb(v)} for k,v in sorted(by_dir.items(),key=lambda x:-x[1])[:5]],
+            'largest_dirs':largest,
             'fastest_growing_7d':[{'dir':k,'mb':mb(v)} for k,v in sorted(recent.items(),key=lambda x:-x[1])[:5]],
             'over_threshold':over,
-            'advice':(f"项目已 {mb(total)}MB / {files} 个文件，超过 {mb(VOLUME_BYTES)}MB 或 {VOLUME_FILES} 个文件；"
-                      "建议请策略师授权后用 guidang.py 把旧稿移到项目同级归档目录") if over else '未超过阈值'}
+            'advice':advice if over else '未超过阈值'}
 
 
 @evaluation
@@ -141,6 +220,30 @@ def resume(root, task_id=None, details=False):
             verify_context(root, item)
     except (OSError, ValueError, KeyError, TypeError) as exc:
         errors.append('当前分派无法核实：'+str(exc));dispatch={'active':[]}
+    try:  # 批次四开工补修 1：作者交回时台账读不出来、存下待补的台账编号，补记之前一直提醒
+        from shishi_taizhang import pending_backfills, events as ledger_events
+        try:
+            ledger_rows = ledger_events(root)
+            waiting = pending_backfills(root, rows=ledger_rows)
+        except WorkflowError:
+            ledger_rows = []
+            waiting = pending_backfills(root, rows=[])  # 台账本身还读不出来：按都没补记提醒
+        # 候选 r2 #12：补记时台账里没有的编号（不补、算补过一次）合起来提示一条，请主控核对；
+        # 候选 r3 #6：主控核对后登记“已核对”（附原话）的那次不再提示
+        from shishi_taizhang import unchecked_missing
+        lost = unchecked_missing(ledger_rows)
+        if lost:
+            warnings.append(f"补记时有 {len(lost)} 个编号台账里没有，请核对：可能是作者写错了编号，也可能是台账漏记了这条说法（漏记就先补进台账）。"
+                            "核对完记一笔，这条提醒就不再显示。"
+                            "技术附录（给 Agent）：" + "；".join(f"{d} {v}" for d, v in lost[:6])
+                            + "；确认是台账漏记的，先 shishi_taizhang.py add，再按页 cite；核对完运行 shishi_taizhang.py backfill --workspace . "
+                            "--dispatch-id <分派编号> --checked --words \"<策略师或主控原话>\" --actor <主控>（每个分派一次）")
+        for w in waiting:
+            warnings.append(f"有一次作者交回时列的 {len(w['pending'])} 条事实台账说法还没记进台账：台账修好之后要补记一次。"
+                            f"技术附录（给 Agent）：待补 {'、'.join(w['pending'][:6])}；"
+                            f"shishi_taizhang.py backfill --dispatch-id {w['dispatch_id']} --actor <主控>")
+    except (OSError, ValueError, KeyError, TypeError) as exc:
+        warnings.append('台账待补记无法列出：'+str(exc))
     try:
         from proposal_plan import inspect as proposal_inspect
         proposals=[p for p in proposal_inspect(root,tasks=tasks)['plans']]
@@ -213,7 +316,9 @@ def resume(root, task_id=None, details=False):
             with probe():
                 gate=gate_status(root,item['task_id'],light=True,file_issues=source.get('file_issues'))
             item['review_label']=gate['review_label']
+            if gate.get('since_pass'):item['since_pass']=gate['since_pass']  # G02（v1.7.5）：始终显示“自上次检查通过已隔 N 版”
             if gate['delivered']:item['delivered']=[d['to'] for d in gate['delivered']]
+            if gate.get('deliveries'):item['deliveries']=gate['deliveries'][-12:]  # G06：各版发客户记录（补登记的写两个时间）
             if gate['strategist_pending']:item['strategist_pending']=len(gate['strategist_pending'])
         except (OSError,ValueError,KeyError,TypeError) as exc:
             item['review_label']='检核状态无法核实：'+brief(str(exc),120)
@@ -244,6 +349,38 @@ def resume(root, task_id=None, details=False):
         if len(entries)>12:result['memory'][key+'_omitted']=len(entries)-12
     result['memory']['summary_complete']=not any(k.endswith('_omitted') for k in result['memory']) and all(
         item['value_complete'] for key in ('current_facts','needs_confirmation','needs_attention') for item in result['memory'][key])
+    try:
+        # G09（v1.7.5）：对外目录里有比已登记版本更新、又没登记过的文件
+        from jiaofu_guankou import unregistered_exports
+        found=unregistered_exports(root)
+        if found:
+            result['unregistered_exports']=found
+            result['warnings'].extend(f"有未登记的对外版本：{x['path']}" for x in found)
+            if result['status']=='ready':result['status']='attention'
+    except (OSError,ValueError,KeyError,TypeError) as exc:
+        result['warnings'].append('对外目录无法核对是否有未登记的版本：'+brief(str(exc),160))
+    reminders=[]
+    try:
+        # G02（v1.7.5）：先交后检发现的问题，策略师确认前置顶
+        from jiaofu_guankou import reminders as strategist_reminders
+        reminders=[x for x in strategist_reminders(root) if task_id is None or selected_space!='standalone' or x['task_id']==task_id]
+    except (OSError,ValueError,KeyError,TypeError) as exc:
+        result['warnings'].append('检查提醒无法读取：'+brief(str(exc),160))
+    finals=[]
+    try:
+        # G07（v1.7.5；候选 r5 按用户 2026-10-11 拍板简化）：最终版没有一次检查通过的记录时只摆一行事实，策略师说不用查后不再出现
+        from jiaofu_guankou import final_checks
+        finals=[x for x in final_checks(root) if task_id is None or selected_space!='standalone' or x['task_id']==task_id]
+    except (OSError,ValueError,KeyError,TypeError) as exc:
+        result['warnings'].append('最终版检查记录无法读取：'+brief(str(exc),160))
+    if (reminders or finals) and result['status']=='ready':result['status']='attention'
+    result={**{k:result[k] for k in ('schema_version','mode','status')},'strategist_reminders':reminders,'final_unchecked':finals,**result}
+    try:  # 候选 r3 #3：引用目标在归档记录里的单列“已归档（可搬回）”；归档记录读不出来时照旧按“引用目标不存在”归组
+        from guidang import archived_index
+        archived={path for path,_ in archived_index(root)}
+    except (OSError,ValueError,KeyError,TypeError):
+        archived=set()
+    result['warning_groups']=warning_groups(result['warnings'],archived)  # 文字输出（project_handoff.print_result）也按组打印
     if details:
         result['workflow_snapshot']=workflows
     else:

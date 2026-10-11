@@ -1830,9 +1830,9 @@
       "path": ".agents/skills/knowledge-connectors/SKILL.md",
       "kind": "file",
       "excluded": false,
-      "size": 3283,
+      "size": 3499,
       "mode": 420,
-      "sha256": "174af162abb11d1a44f3a66fa03eb140d9f82d8688b6cce4785a7a34286424f4"
+      "sha256": "b1f845c8b1627e07d1eac6471049aaa54c39c65678334df8b57f62c13c3c8b8d"
     },
     {
       "path": ".agents/skills/project-control",
@@ -1843,9 +1843,9 @@
       "path": ".agents/skills/project-control/SKILL.md",
       "kind": "file",
       "excluded": false,
-      "size": 21604,
+      "size": 22561,
       "mode": 420,
-      "sha256": "728993d2ac707ff798a198bc8bd6642d159cb71748fe803203a0a6fe9ba45e20"
+      "sha256": "e0e3ec48a43b63dd0adde6a7574b359377878604cc84d0720388275a75be3477"
     },
     {
       "path": ".agents/skills/project-import-template",
@@ -3856,9 +3856,9 @@
       "path": ".claude/skills/knowledge-connectors/SKILL.md",
       "kind": "file",
       "excluded": false,
-      "size": 3283,
+      "size": 3499,
       "mode": 420,
-      "sha256": "174af162abb11d1a44f3a66fa03eb140d9f82d8688b6cce4785a7a34286424f4"
+      "sha256": "b1f845c8b1627e07d1eac6471049aaa54c39c65678334df8b57f62c13c3c8b8d"
     },
     {
       "path": ".claude/skills/project-control",
@@ -3869,9 +3869,9 @@
       "path": ".claude/skills/project-control/SKILL.md",
       "kind": "file",
       "excluded": false,
-      "size": 21604,
+      "size": 22561,
       "mode": 420,
-      "sha256": "728993d2ac707ff798a198bc8bd6642d159cb71748fe803203a0a6fe9ba45e20"
+      "sha256": "e0e3ec48a43b63dd0adde6a7574b359377878604cc84d0720388275a75be3477"
     },
     {
       "path": ".claude/skills/project-import-template",
@@ -3986,7 +3986,7 @@
       "excluded": false,
       "size": 29533,
       "mode": 420,
-      "sha256": "f6bb60463f7e20397f3818dfe6b90710a268d67cccf47e1de14578fd137c5ed3"
+      "sha256": "ea4a14b604ae8d880bce2ec29abf9432d9a9119ae1ff8a4f97add6b7866145db"
     },
     {
       "path": ".codex",
@@ -4079,17 +4079,17 @@
       "path": ".gitignore",
       "kind": "file",
       "excluded": false,
-      "size": 133,
+      "size": 210,
       "mode": 420,
-      "sha256": "87bfca20e5b793787b7bc71768b25c991f8b462749d989ebfd6eebae44a143cb"
+      "sha256": "05f77b986cb36756a5e4a4bc32b9f82eb85894454a441af082cf45d4823b92d5"
     },
     {
       "path": "AGENTS.md",
       "kind": "file",
       "excluded": false,
-      "size": 61575,
+      "size": 90658,
       "mode": 420,
-      "sha256": "40c2feabb14afb7f57e71f4744df3e4e8eda1c4fad2ed3f9fc4d75d2161b3d42"
+      "sha256": "aea4df2ee733a081bfaa0aca273480ac54cb3405735e774982b0e412b7682575"
     },
     {
       "path": "CLAUDE.md",
@@ -4103,9 +4103,9 @@
       "path": "README.md",
       "kind": "file",
       "excluded": false,
-      "size": 20782,
+      "size": 25884,
       "mode": 420,
-      "sha256": "94632f8a8dbd453c190a5ea73bce774e11f1ccdeedebb50211e5a910773ce499"
+      "sha256": "066a014c9504868a18e2886115b2b123713822ef9a95503bf6df6b2f4600acc8"
     },
     {
       "path": "project",
@@ -4279,9 +4279,9 @@
       "path": "scripts/agent_dispatch.py",
       "kind": "file",
       "excluded": false,
-      "size": 43238,
+      "size": 50599,
       "mode": 420,
-      "sha256": "64154addc81a2d532086061d1216ac61fd00d3ce90351bc1a69931e22223fbec"
+      "sha256": "a5dbba346afc3b4fc03575980580f2b61b61e915a058220b4c4c5e57317aaa8c"
     },
     {
       "path": "scripts/author_budget.py",
@@ -4295,9 +4295,9 @@
       "path": "scripts/banben_baoliu.py",
       "kind": "file",
       "excluded": false,
-      "size": 26307,
+      "size": 43919,
       "mode": 420,
-      "sha256": "fb8d2c5f33d55324860e04321f40dbe6ead39d9a607ea56689e96d43b9f784f8"
+      "sha256": "206d721a8b2506e41f2745b233482ab333bb0cee613770c378f1f51daccf2ae1"
     },
     {
       "path": "scripts/brand_house.py",
@@ -4607,9 +4607,9 @@
       "path": "scripts/deck_export.py",
       "kind": "file",
       "excluded": false,
-      "size": 13693,
+      "size": 14009,
       "mode": 420,
-      "sha256": "6fb197a2ce1ef6cbf1e9b614f3bc4278fcd57737d0cc3ed941953177db323626"
+      "sha256": "41ec1359a3f0a5631bfec2f9c89204889417d7fca85665e093995d76e0f6d3ab"
     },
     {
       "path": "scripts/deck_external.mjs",
@@ -4660,6 +4660,14 @@
       "sha256": "ec7d2f6120696a08fad84c7cfb26204eeb4dc57589126c96134df50d59b100a6"
     },
     {
+      "path": "scripts/dengji_qingqiu.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 4879,
+      "mode": 420,
+      "sha256": "bde1ebf3f84de33fd4993ea63a768c225102f9ad6f9b7560901dbabc0a09f6de"
+    },
+    {
       "path": "scripts/design_expression.py",
       "kind": "file",
       "excluded": false,
@@ -4679,17 +4687,17 @@
       "path": "scripts/dispatch_files.py",
       "kind": "file",
       "excluded": false,
-      "size": 8884,
+      "size": 9851,
       "mode": 420,
-      "sha256": "954d04477e9034c28a00a41a964352edc646790135086b052aa4333597e51166"
+      "sha256": "4e79be69f3b625bf1ff6a10ae6e84e3a4c14df2c65ca7a2bc1bdf090ffecfee4"
     },
     {
       "path": "scripts/duiwai_daochu.py",
       "kind": "file",
       "excluded": false,
-      "size": 17608,
+      "size": 18757,
       "mode": 420,
-      "sha256": "56e4b39ad7af8e2fcdbeef21fcfe8150fe9258dec24410ed22e013d42bf917d5"
+      "sha256": "793ee8343f1b9ede9d054d4c99979e28e93d527bda52f8044b5f1893316958fb"
     },
     {
       "path": "scripts/export_gantt.py",
@@ -4711,9 +4719,9 @@
       "path": "scripts/guidang.py",
       "kind": "file",
       "excluded": false,
-      "size": 12835,
+      "size": 13676,
       "mode": 420,
-      "sha256": "85d1162f7e66073880751dbaa39e3299e34037d2901d0b4cfd88665da6b52128"
+      "sha256": "d7a7f2d7d030880ec5f61445f022eb518dc686b6152b824f713f353c3467bfb6"
     },
     {
       "path": "scripts/handoff_history.py",
@@ -4791,9 +4799,9 @@
       "path": "scripts/incremental_review.py",
       "kind": "file",
       "excluded": false,
-      "size": 32609,
+      "size": 33015,
       "mode": 420,
-      "sha256": "c7c9adfa85026d522918aee010ba4dd6a99eb904d24ca1c8447d3ce2b81ef1eb"
+      "sha256": "1f4f907e40770b749755874a50fcbf71b7b5b3db445abf9cd4b18149e094f4c6"
     },
     {
       "path": "scripts/inspect_contract.py",
@@ -4807,17 +4815,17 @@
       "path": "scripts/jianhe_zhunbei.py",
       "kind": "file",
       "excluded": false,
-      "size": 10730,
+      "size": 19919,
       "mode": 420,
-      "sha256": "9c37c88885aa8c54399e466b5f2ce44f4d388d28c497ae38ef62b9c42b50a866"
+      "sha256": "a805ca9da09e98cc9d13480483e462bde4298826fa93d7cd3ac9469d4458d7dc"
     },
     {
       "path": "scripts/jiaofu_guankou.py",
       "kind": "file",
       "excluded": false,
-      "size": 16711,
+      "size": 86343,
       "mode": 420,
-      "sha256": "463af5ae8ea898c26c6ce5cdb4263707c2c6cbe5a2ce6b64f87d724b658e5de6"
+      "sha256": "d3d58f223b6bec319558e6a8e6c838c4b35fe64ca062bf74295ee56f445e455a"
     },
     {
       "path": "scripts/jiaojie_shishi.py",
@@ -4831,9 +4839,9 @@
       "path": "scripts/jiyibi.py",
       "kind": "file",
       "excluded": false,
-      "size": 3262,
+      "size": 3995,
       "mode": 420,
-      "sha256": "f02347c154cda141e09f2d054da093a9f99542fdc31d441305d23cab9f6c5f11"
+      "sha256": "40a074d04a609ee3d1c9d39234bcfa9258f347a792b3f81594299ca12329dae1"
     },
     {
       "path": "scripts/knowledge_connectors.py",
@@ -4852,12 +4860,20 @@
       "sha256": "085643ddac952018b60562660dc8820291e9984218c4696c40c0b3cd1aa80f92"
     },
     {
+      "path": "scripts/mingan_xinxi.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 5769,
+      "mode": 420,
+      "sha256": "ff5316c276c6762f9986d53c3ace616967553735b85806cefa393f0b60d71b2c"
+    },
+    {
       "path": "scripts/neibu_yongyu.py",
       "kind": "file",
       "excluded": false,
-      "size": 5278,
+      "size": 6812,
       "mode": 420,
-      "sha256": "d4af06b57fcb56ce19617785b65250357d7caaebc7b9734696e734ffe6d8287f"
+      "sha256": "132efc64b750930455ef27a80a4e97f3efa2e09ab9aebd36654feab2c0ffac20"
     },
     {
       "path": "scripts/package_audit.py",
@@ -4879,17 +4895,17 @@
       "path": "scripts/package_checks.py",
       "kind": "file",
       "excluded": false,
-      "size": 8978,
+      "size": 9019,
       "mode": 420,
-      "sha256": "592de9a54870e9ffc78b687b4407598311b730088c2f533dd396bf7364273838"
+      "sha256": "3b925caadd7dd9924e9eefd1337dea9c28583bd9ad7d8c2d8b09babb1c311d05"
     },
     {
       "path": "scripts/package_checks_content.py",
       "kind": "file",
       "excluded": false,
-      "size": 8423,
+      "size": 19656,
       "mode": 420,
-      "sha256": "1430abb753d8e194872fc9c755e2a79a53264525aee5aed2a12e7b191210ccca"
+      "sha256": "47982e1a4dc3376b8b8df08b5c3b67956f80a1c8066d67729e24d655523fd58a"
     },
     {
       "path": "scripts/package_checks_dependencies.py",
@@ -4911,9 +4927,9 @@
       "path": "scripts/package_checks_materials.py",
       "kind": "file",
       "excluded": false,
-      "size": 10976,
+      "size": 11374,
       "mode": 420,
-      "sha256": "8790bb60d761ab5a7b8d98b56c8aef45bfccaf1017d25d235920211dad97d9c6"
+      "sha256": "45b063df9f6847cf202035377cff27459f743546356cda0fefe5843e73105a61"
     },
     {
       "path": "scripts/package_checks_office.py",
@@ -5111,9 +5127,17 @@
       "path": "scripts/phase6_targets.py",
       "kind": "file",
       "excluded": false,
-      "size": 9276,
+      "size": 9652,
       "mode": 420,
-      "sha256": "c7603404dd3a0d2cedbe03c2471c59ccf9df532efacf92ab3732d5e12e4f7e44"
+      "sha256": "ddfa11841c61ddb358c8c98de031550f26f35e20d15cbef8244340844f2352d4"
+    },
+    {
+      "path": "scripts/pptx_hedui.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 15442,
+      "mode": 420,
+      "sha256": "6d6d5b79c308361553d1688a97fbd3a7893227b49c5340b37f0eeb11777fd5a7"
     },
     {
       "path": "scripts/project_closure.py",
@@ -5127,17 +5151,17 @@
       "path": "scripts/project_handoff.py",
       "kind": "file",
       "excluded": false,
-      "size": 5130,
+      "size": 6972,
       "mode": 420,
-      "sha256": "2b7fae91e0b10b61a9964566dbf38f551fb23b6b9eb63c338ce1e78d582a5b9d"
+      "sha256": "f4d0cb724dbced17e58a5b2fbd7191565c55ba75e00d25e21a6b89cad446ef5b"
     },
     {
       "path": "scripts/project_memory.py",
       "kind": "file",
       "excluded": false,
-      "size": 1734,
+      "size": 2292,
       "mode": 420,
-      "sha256": "89557b843370aaca254be1f407d7a3ad78fd0f117b194f500418b1246f4870e1"
+      "sha256": "a791d7b7b903053e41bd4c59c9370b684f0b14f03b92a07489e093b0fd69737a"
     },
     {
       "path": "scripts/project_memory_store.py",
@@ -5159,9 +5183,9 @@
       "path": "scripts/proposal_plan.py",
       "kind": "file",
       "excluded": false,
-      "size": 28640,
+      "size": 30001,
       "mode": 420,
-      "sha256": "cf7f584fb4c257552e2c362b3513f7584f758f761a4a15d0ce8a925b9a89cd16"
+      "sha256": "f869f83a38ca82fc4fb6cca2b6b5d1f77c702382fc25407e2d346f5816508371"
     },
     {
       "path": "scripts/proposal_script.py",
@@ -5175,9 +5199,9 @@
       "path": "scripts/registration_guard.py",
       "kind": "file",
       "excluded": false,
-      "size": 4267,
+      "size": 5518,
       "mode": 420,
-      "sha256": "fd3f2584590fa29375d80b95cf841839bb8bbe151d97ad8cf4352d51023c7d28"
+      "sha256": "cbd72ab6c34e6093e4e08ab6a74e1d776e056c3d119aaa637025a671e05ae9c7"
     },
     {
       "path": "scripts/resolve_conflict.py",
@@ -5199,9 +5223,9 @@
       "path": "scripts/runtime_structure.py",
       "kind": "file",
       "excluded": false,
-      "size": 11011,
+      "size": 11954,
       "mode": 420,
-      "sha256": "2e68b464c85c3580f6330e407f514b92d3aa468351fc3c40b18994695cb041df"
+      "sha256": "a73164946e4fe93fcad897d4e2d6dd93d4a371fca21f03605b1fd09732eaed7a"
     },
     {
       "path": "scripts/shencha_zu.py",
@@ -5215,9 +5239,9 @@
       "path": "scripts/shijue_zengliang.py",
       "kind": "file",
       "excluded": false,
-      "size": 53710,
+      "size": 61426,
       "mode": 420,
-      "sha256": "2d0f703aa6b4f24babf2a4c9becbc63c4013cdc7f67b4ff6e9b36de135c217eb"
+      "sha256": "5cf3f8854d9735d9e041b77abd6c0112e39960e18f4305d2adcd0df32b9d072d"
     },
     {
       "path": "scripts/shijue_zhiwen.mjs",
@@ -5228,12 +5252,28 @@
       "sha256": "fd0cad4b74cad47bcc4394662220d46d2dbab7439de6f27a5eb448c8a125a5df"
     },
     {
+      "path": "scripts/shishi_taizhang.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 42043,
+      "mode": 420,
+      "sha256": "f416c739dec218bf69844f9034657790efd6682855b5071860981b2ef21f2a2f"
+    },
+    {
       "path": "scripts/shougai_dengji.py",
       "kind": "file",
       "excluded": false,
-      "size": 16187,
+      "size": 16375,
       "mode": 420,
-      "sha256": "be08eb7e449f4bed9a0c0de657626c813b85507a842c30c037b90981bfee47da"
+      "sha256": "dd927baac2fa4c25417492ca1e9ff08b624ee828324aa9bdb379f7ab3e8db08b"
+    },
+    {
+      "path": "scripts/shuo_renhua.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 20369,
+      "mode": 420,
+      "sha256": "6e87a37f6ea33ee9a3d98d49b63a979570f4eecebc1caa53443ee7537844f982"
     },
     {
       "path": "scripts/source_verification.py",
@@ -5255,33 +5295,33 @@
       "path": "scripts/standalone_review.py",
       "kind": "file",
       "excluded": false,
-      "size": 8020,
+      "size": 8507,
       "mode": 420,
-      "sha256": "9d2652cd4d5ddd039e3200fd0c7a291ff6fb9a6d655b43b64cd8a120fbcb02f6"
+      "sha256": "30abca5d47ed574da6e9f5a2c24f70f68b0658f23acd5a1de8d475fb17435375"
     },
     {
       "path": "scripts/standalone_store.py",
       "kind": "file",
       "excluded": false,
-      "size": 20219,
+      "size": 23581,
       "mode": 420,
-      "sha256": "6acdee22d8b9b7edca2a0255ded3b4683264d831f39c580233804ed10a818d0b"
+      "sha256": "a98d36c4683d754ccba754aadd81898e206007052c16ae0883a122fbae7b8c35"
     },
     {
       "path": "scripts/standalone_tasks.py",
       "kind": "file",
       "excluded": false,
-      "size": 29608,
+      "size": 39980,
       "mode": 420,
-      "sha256": "3c21373327916515908941cbebb2709852e05ac77033575cef3c4199b71a7655"
+      "sha256": "ba6f704442c49948fc4a0315779eba375d4a88edf031f3319005a4fb884d9818"
     },
     {
       "path": "scripts/standalone_visual.py",
       "kind": "file",
       "excluded": false,
-      "size": 11447,
+      "size": 11728,
       "mode": 420,
-      "sha256": "6e60e22bfab36b9a80e0c2cf2d9fb113a1561b942d2406e68ca2a5c203c373ac"
+      "sha256": "4ba3c330926dd80337263fec7fc9cd062091924496f6e6a469b418d5203768f2"
     },
     {
       "path": "scripts/sucai_ku.py",
@@ -5303,17 +5343,17 @@
       "path": "scripts/task_context.py",
       "kind": "file",
       "excluded": false,
-      "size": 8212,
+      "size": 8739,
       "mode": 420,
-      "sha256": "dccdf1186fb152b0beef8f903ce8b1366e31e9955d28151ae7f624efd0d86608"
+      "sha256": "9aa1cb6d77e990572f35fd0d61b3ace858f8536f5e09a7993a92fa84872e472f"
     },
     {
       "path": "scripts/task_receipts.py",
       "kind": "file",
       "excluded": false,
-      "size": 13681,
+      "size": 14238,
       "mode": 420,
-      "sha256": "bbbc98f434d379b149914c233511b474d2aa0b061eef9ffa59a7803b0df14842"
+      "sha256": "b81539f992083c25a1776db67199503560d6831a6854a29b477d048d8ba4ac1b"
     },
     {
       "path": "scripts/task_validation.py",
@@ -5343,9 +5383,9 @@
       "path": "scripts/validate_project.py",
       "kind": "file",
       "excluded": false,
-      "size": 22919,
+      "size": 25866,
       "mode": 420,
-      "sha256": "7ae245a2cfe609982745589141051422baf5fb11cd0d543b7819633dbf55d744"
+      "sha256": "f91034a9aa1c4eebf1c9ccc9683d2503fad45839d7b67eaad175ecc7d74aae3b"
     },
     {
       "path": "scripts/waibu_wendang.py",
@@ -5391,9 +5431,9 @@
       "path": "scripts/workspace_resume.py",
       "kind": "file",
       "excluded": false,
-      "size": 17232,
+      "size": 26937,
       "mode": 420,
-      "sha256": "20bcb251fa994dbbb3ffeca456a3a107f5f6747f531ff964743c11348a1cdb5d"
+      "sha256": "9b1bf8ac2ba1d4f82be02414c5aeade8344e923b45c95ae5bdcd84d5e0ac67a8"
     },
     {
       "path": "scripts/workspace_status.py",
@@ -5423,17 +5463,25 @@
       "path": "scripts/yunxing_fupan.py",
       "kind": "file",
       "excluded": false,
-      "size": 22872,
+      "size": 35697,
       "mode": 420,
-      "sha256": "37ca658ecfa1337db35a39559a54c352b3694f162333c43c11436ad6ca5f9a47"
+      "sha256": "c1975c0daf7b101d20ef58dd707c66bbee7c8ac78b969c3cab7c5e0eccf1746c"
     },
     {
       "path": "scripts/yunxing_rizhi.py",
       "kind": "file",
       "excluded": false,
-      "size": 37405,
+      "size": 41506,
       "mode": 420,
-      "sha256": "8e553f69fc1e2c217037f3cb4db6b29ab8a95eebe70cf2497bc349a1c0db6250"
+      "sha256": "acc7d6864d58d88daee973e143fffcfb1b408687f6cb6f73e00c9abf2e32b3dc"
+    },
+    {
+      "path": "scripts/zifu_yujian.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 7686,
+      "mode": 420,
+      "sha256": "274715d9e376a7daacaf7e3d00ea413d843de5d68b2235df31ab3932f2c6e59b"
     },
     {
       "path": "templates",
@@ -5473,6 +5521,46 @@
       "sha256": "420db3e79648c1deaa973620cd341d049439e7bfa046f21c101f60089fd28f1d"
     },
     {
+      "path": "templates/台账慎用说法.txt",
+      "kind": "file",
+      "excluded": false,
+      "size": 1894,
+      "mode": 420,
+      "sha256": "ddc2b8e3313dd3f15a9081541c64f0c267ff57e97b3d62475e2556622de31db6"
+    },
+    {
+      "path": "templates/给策略师-交稿说明.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 1440,
+      "mode": 420,
+      "sha256": "6063fd67fcd2b7a1fc21e5a67c4f9ca832d32eb620f6a8e163b335ae05ab00b4"
+    },
+    {
+      "path": "templates/给策略师-复盘.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 917,
+      "mode": 420,
+      "sha256": "08499e06ea60cab5ff278c6282b81e3f5f46dfe0376f92f2f92f4e62e49f6fad"
+    },
+    {
+      "path": "templates/给策略师-报错说明.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 993,
+      "mode": 420,
+      "sha256": "9c6f53a0fdde41be353433b15f759c41ecd4f2e4c8dcd35860cf8ebe938fc238"
+    },
+    {
+      "path": "templates/说人话词表.tsv",
+      "kind": "file",
+      "excluded": false,
+      "size": 2737,
+      "mode": 420,
+      "sha256": "80588e6788b1d38e8e799dce0547f7f8b135a9867f96ff64b64ba46bc1e5f8c0"
+    },
+    {
       "path": "品牌屋HTML运行说明.md",
       "kind": "file",
       "excluded": false,
@@ -5484,9 +5572,9 @@
       "path": "外部连接说明.md",
       "kind": "file",
       "excluded": false,
-      "size": 8229,
+      "size": 8614,
       "mode": 420,
-      "sha256": "51116b15741f746f339e4cda2ba2977965a972cb4b4e418ed9c62e783be882d5"
+      "sha256": "d1f1668097ed161c3df2e4417b704e297fcfb4b601c770723a40b777a4d1e6dd"
     },
     {
       "path": "工作包移交说明.md",
@@ -5532,9 +5620,9 @@
       "path": "运行环境与命令.md",
       "kind": "file",
       "excluded": false,
-      "size": 45640,
+      "size": 48114,
       "mode": 420,
-      "sha256": "b28b7b30d72f552ee76517419e0cd822bcee02642e03ab9ae4988fc55ce960d4"
+      "sha256": "65e6e86295258e3870a2312e56daac446155e1bb1428cd7b6b78903e5f907d59"
     },
     {
       "path": "项目检核与结项运行说明.md",
@@ -5545,38 +5633,5 @@
       "sha256": "82061c947f5a9ae0b596af2c2f58a8a4e375cb954e2eb7d360904b94c7da27c1"
     }
   ],
-  "excluded_from_source": [
-    {
-      "path": ".DS_Store",
-      "reason": "runtime_cache"
-    },
-    {
-      "path": "scripts/__pycache__/phase2_store.cpython-311.pyc",
-      "reason": "runtime_cache"
-    },
-    {
-      "path": "scripts/__pycache__/phase5_common.cpython-311.pyc",
-      "reason": "runtime_cache"
-    },
-    {
-      "path": "scripts/__pycache__/phase6_events.cpython-311.pyc",
-      "reason": "runtime_cache"
-    },
-    {
-      "path": "scripts/__pycache__/standalone_store.cpython-311.pyc",
-      "reason": "runtime_cache"
-    },
-    {
-      "path": "scripts/__pycache__/task_validation.cpython-311.pyc",
-      "reason": "runtime_cache"
-    },
-    {
-      "path": "scripts/__pycache__/workspace_lock.cpython-311.pyc",
-      "reason": "runtime_cache"
-    },
-    {
-      "path": "scripts/__pycache__",
-      "reason": "runtime_cache"
-    }
-  ]
+  "excluded_from_source": []
 }

@@ -25,6 +25,11 @@ ROLES = {
 }
 ACTIVE = {"prepared", "assigned", "returned_for_readback"}
 AUTHOR_ROLES = {"strategy-author", "proposal-author", "deck-builder", "project-controller"}
+WRITER_ROLES = {"strategy-author", "proposal-author", "deck-builder"}  # v1.7.5 G03：写稿的作者，派工必读事实台账、交回列出用到的编号
+LEDGER_PENDING_NOTICE = ("事实台账现在有记录读不出来，作者交回时列的台账编号先存着，没有记进台账。"
+                         "台账修好之后要补记一次，补记之前每次查看进度都会提醒。"
+                         "技术附录（给 Agent）：交回记录 ledger_pending 为待补引用；台账修好后主控运行 "
+                         "shishi_taizhang.py backfill --dispatch-id <分派编号> --actor <主控>（按分派编号只补一次）")
 
 
 @read_check
@@ -218,14 +223,33 @@ def validate_request(root: Path, request: dict) -> dict:
     issues = write_conflicts(text, request["permissions"]) + (constraint_on_screen(text, request) if role in AUTHOR_ROLES else [])
     if issues:
         raise WorkflowError("派工请求自相矛盾，未登记分派：" + "；".join(issues))
-    input_refs = [input_ref(root, value) for value in inputs]
+    input_refs = [input_ref(root, value, number) for number, value in enumerate(inputs, 1)]
+    ledger = ledger_notice = None
+    if role in WRITER_ROLES:  # G03（v1.7.5）：项目有事实台账时，作者派工把台账当前版列为输入与必读
+        from shishi_taizhang import ledger_ref
+        try:
+            ledger = ledger_ref(root)
+        except (WorkflowError, OSError, ValueError) as exc:  # 批次三返修 r2 #4：台账读不出来时这次派工不带台账，给白话提示，不整条失败
+            ledger_notice = ("事实台账有记录读不出来，这次派工没有把台账交给作者，作者交回时也不用列台账编号；"
+                             "稿子交回来时，里面的关键说法我会照资料核一遍；台账修好后再派工就会恢复。技术附录（给 Agent）："
+                             + str(exc).split("技术附录（给 Agent）：")[-1])
+        if ledger:
+            own = {"path": ledger["path"], "sha256": ledger["sha256"]}
+            if not any(r.get("path") == own["path"] for r in input_refs):
+                input_refs.append(own)
+            else:
+                input_refs = [own if r.get("path") == own["path"] else r for r in input_refs]
     required = request.get("required_reading")
     if required is not None:
         if not isinstance(required, list) or not required:
             raise WorkflowError("required_reading 须为 input_files 中必读文件的非空列表")
-        required_refs = [file_ref(root, value, "必读文件") for value in required]
+        required_refs = [file_ref(root, value, "必读文件", number) if not (ledger and isinstance(value, (dict, str)) and
+                         (value.get("path") if isinstance(value, dict) else value) == ledger["path"]) else
+                         {"path": ledger["path"], "sha256": ledger["sha256"]} for number, value in enumerate(required, 1)]
         if any(r not in input_refs for r in required_refs):
             raise WorkflowError("required_reading 只能从 input_files 中选；其余自动列为备查")
+        if ledger and not any(r["path"] == ledger["path"] for r in required_refs):
+            required_refs.append({"path": ledger["path"], "sha256": ledger["sha256"]})
     else:
         required_refs = None
     budget = request.get("budget")
@@ -271,6 +295,11 @@ def validate_request(root: Path, request: dict) -> dict:
         # U11/U18：作者派工写明必读/备查、时间与调用预算（默认 60 分钟/80 次，停下来问，不是失败）。
         payload["budget"] = dict(budget or DEFAULT_BUDGET)
         payload["required_reading"] = required_refs or input_refs  # 备查 = input_files 减去必读，读取时推导，不重复存
+        if ledger_notice:
+            payload["ledger_notice"] = ledger_notice
+        if ledger:
+            payload["fact_ledger"] = {"path": ledger["path"], "sha256": ledger["sha256"], "entries": ledger["entries"],
+                                      "notice": "事实台账当前版是必读；交回时用 return --ledger-ref 列出本稿用到的编号（F001 或 F001:页，没用到写“无”）"}
         if disclosures:
             payload["on_screen_disclosures"] = disclosures
     if request.get('review_group_id') or request.get('review_member_id'):
@@ -307,7 +336,7 @@ def prepare(root: Path, request: dict, actor: str) -> dict:
         allowed_group=payload.get('review_group_id') and all(item.get('review_group_id')==payload['review_group_id'] and item.get('role')=='independent-reviewer' for item in active)
         if active and not allowed_group:
             raise WorkflowError("同一任务已有未结束分派；回传后由当前主控回读并执行 complete，"
-                                "新主控先执行 takeover；确需放弃时明确 cancel，不重复占用")
+                                "新主控先执行 takeover；确需放弃时明确 cancel --reason-code <代码> --reason \"<一句话>\"，不重复占用")
         dispatch_id = "dispatch-" + uuid.uuid4().hex
         if payload.get("role") in AUTHOR_ROLES:
             payload["progress_path"] = f"project/outputs/分派进度/{dispatch_id}.md"
@@ -443,11 +472,18 @@ def extend(root: Path, dispatch_id: str, words: str, minutes: int, tool_calls: i
 
 
 @dispatch_write
-def return_candidate(root: Path, dispatch_id: str, candidate: object, actor: str, return_evidence=None, tradeoffs=None) -> dict:
+def return_candidate(root: Path, dispatch_id: str, candidate: object, actor: str, return_evidence=None, tradeoffs=None, ledger_refs=None) -> dict:
     with serialized(root):
         item = current(root, dispatch_id)
         if item.get("status") != "assigned":
             raise WorkflowError("只有已绑定实际实例的分派可以回传")
+        used = pending = None
+        if item.get("fact_ledger") and item.get("role") in WRITER_ROLES:  # G03：派工时有事实台账，交回须列出本稿用到的编号
+            from shishi_taizhang import check_ids, check_format, ledger_readable
+            if ledger_readable(root):
+                used = check_ids(root, ledger_refs)
+            else:  # 批次四开工补修 1：派工之后台账才坏——只核编号格式，不写台账，存待补引用，台账修好后由主控显式补记
+                pending = check_format(ledger_refs)
         values = candidate if isinstance(candidate, list) else [candidate]
         conflict_items=[];terminal={}
         if item.get("dispatch_protocol")==2:
@@ -461,14 +497,21 @@ def return_candidate(root: Path, dispatch_id: str, candidate: object, actor: str
             except (ValueError,OSError):conflict_items.append({"reason":"context_changed","action":"已完成候选保留，待主控核对输入/任务上下文；不重派相同成果"})
         else:
             verify_context(root, item)
-            candidate_refs = [file_ref(root, value, "回传候选") for value in values]
+            candidate_refs = [file_ref(root, value, "回传候选", number) for number, value in enumerate(values, 1)]
         if conflict_items:
             from yunxing_rizhi import classify
             classify("candidate_preserved")
         if tradeoffs is not None and (not isinstance(tradeoffs, list) or any(not isinstance(t, str) or not t.strip() for t in tradeoffs)):
             raise WorkflowError("可讨论取舍须为非空文字")
+        if used:
+            from shishi_taizhang import cite
+            for fid in dict.fromkeys(f for f, _ in used):
+                cite(root, fid, [{"task_id": item["task_id"], "page": page} for f, page in used if f == fid], actor,
+                     via="author_return", dispatch_id=dispatch_id, locked=False)
         return append(root, {"event": "returned", "dispatch_id": dispatch_id,
                              **({"tradeoffs": tradeoffs} if tradeoffs else {}),
+                             **({"ledger_refs": [f"{f}:{p}" if p is not None else f for f, p in used]} if used is not None else {}),
+                             **({"ledger_pending": pending, "ledger_notice": LEDGER_PENDING_NOTICE} if pending else {}),
                              "status": "returned_for_readback", "actor": actor,
                              "review_mode":item.get('review_mode'),
                              "instance": item["instance"], "host_instance": item["host_instance"],
@@ -608,26 +651,53 @@ def discard(root: Path, dispatch_id: str, words: str, actor: str) -> dict:
                              "notice": "只记录不采用，不删除候选文件"})
 
 
+# 取消原因代码（v1.7.5 G05；G02 先交后检的“被新版取代”用 superseded）。旧记录没有代码，读为 unknown。
+# 代码表只在这里一处（批次二返修 #13），复盘统计引用，不另写文字。
+CANCEL_CODES = {"superseded": "被新版取代", "inputs_changed": "输入变了", "not_needed": "不需要了",
+                "host_failed": "宿主没派成", "other": "其他"}
+CANCEL_UNKNOWN = "没写原因代码（旧记录）"
+
+
 @dispatch_write
-def cancel(root: Path, dispatch_id: str, reason: str, actor: str) -> dict:
+def cancel(root: Path, dispatch_id: str, reason: str, actor: str, reason_code: str | None = None) -> dict:
     with serialized(root):
         item = current(root, dispatch_id)
         if item.get("status") not in ACTIVE:
             raise WorkflowError("当前分派不能取消")
         if not isinstance(reason, str) or not reason.strip():
             raise WorkflowError("取消必须保留原因")
+        if reason_code is not None and reason_code not in CANCEL_CODES:
+            raise WorkflowError("取消原因代码不认识，这次没有取消。技术附录（给 Agent）：--reason-code 须为 " + "、".join(CANCEL_CODES))
         return append(root, {"event": "cancelled", "dispatch_id": dispatch_id,
-                             "status": "cancelled", "actor": actor, "reason": reason})
+                             "status": "cancelled", "actor": actor, "reason": reason,
+                             **({"reason_code": reason_code} if reason_code else {})})
 
 
 @read_serialized
-def inspect(root: Path) -> dict:
+def load_records(root: Path) -> tuple[list[dict], dict[str, dict]]:
+    """查询用的读取、解析一步（批次三返修 r2 #3/#12：只有这一步的报错算“记录损坏”、如实报 blocked 不计数）。"""
     with serialized(root):
         records = read_log(root)
-        latest_records = replay(records)
-        return {"schema_version": 1, "records": len(records),
-                "dispatches": list(latest_records.values()),
-                "active": [item for item in latest_records.values() if item.get("status") in ACTIVE]}
+        return records, replay(records)
+
+
+def inspect(root: Path, loaded=None) -> dict:
+    records, latest_records = loaded if loaded is not None else load_records(root)
+    return {"schema_version": 1, "records": len(records),
+            "dispatches": list(latest_records.values()),
+            "active": [item for item in latest_records.values() if item.get("status") in ACTIVE]}
+
+
+def _state_report(exc):
+    """查询读记录这一步出错：打印完整 JSON（blocked / busy）、记命令级报错首行，抛 StateReport(1)（守卫不计数）。"""
+    from workspace_lock import WorkspaceBusy
+    from yunxing_rizhi import StateReport, command_error
+    command_error(exc)
+    if isinstance(exc, WorkspaceBusy):
+        print(json.dumps({"status": "busy", "reason_code": exc.reason_code, "message": str(exc), "written": False}, ensure_ascii=False))
+    else:
+        print(json.dumps({"status": "blocked", "errors": [str(exc)]}, ensure_ascii=False, indent=2))
+    raise StateReport(1) from None
 
 
 def main() -> int:
@@ -645,9 +715,11 @@ def main() -> int:
     parser.add_argument("--readback-summary")
     parser.add_argument("--readback-reference",action="append")
     parser.add_argument("--reason")
+    parser.add_argument("--reason-code", choices=sorted(CANCEL_CODES), help="cancel 必填：取消原因代码（v1.7.5 G05）")
     parser.add_argument("--actor")
     parser.add_argument("--request-id")
     parser.add_argument("--tradeoff", action="append", help="作者交回时的可讨论取舍，进入策略师待决清单首位")
+    parser.add_argument("--ledger-ref", action="append", help="return：本稿用到的事实台账编号（F001 或 F001:页；没用到写“无”）（v1.7.5 G03）")
     parser.add_argument("--words", help="extend / discard：策略师原话")
     parser.add_argument("--minutes", type=int, default=0)
     parser.add_argument("--calls", type=int, default=0)
@@ -667,8 +739,12 @@ def main() -> int:
                         args.host_instance, request_id=args.request_id)
     elif args.action == "return":
         result = return_candidate(root, args.dispatch_id, args.candidate, args.actor, return_evidence=args.return_evidence,
-                                  tradeoffs=args.tradeoff, request_id=args.request_id)
+                                  tradeoffs=args.tradeoff, ledger_refs=args.ledger_ref, request_id=args.request_id)
     elif args.action == "progress":
+        try:  # 批次三返修 r2 #3（F08 同类）：分派记录损坏时如实报 blocked，不计数；之后的报错（如分派编号不存在）照常计数
+            load_records(root)
+        except (WorkflowError, OSError, ValueError, KeyError, TypeError) as exc:
+            _state_report(exc)
         result = progress(root, args.dispatch_id)
     elif args.action == "budget-reached":
         result = budget_reached(root, args.dispatch_id, args.actor, request_id=args.request_id)
@@ -685,11 +761,21 @@ def main() -> int:
         from xiugai_fenpai import integrate
         result=integrate(root,args.dispatch_id,json.loads(args.request.read_text()),args.actor)
     elif args.action == "cancel":
-        result = cancel(root, args.dispatch_id, args.reason, args.actor, request_id=args.request_id)
+        if not args.reason_code:  # G05（v1.7.5）：取消必须填原因代码
+            raise WorkflowError("取消派工要写清原因（被新版取代、输入变了、不需要了、宿主没派成、其他），这次没有取消。"
+                                "技术附录（给 Agent）：--reason-code 必填，取值 " + " / ".join(CANCEL_CODES)
+                                + "；other 时用 --reason 附一句具体原因（其余代码也照旧须带 --reason）")
+        result = cancel(root, args.dispatch_id, args.reason, args.actor, reason_code=args.reason_code, request_id=args.request_id)
     elif args.action == "discard":
         result = discard(root, args.dispatch_id, args.words, args.actor, request_id=args.request_id)
     else:
-        result = inspect(root)
+        # F08 漏网（v1.7.5 批次三 B，写法同 r4 #1）：记录损坏时查询如实报 blocked（输出完整 JSON），退出码仍 1，重试守卫不计数。
+        # 批次三返修 r2 #12：只在读取、解析记录这一步捕获（含 KeyError/TypeError）；之后的逻辑错误与真崩照常计数。
+        try:
+            loaded = load_records(root)
+        except (WorkflowError, OSError, ValueError, KeyError, TypeError) as exc:
+            _state_report(exc)
+        result = inspect(root, loaded)
     from standalone_tasks import with_retention
     print(json.dumps(with_retention(result), ensure_ascii=False, indent=2))
     return 0

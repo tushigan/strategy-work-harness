@@ -1,4 +1,11 @@
-"""Bounded, best-effort local diagnostics. No business content or raw exceptions."""
+"""Bounded, best-effort local diagnostics. No business content, stack traces or raw exceptions.
+
+v1.7.5 G04：出错事件另存 message——工作包自己写的业务报错（WorkflowError 一类）的首行，最长 200 字，
+先去掉本机绝对路径（工作区内的换成相对路径）、凭据样式字符串、邮箱与电话（mingan_xinxi.first_line）；
+其他异常只记类别（如“程序内部错误（RuntimeError）”），不存原文。仍不存堆栈与业务正文；首行可能带文件名、引用说明等，
+日志只在客户工作区内（project/运行日志/），不随包发布。
+返修（r2）：命令级出错事件只取本次异常的首行，或入口捕获后用 command_error 明确交来的首行；不再借用进程里最近一次步骤报错。
+工作区被占用（WorkspaceBusy）按业务报错记首行；重试守卫停记固定白话“同类报错已连续 2 次，自动停下”。"""
 from contextlib import contextmanager
 from contextvars import ContextVar
 from datetime import datetime, timezone
@@ -263,7 +270,33 @@ def emit(event):
     except Exception as exc:
         state['gap']=str(exc) if isinstance(exc,DiagnosticGap) else 'diagnostic_unavailable'
 
-def note(operation,event_type='end',*,duration_ms=None,reason_code='none',status='ok',span_id=None,parent_span_id=None,version=None,mode=None,file_counts=None):
+def error_message(error,root=None):
+    """G04（v1.7.5）：出错事件的 message。只存业务报错首行（去敏、限 200 字）；其他异常只记类别，不存原文。"""
+    if error is None:return None
+    if isinstance(error,RetryBlocked):return RETRY_STOP_MESSAGE  # 守卫停：固定白话，不存原报错
+    if isinstance(error,SystemExit):
+        if not isinstance(error.code,str) or not error.code.strip():return None
+        text=error.code
+    elif any(c.__name__ in ('WorkflowError','WorkspaceBusy') for c in type(error).__mro__):text=str(error)  # 工作区被占用也是业务报错
+    elif isinstance(error,OSError):return f'文件读写出错（{type(error).__name__}，错误号 {error.errno}）'
+    else:return f'程序内部错误（{type(error).__name__}）'
+    try:
+        from mingan_xinxi import first_line
+        return first_line(text,root) or None
+    except Exception:
+        return None
+
+
+def command_error(error):
+    """G04（v1.7.5 返修）：入口自己捕获报错、打印后返回 1 时调用，命令级出错事件记这条首行（同 error_message 去敏）。
+    只记本次调用者明确交来的报错；被上层吞掉的步骤报错不会借给命令级事件。"""
+    state=_state.get()
+    if not state:return
+    try:state['command_message']=error_message(error,state.get('root'))
+    except Exception:state['gap']='diagnostic_unavailable'
+
+
+def note(operation,event_type='end',*,duration_ms=None,reason_code='none',status='ok',span_id=None,parent_span_id=None,version=None,mode=None,file_counts=None,message=None):
     state=_state.get()
     if not state:return
     if operation not in OPERATIONS:operation='command'
@@ -280,6 +313,8 @@ def note(operation,event_type='end',*,duration_ms=None,reason_code='none',status
      'review_mode':mode if mode in {'full','incremental','reuse'} else None}
     if file_counts is not None and isinstance(file_counts,dict):
         event["file_counts"]={k:v for k,v in file_counts.items() if k in {"compared","changed","required","inherited","uncovered"} and type(v) is int and 0<=v<=1000000}
+    if event_type=='error' and isinstance(message,str) and message.strip():
+        event['message']=message.strip()[:200]
     emit(event)
 
 def bind(task_id=None,dispatch_id=None):
@@ -359,15 +394,17 @@ def observed(operation):
             except BaseException as exc:error=exc;raise
             finally:
                 try:
+                    message=error_message(error,state.get('root')) if error else None
                     version=next((x for x in (result.get('revision'),result.get('event',{}).get('revision') if isinstance(result.get('event'),dict) else None,result.get('version'),result.get('target',{}).get('version') if isinstance(result.get('target'),dict) else None) if type(x) is int),None) if isinstance(result,dict) else None
                     if isinstance(result,dict) and result.get('dispatch_id'):state['dispatch_id']=opaque(result['dispatch_id'])
                     # 状态探测里“未检核/被拒”是正常状态记 blocked；记录损坏仍记 error，不被探测掩盖
                     probing=bool(error) and state.get('probe',0)>0 and not isinstance(error,(OSError,KeyError,TypeError)) and not re.search(r'损坏|格式无效|不能解析|无法解析',str(error))
+                    if probing:message=None  # 状态探测的“被拒”是正常状态，不记报错首行
                     note(operation,'error' if error and not probing else 'end',duration_ms=(time.monotonic()-start)*1000,
                          status=('blocked' if probing else 'error') if error else 'ok',reason_code=('review_not_passed' if probing else getattr(error,'reason_code','workflow_error')) if error else state.get('span_reasons',{}).pop(span,'none'),
                          span_id=span,parent_span_id=parent,version=version,
                          mode=('incremental' if operation=='incremental_review.plan' else result.get('review_mode')) if isinstance(result,dict) else None,
-                         file_counts=counts_of(result))
+                         file_counts=counts_of(result),message=message)
                     if isinstance(result,dict):
                         scope=result.get('changed_scope')
                         reasons=scope.get('reason_codes',[]) if isinstance(scope,dict) else result.get('reason_codes',[])
@@ -415,11 +452,16 @@ def _request_objects(root,value):
     """--request 类命令：按请求文件里的业务对象编号区分（同一文件换成另一任务的请求不误拦）；读不了才退回文件路径。"""
     try:
         path=Path(value) if Path(str(value)).is_absolute() or root is None else Path(root)/str(value)
+        if not path.exists() and root is not None:
+            # G10 返修：登记成功后请求已移到“已用”，原样重试仍按那份里的编号计数
+            from dengji_qingqiu import used_copy
+            used=used_copy(root,path)
+            if used:path=Path(root)/used
         data=json.loads(path.read_text(encoding='utf-8'))
         if isinstance(data,dict):
             found=[k+'='+str(data[k]) for k in REQUEST_IDS if isinstance(data.get(k),(str,int))]
             if found:return found
-    except (OSError,ValueError):pass
+    except (OSError,ValueError,ImportError):pass  # r3 #7：缺 dengji_qingqiu 或同名多份（SameNameCopies 是 ValueError）时退回文件路径
     return ['request='+_norm_path(root,value)]
 
 
@@ -455,11 +497,18 @@ class RetryBlocked(SystemExit):
     reason_code='retry_limit'
 
 
+RETRY_STOP_MESSAGE='同类报错已连续 2 次，自动停下'  # 守卫停时运行日志记的首行（G04 返修 #8）
+
+
 class StateReport(SystemExit):
     """F08（v1.7.3）：状态探测命令（resume、inspect、启动检查）如实报出 blocked 是成功，不是失败。
     退出码仍为 1（既有约定）；cli 的重试守卫看到它不计数、不清零、不写放行记录、不打印“已停止重试”。
     命令自身崩溃（未捕获异常）仍按原规则计数；记录损坏被命令捕获并如实列进 blocked 报告的，属于状态，同样不计数。
-    运行日志仍按 v1.7.2 记 error / workflow_error（复盘统计口径不变），只是守卫不计数。"""
+    运行日志仍按 v1.7.2 记 error / workflow_error（复盘统计口径不变），只是守卫不计数。
+    v1.7.5 r4：项目记忆、项目身份、任务回执三个查询（inspect）如实报 blocked 时同样抛它（这三个入口 v1.7.5 才套运行日志，
+    v1.7.4 没有守卫、每次都 rc 1）；不加进 STATE_PROBES——那里只管 v1.7.2 留下的旧计数，新计数靠 StateReport 才不记。
+    v1.7.5 批次三 B（F08 漏网）：独立任务查询（standalone_tasks inspect）、分派查询（agent_dispatch inspect）记录损坏时如实报 blocked
+    同样抛它（这两个入口 v1.7.4 已套运行日志，记录损坏连跑 4 次是 1、1、3、3，现为 1、1、1、1）。"""
 
 
 # v1.7.2 及以前把这些探测入口的 blocked 计成失败；这些旧计数（无 rule=2 标记）不再据以拦截，
@@ -653,13 +702,15 @@ def _cli_inner(function,filename):
         raise
     finally:
         failed=bool(error) or type(result) is int and result!=0
+        message=error_message(error,state['root']) if error else (state.get('command_message') if failed else None)
+        if message is None and isinstance(error,StateReport):message=state.get('command_message')  # r4 #1：查询如实报 blocked 时也记入口捕获的报错首行
         action=state.get('formal_action')
         if action:
             note(action['operation'],'error' if failed else 'end',duration_ms=(time.monotonic()-action['start'])*1000,
                  status='error' if failed else 'ok',reason_code=getattr(error,'reason_code','workflow_error') if failed else action['reason'],
-                 version=action['version'],mode=action['mode'],span_id=action['span_id'],parent_span_id=action['parent'])
+                 version=action['version'],mode=action['mode'],span_id=action['span_id'],parent_span_id=action['parent'],message=message)
             state['span_id']=action['parent']
         note(operation,'error' if failed else 'end',duration_ms=(time.monotonic()-start)*1000,
-             status='error' if failed else 'ok',reason_code=getattr(error,'reason_code','workflow_error') if failed else 'none')
+             status='error' if failed else 'ok',reason_code=getattr(error,'reason_code','workflow_error') if failed else 'none',message=message)
         _state.reset(token)
         if state['gap']:print('运行记录不完整：'+state['gap']+'；业务结果不受诊断影响。',file=sys.stderr)

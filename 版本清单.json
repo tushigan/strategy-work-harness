@@ -1,21 +1,21 @@
 {
   "name": "策略师工作包（Codex / Claude Code 统一包）",
   "repository": "https://github.com/tushigan/strategy-work-harness",
-  "version": "1.7.4",
-  "released": "2026-10-09",
+  "version": "1.7.5",
+  "released": "2026-10-11",
   "package_dir": "策略师工作包",
   "package_inventory": "策略师工作包/package-inventory.json",
-  "package_inventory_sha256": "66118d46d38137496ee9cb712f253deba124b991e38f5fbc3fb1731414f76d12",
+  "package_inventory_sha256": "39dca03f308412fe6a17835a982c48dcbdebd9a41702930ed2f0d4ae2913f932",
   "release_zip": {
-    "name": "strategist-harness-v1.7.4-20261009.zip",
-    "url": "https://github.com/tushigan/strategy-work-harness/releases/download/v1.7.4/strategist-harness-v1.7.4-20261009.zip",
-    "sha256": "3b166416b3d4ba2ed157d4d4a1a333120fe08d32736b086f6a03d2891afe8b52",
-    "bytes": 64476840,
-    "files": 625,
+    "name": "strategist-harness-v1.7.5-20261011.zip",
+    "url": "https://github.com/tushigan/strategy-work-harness/releases/download/v1.7.5/strategist-harness-v1.7.5-20261011.zip",
+    "sha256": "2398e470c298a9529b980f8419375c2d736871d09444e5bebf51d5d3807181c2",
+    "bytes": 64591983,
+    "files": 636,
     "zip_root": "统一包",
-    "note": "与开发仓库定稿包 策略师工作包-统一版-v1.7.4-定稿-20261009.zip 逐字节相同，仅附件名改为英文（GitHub 会改写中文附件名）"
+    "note": "与开发仓库定稿包 策略师工作包-统一版-v1.7.5-定稿-20261011.zip 逐字节相同，仅附件名改为英文（GitHub 会改写中文附件名）"
   },
-  "git_tag": "v1.7.4",
+  "git_tag": "v1.7.5",
   "requirements": {
     "python": ">=3.11",
     "hosts": [
@@ -35,7 +35,8 @@
       "58e0a41abb683e806f19d5b619b942aec0e0559a9d0e5e58bae73bd421d61b18": "1.7.2",
       "a7e28b7af38330676c8c4e45c7ca2d8b432622f6ec07354781b7409a0e0a68b7": "1.7.3",
       "fbe96d2d38ddeaa27cb6ef7bf21ba04b011d5d61962b8830f2d8c4b829b28126": "1.7.2",
-      "66118d46d38137496ee9cb712f253deba124b991e38f5fbc3fb1731414f76d12": "1.7.4"
+      "66118d46d38137496ee9cb712f253deba124b991e38f5fbc3fb1731414f76d12": "1.7.4",
+      "39dca03f308412fe6a17835a982c48dcbdebd9a41702930ed2f0d4ae2913f932": "1.7.5"
     },
     "note": "fbe96d2d… 为 v1.7.2 候选 r2（代码与 v1.7.2 定稿逐字节相同，只差 README 版本记录与一处注释），按 1.7.2 处理"
   },
@@ -55,6 +56,11 @@
     ]
   },
   "history": [
+    {
+      "version": "1.7.5",
+      "date": "2026-10-11",
+      "note": "按在途项目使用中发现的问题迭代：对策略师说人话（固定三段、不出现程序用语）；资料里像凭据的文件与字符串三处同一判定；报错看得懂（运行日志存去敏的报错首行、登记被拒点名字段、提醒按类归并）；先交后检与背后检核；发客户记账（先交付后补登记、豁免分三种来源、最终版没有检查通过时摆一行事实）；事实台账；对外导出纳入版本保留、导出前字符预检、PPT 与网页版文字核对。接口变化：取消派工要写原因代码；作者交回要列台账编号。升级前先只读检查资料目录里会被新启动检查当成凭据的 JSON"
+    },
     {
       "version": "1.7.4",
       "date": "2026-10-09",

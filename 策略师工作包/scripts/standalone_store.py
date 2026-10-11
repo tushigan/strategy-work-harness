@@ -159,9 +159,40 @@ def known_fingerprint(root, path, sha):
         return False
 
 
-def references(root, items, stored=False, previous=None, accept_changed_references=False, pinned=False):
-    """pinned=True（历史来源）：允许直接给出登记时的指纹，按原指纹保存、不读现场文件（文件已改或已移走也照样可引用）。"""
+KINDS = {"sources": "来源", "deliverables": "交付物", "process_refs": "过程引用", "historical_refs": "历史来源", "decision_refs": "决定引用"}
+
+
+def reference_shape_issue(item, field, number, pinned=False):
+    """G08（v1.7.5）：引用条目写法不对时点名第几条、哪一项、应该怎么写；正文白话，字段名放技术附录。合规返回 None。"""
+    kind = KINDS.get(field, "引用")
+    where = f"{field}[{number - 1}]"
+    expect = "{label, path}（历史来源也可 {label, path, sha256}）或 {label, url}" if pinned else "{label, path} 或 {label, url}"
+    if not isinstance(item, dict):
+        return f"第 {number} 条{kind}的写法不对，应写“说明 + 文件位置”，这次没有登记。技术附录（给 Agent）：{where} 应为对象 {expect}"
+    label = item.get("label")
+    name = f"第 {number} 条{kind}" + (f"（{label}）" if isinstance(label, str) and label.strip() else "")
+    if not isinstance(label, str) or not label.strip():
+        return f"{name}没写说明（这份资料叫什么），这次没有登记。技术附录（给 Agent）：{where} 缺 label（非空文字）；应为 {expect}"
+    allowed = {"label", "url"} if "url" in item else {"label", "path", "sha256"} if pinned else {"label", "path"}
+    extra = sorted(set(item) - allowed)
+    if extra == ["sha256"]:
+        return (f"{name}多写了“文件版本标记”。这一项由程序自己算，不用写，这次没有登记。"
+                f"技术附录（给 Agent）：{where} 多余字段 sha256；应为 {expect}；要钉住历史版本请放 historical_refs")
+    if extra:
+        return (f"{name}多写了 {len(extra)} 项不认识的内容，这次没有登记。"
+                f"技术附录（给 Agent）：{where} 多余字段 {', '.join(extra)}；应为 {expect}")
+    if "url" not in item and "path" not in item:
+        return (f"{name}没写文件位置，这次没有登记。"
+                f"技术附录（给 Agent）：{where} 缺 path（工作包内相对路径）或 url；应为 {expect}")
+    return None
+
+
+def references(root, items, stored=False, previous=None, accept_changed_references=False, pinned=False, field=None):
+    """pinned=True（历史来源）：允许直接给出登记时的指纹，按原指纹保存、不读现场文件（文件已改或已移走也照样可引用）。
+    field：请求里的字段名（sources 等），写法不对时报错点名用（G08）；读取已存记录（stored）不改原报错。"""
     if not isinstance(items, list):
+        if field and not stored:
+            raise WorkflowError(f"{KINDS.get(field, '引用')}要写成一串条目，这次没有登记。技术附录（给 Agent）：{field} 必须为列表")
         raise WorkflowError("来源与交付物必须为列表")
     previous_hashes = {
         item["path"]: item["sha256"]
@@ -169,7 +200,11 @@ def references(root, items, stored=False, previous=None, accept_changed_referenc
         if isinstance(item, dict) and set(item) == {"label", "path", "sha256"}
     }
     result = []
-    for item in items:
+    for number, item in enumerate(items, 1):
+        if field and not stored:
+            issue = reference_shape_issue(item, field, number, pinned)
+            if issue:
+                raise WorkflowError(issue)
         if not isinstance(item, dict):
             raise WorkflowError("每份来源或交付物必须为对象")
         text(item.get("label"), "资料说明")
@@ -220,7 +255,13 @@ def request_task(task):
 def task_value(root, value, stored=False, previous=None, accept_changed_references=False):
     if (not isinstance(value, dict) or not FIELDS.issubset(value)
             or set(value) - FIELDS - OPTIONAL_FIELDS):
-        raise WorkflowError("独立任务字段不完整或含未支持字段")
+        if stored or not isinstance(value, dict):
+            raise WorkflowError("独立任务字段不完整或含未支持字段")
+        extra, missing = sorted(set(value) - FIELDS - OPTIONAL_FIELDS), sorted(FIELDS - set(value))
+        plain = "、".join(x for x in (f"多了 {len(extra)} 项不认识的内容" if extra else "", f"少了 {len(missing)} 项必填内容" if missing else "") if x)
+        raise WorkflowError(f"任务内容{plain}，这次没有登记。技术附录（给 Agent）：task"
+                            + (f" 多余字段 {', '.join(extra)}" if extra else "") + (f" 缺字段 {', '.join(missing)}" if missing else "")
+                            + f"；必填 {', '.join(sorted(FIELDS))}；可选 {', '.join(sorted(OPTIONAL_FIELDS))}")
     result = dict(value)
     for name in ("title", "project_label", "request_text", "goal", "summary", "next_action"):
         text(value[name], name)
@@ -242,13 +283,13 @@ def task_value(root, value, stored=False, previous=None, accept_changed_referenc
         result[name] = references(
             root, value[name], stored,
             previous=(previous or {}).get(name),
-            accept_changed_references=accept_changed_references,
+            accept_changed_references=accept_changed_references, field=name,
         )
     for name in ("process_refs", "historical_refs", "decision_refs"):
         if name in value:
             result[name] = references(root,value[name],stored,
                 previous=(previous or {}).get(name),accept_changed_references=accept_changed_references,
-                pinned=name == "historical_refs")
+                pinned=name == "historical_refs", field=name)
     if "artifact_versions" in value:
         from chengguo_shenfen import versions
         result["artifact_versions"]=versions(root,value["artifact_versions"],result,previous,stored)

@@ -484,9 +484,13 @@ def default_plan(root,target,reviewer,simulation=False,change_kind='unknown',pur
         result=plan(root,target,baseline,expected,meta,authors,simulation,reviewer,change_kind)
         return {**result,'target':target,'review_mode':'incremental','review_purpose':purpose,
                 'dispatch_required':True,'uncovered':[]}
-    return {'target':target,'review_mode':'full','review_purpose':purpose,'dispatch_required':True,
+    out={'target':target,'review_mode':'full','review_purpose':purpose,'dispatch_required':True,
             'base_review':None,'checked_sources_required':expected,'reused_coverage':[],
             'uncovered':[],'reason_codes':['baseline_unavailable'],'baseline_errors':failures}
+    if any('快照失效' in f or '被修改/缺失' in f for f in failures):
+        # v1.7.5 G11：基线副本找不到（例如已移到归档）时退回完整检核，给白话说明，不报错卡住
+        out['baseline_notice']='上次完整检查留存的资料副本找不到了（可能已移到归档），这次检查要全部看一遍；只是多花时间，不影响结论。'
+    return out
 
 
 def main():
