@@ -258,7 +258,7 @@ def resume(root, task_id=None, details=False):
         errors.append('产品矩阵计划无法核实：'+str(exc));matrices=[]
     platform=None
     try:
-        from pingtai_kuaizhao import resume_summary
+        from pingtai_kuaizhao import resume_summary, platform_line
         platform=resume_summary(root)
         warnings.extend(platform.get('warnings',[]))
     except ImportError:
@@ -353,6 +353,8 @@ def resume(root, task_id=None, details=False):
     if active_matrix:  # 产品矩阵计划单列一行，不覆盖品牌屋等正式主线的“当前阶段”
         result['project']['matrix_line']='产品矩阵：'+active_matrix['current_stage']+'；'+brief(active_matrix['next_action'])+(
             '；'+active_matrix['platform_status'] if active_matrix.get('platform_status') else '')  # W3：平台测算状态随快照同步
+    if matrices and platform is not None:  # P10（v1.7.7）：建过产品矩阵计划才出现；只提醒，不阻断
+        result['project']['platform_line']=platform_line(platform.get('last_identity_check'))
     active_plan=next((p for p in proposals if not p['upgraded_to']),None)
     if active_plan and result['project'].get('progress_source')!='live_closure':
         result['project'].update(current_stage='提案：'+active_plan['current_stage'],next_action=brief(active_plan['next_action']),

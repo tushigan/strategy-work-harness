@@ -54,6 +54,8 @@ def print_result(result: dict[str, object], as_json: bool) -> None:
     print(f"项目: {project.get('project_name') or '未初始化'}")
     print(f"阶段: {project.get('current_stage') or '未知'}")
     print(f"下一步: {project.get('next_action') or '未知'}")
+    if project.get("platform_line"):  # P10（v1.7.7）：建过产品矩阵计划才有这一行
+        print(project["platform_line"])
     for item in report.get("workflow_snapshot", {}).get("standalone", {}).get("tasks", []):
         if item["status"] != "archived":
             print(f"独立任务 {item['task_id']}：{item['title']} / {item['effective_status']} / {item['next_action']}")

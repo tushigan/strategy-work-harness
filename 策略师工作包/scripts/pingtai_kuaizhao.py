@@ -718,6 +718,25 @@ def inspect(root):
             "before_client": BEFORE_CLIENT, "record_path": LOG}
 
 
+SITE_URL = "https://120.76.179.118"  # P10（v1.7.7）：产品线网站网址，用户 2026-10-14 同意公开；连接参数另从网站公开安装清单现读
+ROLE_WORDS = {"CLIENT": "客户", "CONSULTANT": "顾问"}
+
+
+def platform_line(last_identity):
+    """续做状态里“产品线网站”那一行（P10）：没登记过身份 → 白话提醒怎么连；登记过 → 已连上（账号、身份、日期）；
+    看得到 0 个项目 → 加一句到网站“管理连接授权”页撤销后重登。只提醒，不阻断；不出现网址以外的程序用语。"""
+    if not last_identity:
+        return "产品线网站：还没连上。要用产品线测算时，说一句“帮我连产品线网站”，我带你连。"
+    role = str(last_identity.get("role") or "")
+    role_words = ROLE_WORDS.get(role.upper(), f"「{role}」" if role else "未知")
+    line = (f"产品线网站：已连上（账号「{last_identity.get('username')}」，身份 {role_words}，"
+            f"{str(last_identity.get('checked_at') or '')[:10]} 核对，看得到 {last_identity.get('visible_projects')} 个项目）")
+    if last_identity.get("visible_projects") == 0:
+        line += ("。看得到 0 个项目，多半登错了账号（例如测试账号）：到产品线网站的“管理连接授权”页撤销这次授权，"
+                 "再用正确的账号重新登录，然后说一句“帮我连产品线网站”，我再核对一次。")
+    return line
+
+
 def resume_summary(root):
     """续做状态用：每个平台项目最新一版，“产品线规划表格：第 N 版”，以及要复核的成果、被改过的快照文件。"""
     root = Path(root).resolve()

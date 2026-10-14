@@ -1843,9 +1843,9 @@
       "path": ".agents/skills/product-matrix/SKILL.md",
       "kind": "file",
       "excluded": false,
-      "size": 16699,
+      "size": 28234,
       "mode": 420,
-      "sha256": "b1d396cd6b4ce12cf66acb43a4f49e39660fdeb8b3079b1422e9a3086b4c1222"
+      "sha256": "0a7e67b7da3fb6f4444653f50885f6edaa1ca49eb7bdd475877f7a10623b9026"
     },
     {
       "path": ".agents/skills/project-control",
@@ -3882,9 +3882,9 @@
       "path": ".claude/skills/product-matrix/SKILL.md",
       "kind": "file",
       "excluded": false,
-      "size": 16699,
+      "size": 28234,
       "mode": 420,
-      "sha256": "b1d396cd6b4ce12cf66acb43a4f49e39660fdeb8b3079b1422e9a3086b4c1222"
+      "sha256": "0a7e67b7da3fb6f4444653f50885f6edaa1ca49eb7bdd475877f7a10623b9026"
     },
     {
       "path": ".claude/skills/project-control",
@@ -4012,7 +4012,7 @@
       "excluded": false,
       "size": 29645,
       "mode": 420,
-      "sha256": "b0c11e905c9140628a78a1ba5dc3ebd2b52eae283ae9d7b35e1ea0c39ed964cb"
+      "sha256": "9523699acb31cb1172a67ddfcec7ab8f5218b2486ffe3dfaa501105c91318d84"
     },
     {
       "path": ".codex",
@@ -4113,9 +4113,9 @@
       "path": "AGENTS.md",
       "kind": "file",
       "excluded": false,
-      "size": 118638,
+      "size": 123123,
       "mode": 420,
-      "sha256": "33aa7c9a57a7f5c0034fb6b146328e884ade84c562238791c7e135421931fe47"
+      "sha256": "d07b179055bd02e62a7da1027990b43c946c9005e886a08415bb5d0632f14844"
     },
     {
       "path": "CLAUDE.md",
@@ -4129,9 +4129,9 @@
       "path": "README.md",
       "kind": "file",
       "excluded": false,
-      "size": 30536,
+      "size": 32054,
       "mode": 420,
-      "sha256": "bcf143426971ace1f4e61e1e69b099c63debaa70d4f30d89f593f43df941dd2f"
+      "sha256": "892fdae68c996b73b55e551f56041fa102f8425cd46b1fdfee24f0369f45d5a2"
     },
     {
       "path": "project",
@@ -5177,9 +5177,9 @@
       "path": "scripts/pingtai_kuaizhao.py",
       "kind": "file",
       "excluded": false,
-      "size": 48306,
+      "size": 49796,
       "mode": 420,
-      "sha256": "e59b0d4d78747ef6865590d2f6d37e4d9b495a527aa6515d969e72f30a9a1e09"
+      "sha256": "e3a0ee6ace5a371d903ba3a732176177a6f53a320af9b70ecea04275540976f4"
     },
     {
       "path": "scripts/pptx_hedui.py",
@@ -5201,9 +5201,9 @@
       "path": "scripts/project_handoff.py",
       "kind": "file",
       "excluded": false,
-      "size": 6972,
+      "size": 7110,
       "mode": 420,
-      "sha256": "f4d0cb724dbced17e58a5b2fbd7191565c55ba75e00d25e21a6b89cad446ef5b"
+      "sha256": "856b378cb16a10ee0104c129239549d72b77d1d9402200df97753e76acb8e0e1"
     },
     {
       "path": "scripts/project_memory.py",
@@ -5481,9 +5481,9 @@
       "path": "scripts/workspace_resume.py",
       "kind": "file",
       "excluded": false,
-      "size": 28674,
+      "size": 28904,
       "mode": 420,
-      "sha256": "8bd3d2adc3638f0616f93e0fc9a10021c5ba135add83306ace3f3075db30e98f"
+      "sha256": "ddb767a53dfcbf4787e8143cc7036b81daa9502a99a20fcfd04bfcdcc935f933"
     },
     {
       "path": "scripts/workspace_status.py",
@@ -5654,9 +5654,9 @@
       "path": "外部连接说明.md",
       "kind": "file",
       "excluded": false,
-      "size": 10378,
+      "size": 11756,
       "mode": 420,
-      "sha256": "324b4874d77dd00b7a8b1b92271eb0a893eb6e241f18ca154d476acd80e0449a"
+      "sha256": "47266bb852b8dd2ac3a30f2975e8e259aa0989ed1ea2affc62c094e28e9881cf"
     },
     {
       "path": "工作包移交说明.md",

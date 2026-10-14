@@ -1,21 +1,21 @@
 {
   "name": "策略师工作包（Codex / Claude Code 统一包）",
   "repository": "https://github.com/tushigan/strategy-work-harness",
-  "version": "1.7.6",
+  "version": "1.7.7",
   "released": "2026-10-14",
   "package_dir": "策略师工作包",
   "package_inventory": "策略师工作包/package-inventory.json",
-  "package_inventory_sha256": "6a07506db056e2a0e4ebe899da8672cf68e565542bc8cd69bb2a3681b31bc8ca",
+  "package_inventory_sha256": "300db5fcd4a38a999528398397306f58f3d2e750a91f914d4936772db3c07e0a",
   "release_zip": {
-    "name": "strategist-harness-v1.7.6-20261014.zip",
-    "url": "https://github.com/tushigan/strategy-work-harness/releases/download/v1.7.6/strategist-harness-v1.7.6-20261014.zip",
-    "sha256": "ee7c66ef543a06a67d3479966976b12783af7be15f355d175a58f39903733073",
-    "bytes": 64688152,
+    "name": "strategist-harness-v1.7.7-20261014.zip",
+    "url": "https://github.com/tushigan/strategy-work-harness/releases/download/v1.7.7/strategist-harness-v1.7.7-20261014.zip",
+    "sha256": "6a0f044edb897bf610ac01c175759cb21f220cba31e6a2235233bd0596626a9f",
+    "bytes": 64700841,
     "files": 645,
     "zip_root": "统一包",
-    "note": "与开发仓库定稿包 策略师工作包-统一版-v1.7.6-定稿-20261014.zip 逐字节相同，仅附件名改为英文（GitHub 会改写中文附件名）"
+    "note": "与开发仓库定稿包 策略师工作包-统一版-v1.7.7-定稿-20261014.zip 逐字节相同，仅附件名改为英文（GitHub 会改写中文附件名）"
   },
-  "git_tag": "v1.7.6",
+  "git_tag": "v1.7.7",
   "requirements": {
     "python": ">=3.11",
     "hosts": [
@@ -37,7 +37,8 @@
       "fbe96d2d38ddeaa27cb6ef7bf21ba04b011d5d61962b8830f2d8c4b829b28126": "1.7.2",
       "66118d46d38137496ee9cb712f253deba124b991e38f5fbc3fb1731414f76d12": "1.7.4",
       "39dca03f308412fe6a17835a982c48dcbdebd9a41702930ed2f0d4ae2913f932": "1.7.5",
-      "6a07506db056e2a0e4ebe899da8672cf68e565542bc8cd69bb2a3681b31bc8ca": "1.7.6"
+      "6a07506db056e2a0e4ebe899da8672cf68e565542bc8cd69bb2a3681b31bc8ca": "1.7.6",
+      "300db5fcd4a38a999528398397306f58f3d2e750a91f914d4936772db3c07e0a": "1.7.7"
     },
     "note": "fbe96d2d… 为 v1.7.2 候选 r2（代码与 v1.7.2 定稿逐字节相同，只差 README 版本记录与一处注释），按 1.7.2 处理"
   },
@@ -57,6 +58,11 @@
     ]
   },
   "history": [
+    {
+      "version": "1.7.7",
+      "date": "2026-10-14",
+      "note": "第一次连接产品线网站的引导：策略师说“帮我连产品线网站”（或做到产品矩阵测算而没连上）时，AI 自己认出是 Codex 还是 Claude Code，征得同意后下载校验并安装测算技能、加上网站连接，策略师只需本人在网页登录；连好后核对账号并登记，之后不再重复带。续做状态在有产品矩阵计划却没连过网站时多一行提醒。在 Codex 上从零连接、Claude Code 上已连上不重复，均真实走查通过；Claude Code 桌面版首次登录的入口仍待实测"
+    },
     {
       "version": "1.7.6",
       "date": "2026-10-14",
