@@ -18,12 +18,17 @@ def _is_records(path):
     from task_validation import is_records_path
     return is_records_path(path)
 
+def _without_labels(refs):
+    """v1.7.6 H10：交付物只比文件（路径或链接与指纹），名称（label）不同不算实质改稿——iterate 存“在线改稿第N轮”、
+    手写登记单按文件名写，同一份成品不因此判成又改了一轮。历史各版的比较结果只会更少计轮，旧记录已存的预算仍按原值读回。"""
+    return [{k:v for k,v in r.items() if k!="label"} if isinstance(r,dict) else r for r in refs]
+
 def substantive(task):
     deps={a["artifact_id"]:a["dependencies"] for a in task.get("artifact_versions",[])}
     paths={p for values in deps.values() for p in values}
     effective=_records_loose([r for r in task.get("process_refs",[]) if r.get("path") in paths])
     extra={"artifact_dependencies":deps,"artifact_dependency_files":effective} if deps else {}
-    return {**extra,**{k: task[k] for k in ("request_text", "goal")},"sources":_records_loose(task["sources"]),"deliverables":task["deliverables"],
+    return {**extra,**{k: task[k] for k in ("request_text", "goal")},"sources":_records_loose(task["sources"]),"deliverables":_without_labels(task["deliverables"]),
             **({"decision_refs":_records_loose(task["decision_refs"])} if "decision_refs" in task else {})}
 
 def derive(events, task_id):

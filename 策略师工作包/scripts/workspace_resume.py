@@ -250,6 +250,22 @@ def resume(root, task_id=None, details=False):
     except (OSError,ValueError,KeyError,TypeError) as exc:
         errors.append('提案计划无法核实：'+str(exc));proposals=[]
     try:
+        from matrix_plan import inspect as matrix_inspect
+        matrices=matrix_inspect(root,tasks=tasks)['plans']
+    except ImportError:
+        matrices=[]
+    except (OSError,ValueError,KeyError,TypeError) as exc:
+        errors.append('产品矩阵计划无法核实：'+str(exc));matrices=[]
+    platform=None
+    try:
+        from pingtai_kuaizhao import resume_summary
+        platform=resume_summary(root)
+        warnings.extend(platform.get('warnings',[]))
+    except ImportError:
+        platform=None
+    except (OSError,ValueError,KeyError,TypeError) as exc:
+        warnings.append('平台快照记录无法读取：'+str(exc))
+    try:
         from agent_dispatch import unregistered_candidates
         waiting_candidates=unregistered_candidates(root)
     except (OSError,ValueError,KeyError,TypeError) as exc:
@@ -327,6 +343,16 @@ def resume(root, task_id=None, details=False):
     result['proposal_plans']=[{'plan_id':p['plan_id'],'current_stage':p['current_stage'],'next_action':brief(p['next_action']),
         'deadline':p['deadline'],'upgraded_to':p['upgraded_to'],'stages':[{'stage':x['stage'],'name':x['name'],'task_id':x.get('task_id'),
         'status':x['status']} for x in p['stages']]} for p in proposals]
+    result['matrix_plans']=[{'plan_id':p['plan_id'],'start_line':p['start_line'],'cost_status':p['cost_status'],'current_stage':p['current_stage'],
+        'next_action':brief(p['next_action']),'deadline':p['deadline'],'platform_pending':p['platform_pending'],
+        'platform_status':p.get('platform_status'),'platform_snapshot':p.get('platform_snapshot'),
+        'stages':[{'stage':x['stage'],'name':x['name'],'task_id':x.get('task_id'),'status':x['status']} for x in p['stages']]} for p in matrices]
+    if platform and platform.get('snapshots'):
+        result['platform_snapshots']=platform
+    active_matrix=next((p for p in matrices if p['current_stage']!='全部阶段完成'),None)
+    if active_matrix:  # 产品矩阵计划单列一行，不覆盖品牌屋等正式主线的“当前阶段”
+        result['project']['matrix_line']='产品矩阵：'+active_matrix['current_stage']+'；'+brief(active_matrix['next_action'])+(
+            '；'+active_matrix['platform_status'] if active_matrix.get('platform_status') else '')  # W3：平台测算状态随快照同步
     active_plan=next((p for p in proposals if not p['upgraded_to']),None)
     if active_plan and result['project'].get('progress_source')!='live_closure':
         result['project'].update(current_stage='提案：'+active_plan['current_stage'],next_action=brief(active_plan['next_action']),

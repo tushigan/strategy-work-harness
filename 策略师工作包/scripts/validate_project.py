@@ -15,7 +15,7 @@ try:
     from dengji_qingqiu import REQUESTS_DIR, USED_DIR
 except ImportError:  # r3 #7：缺这个必需文件时照常报“缺少必需文件”，不在导入时崩掉（登记请求按普通记录核对）
     REQUESTS_DIR = USED_DIR = None
-from runtime_structure import (PROJECT_MEMORY_RUNTIME_FILES, STANDALONE_RUNTIME_FILES, V175_RUNTIME_FILES,
+from runtime_structure import (PROJECT_MEMORY_RUNTIME_FILES, STANDALONE_RUNTIME_FILES, V175_RUNTIME_FILES, V176_RUNTIME_FILES,
                                runtime_requirements_for_root, startup_structure_errors)
 REQUIRED_FILES = (
     "AGENTS.md",
@@ -73,6 +73,30 @@ ALLOWED_STAGE = {
     "closure",
 }
 ABSOLUTE_PATH = re.compile(r"^(?:/|~[/\\]|[A-Za-z]:[/\\]|\\\\)")
+# 疑似凭据报错的两种写法只在这里写一份（v1.7.6 r2 #6）：误报登记（wubao_dengji）按 credential_location 反解，不另写文案
+CREDENTIAL_FIELD = " 中疑似凭据字段: "
+CREDENTIAL_AS_TEXT = " 中疑似凭据（无法按 JSON 读取，按文本检查）"
+CREDENTIAL_TEXT_FIELD = "（按文本检查）"
+
+
+def credential_field_message(source: str, key_path: str) -> str:
+    return f"{source}{CREDENTIAL_FIELD}{key_path}"
+
+
+def credential_text_message(rel: str) -> str:
+    return f"{rel}{CREDENTIAL_AS_TEXT}"
+
+
+def credential_location(message: Any) -> tuple[str, str] | None:
+    """一条报错 → (来源, 字段)；按文本判的字段记“（按文本检查）”；不是按内容判出的疑似凭据返回 None。"""
+    if not isinstance(message, str):
+        return None
+    if message.endswith(CREDENTIAL_AS_TEXT):
+        return message[:-len(CREDENTIAL_AS_TEXT)], CREDENTIAL_TEXT_FIELD
+    if CREDENTIAL_FIELD in message:
+        source, field = message.split(CREDENTIAL_FIELD, 1)
+        return source, field
+    return None
 SENSITIVE_NAME = re.compile(
     r"^(?:\.env(?:\..*)?|id_[^/]+|.*(?:credential|secret|token|password|private[-_]?key).*|.*\.(?:pem|key|p12|pfx|crt))$",
     re.IGNORECASE,
@@ -119,13 +143,46 @@ def artifact_unreadable(root: Path, path: Path, reason: str, errors: list[str], 
     if rel not in issues_list:
         issues_list.append(rel)
     try:
+        from package_checks_content import feishu_lines_context, mask_comments
         with path.open(encoding="utf-8", errors="replace") as handle:  # 逐行扫描，大文件不整份读进内存
+            feishu = feishu_lines_context(handle)  # v1.7.6 r2 #12、批次二 P2 #2：整份文件里有带代号的飞书专有标签（注释里的不算）
+        with path.open(encoding="utf-8", errors="replace") as handle:
+            in_comment = False
             for line in handle:
-                if text_has_secret(line):
-                    errors.append(f"{rel} 中疑似凭据（无法按 JSON 读取，按文本检查）")
+                masked, in_comment = mask_comments(line, in_comment)
+                if text_has_secret(line, feishu_context=feishu, masked=masked):
+                    errors.append(credential_text_message(rel))
                     return
     except OSError:
         return
+
+
+def source_original_errors(root: Path) -> list[str]:
+    """v1.7.6 H11：单跑项目校验（及正式移交检查）时，已登记的正式来源（phase3 来源登记）当前版的原件或全量提取记录缺失、被改 → 报错。
+    此前登记表里引用的文件不存在只告警（靠分派错误兜着，v1.7.3 F05 后分派已结束就不再兜）。续做状态（current_only）不在这里报，
+    仍按受影响任务判断（正式材料问题只阻断依赖它的任务，见 workspace_resume.formal_problems），避免一处丢失挡住所有任务。"""
+    try:
+        from phase3_sources import catalog, file_valid
+        sources = catalog(root).get("sources", {})
+    except ImportError as exc:
+        return [f"正式来源核对程序缺失（phase3_sources.py：{exc}），来源原件没法核对：工作包可能不完整，请重新放入完整的统一包"]
+    except (OSError, ValueError) as exc:  # WorkflowError 是 ValueError 的子类
+        return [f"正式来源登记读不出来，来源原件没法核对：{exc}"]
+    out = []
+    for source_id, history_items in sorted(sources.items()) if isinstance(sources, dict) else []:
+        meta = history_items[-1] if isinstance(history_items, list) and history_items else None
+        if not isinstance(meta, dict):
+            out.append(f"正式来源 {source_id} 的登记不完整，来源原件没法核对")
+            continue
+        try:  # B3P #2：登记里的路径越界 / 不安全时逐条报，不让整次校验崩掉
+            valid = file_valid(root, meta) and file_valid(root, meta.get("original"))
+        except (OSError, ValueError, TypeError, KeyError) as exc:
+            out.append(f"正式来源 {source_id} 的登记路径无效（{exc}）；依赖它的任务须暂停：按正式流程重新登记来源并重新审核受影响成果")
+            continue
+        if not valid:
+            out.append(f"正式来源 {source_id} 的原件或全量提取记录已改变或丢失（{(meta.get('original') or {}).get('path', '未提供')}）；"
+                       "依赖它的任务须暂停：恢复原件，或按正式流程重新登记来源并重新审核受影响成果")
+    return out
 
 
 def registered_requests(root: Path) -> dict[str, str]:
@@ -225,17 +282,36 @@ def inspect_structured_data(
             message = f"{source} 引用目标不存在: {value}"
             (errors if value in required_paths else warnings).append(message)
     for key_path in walk_sensitive_keys(data):
-        errors.append(f"{source} 中疑似凭据字段: {key_path}")
+        errors.append(credential_field_message(source, key_path))
 
 
 @__import__('yunxing_rizhi').observed('validate_project')
-def check(root: Path, current_only=False) -> tuple[list[str], list[str], dict[str, Any]]:
+def check(root: Path, current_only=False, confirmed=True) -> tuple[list[str], list[str], dict[str, Any]]:
+    """confirmed=False（v1.7.6 H02）：不套用“已确认误报”登记，返回原始判定（误报登记命令核对用）。
+    默认套用登记：启动检查、续做状态（workspace_resume）与正式移交检查（handoff_inspection 的 inspect / prepare / accept）
+    都经这里，同一口径——登记过且文件指纹没变的一处不阻断，改记“已确认误报”提示（r2 #3 裁定：移交也放行）。"""
+    errors, warnings, capabilities = _check(root, current_only)
+    if confirmed:
+        try:
+            from wubao_dengji import apply as confirmed_false_alarms
+        except ImportError:  # 缺这个模块时不放过任何一处（比放过更严）；有登记记录时如实提示（r2 #5）
+            if (root / "project/records/false-alarms.jsonl").is_file():
+                warnings.append("误报登记程序缺失（scripts/wubao_dengji.py），已登记的误报未生效、照常拦；升级整包替换后再看")
+            return errors, warnings, capabilities
+        errors, notes, accepted = confirmed_false_alarms(root, errors)
+        warnings.extend(notes)
+        if accepted:
+            capabilities["confirmed_false_alarms"] = accepted
+    return errors, warnings, capabilities
+
+
+def _check(root: Path, current_only=False) -> tuple[list[str], list[str], dict[str, Any]]:
     errors: list[str] = []
     warnings: list[str] = []
     capabilities: dict[str, Any] = {}
 
     runtime_required = set(runtime_requirements_for_root(root))
-    optional_generation_files = set(STANDALONE_RUNTIME_FILES + PROJECT_MEMORY_RUNTIME_FILES + V175_RUNTIME_FILES)
+    optional_generation_files = set(STANDALONE_RUNTIME_FILES + PROJECT_MEMORY_RUNTIME_FILES + V175_RUNTIME_FILES + V176_RUNTIME_FILES)
     required_files = [relative for relative in REQUIRED_FILES
                       if relative not in optional_generation_files or relative in runtime_required]
     for relative in required_files:
@@ -306,7 +382,7 @@ def check(root: Path, current_only=False) -> tuple[list[str], list[str], dict[st
                     # G10（v1.7.5）：登记成功后移入“已用”的请求只是存档，不再核对其中引用（疑似凭据仍阻断）；
                     # 返修：仍留在 登记请求/ 下、但请求编号已在任务记录里登记过的旧请求同样只查疑似凭据，不自动移动
                     for key_path in walk_sensitive_keys(data):
-                        errors.append(f"{path.relative_to(root)} 中疑似凭据字段: {key_path}")
+                        errors.append(credential_field_message(str(path.relative_to(root)), key_path))
                     continue
                 local_errors = []
                 inspect_structured_data(
@@ -376,6 +452,8 @@ def check(root: Path, current_only=False) -> tuple[list[str], list[str], dict[st
             except (OSError, ValueError) as exc:
                 errors.append(f"记录文件无法读取 {path.relative_to(root)}: {exc}")
 
+    if not current_only:
+        errors.extend(source_original_errors(root))
     try:
         from current_dependencies import dispatch_issues
         dispatch = dispatch_issues(root,current_only=current_only)
@@ -419,7 +497,7 @@ def check(root: Path, current_only=False) -> tuple[list[str], list[str], dict[st
             if path.suffix == ".toml":
                 config = load_toml(path)
                 for key_path in walk_sensitive_keys(config):
-                    errors.append(f"{relative} 中疑似凭据字段: {key_path}")
+                    errors.append(credential_field_message(relative, key_path))
             else:
                 load_json(path)
         except (OSError, ValueError, tomllib.TOMLDecodeError, json.JSONDecodeError) as exc:

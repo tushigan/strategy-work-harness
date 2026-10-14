@@ -1,21 +1,21 @@
 {
   "name": "策略师工作包（Codex / Claude Code 统一包）",
   "repository": "https://github.com/tushigan/strategy-work-harness",
-  "version": "1.7.5",
-  "released": "2026-10-11",
+  "version": "1.7.6",
+  "released": "2026-10-14",
   "package_dir": "策略师工作包",
   "package_inventory": "策略师工作包/package-inventory.json",
-  "package_inventory_sha256": "39dca03f308412fe6a17835a982c48dcbdebd9a41702930ed2f0d4ae2913f932",
+  "package_inventory_sha256": "6a07506db056e2a0e4ebe899da8672cf68e565542bc8cd69bb2a3681b31bc8ca",
   "release_zip": {
-    "name": "strategist-harness-v1.7.5-20261011.zip",
-    "url": "https://github.com/tushigan/strategy-work-harness/releases/download/v1.7.5/strategist-harness-v1.7.5-20261011.zip",
-    "sha256": "2398e470c298a9529b980f8419375c2d736871d09444e5bebf51d5d3807181c2",
-    "bytes": 64591983,
-    "files": 636,
+    "name": "strategist-harness-v1.7.6-20261014.zip",
+    "url": "https://github.com/tushigan/strategy-work-harness/releases/download/v1.7.6/strategist-harness-v1.7.6-20261014.zip",
+    "sha256": "ee7c66ef543a06a67d3479966976b12783af7be15f355d175a58f39903733073",
+    "bytes": 64688152,
+    "files": 645,
     "zip_root": "统一包",
-    "note": "与开发仓库定稿包 策略师工作包-统一版-v1.7.5-定稿-20261011.zip 逐字节相同，仅附件名改为英文（GitHub 会改写中文附件名）"
+    "note": "与开发仓库定稿包 策略师工作包-统一版-v1.7.6-定稿-20261014.zip 逐字节相同，仅附件名改为英文（GitHub 会改写中文附件名）"
   },
-  "git_tag": "v1.7.5",
+  "git_tag": "v1.7.6",
   "requirements": {
     "python": ">=3.11",
     "hosts": [
@@ -36,7 +36,8 @@
       "a7e28b7af38330676c8c4e45c7ca2d8b432622f6ec07354781b7409a0e0a68b7": "1.7.3",
       "fbe96d2d38ddeaa27cb6ef7bf21ba04b011d5d61962b8830f2d8c4b829b28126": "1.7.2",
       "66118d46d38137496ee9cb712f253deba124b991e38f5fbc3fb1731414f76d12": "1.7.4",
-      "39dca03f308412fe6a17835a982c48dcbdebd9a41702930ed2f0d4ae2913f932": "1.7.5"
+      "39dca03f308412fe6a17835a982c48dcbdebd9a41702930ed2f0d4ae2913f932": "1.7.5",
+      "6a07506db056e2a0e4ebe899da8672cf68e565542bc8cd69bb2a3681b31bc8ca": "1.7.6"
     },
     "note": "fbe96d2d… 为 v1.7.2 候选 r2（代码与 v1.7.2 定稿逐字节相同，只差 README 版本记录与一处注释），按 1.7.2 处理"
   },
@@ -56,6 +57,11 @@
     ]
   },
   "history": [
+    {
+      "version": "1.7.6",
+      "date": "2026-10-14",
+      "note": "遗留问题全修 + 新增“产品矩阵策略”：飞书文档对象代号不再被当成密钥、已确认误报可登记（只存字段指纹）、最终版与检核措辞更准、检核派工口径统一、检核基线副本随登记自动整理；新增产品矩阵技能（矩阵计划、市场与品类研判、选品判断、产品角色、产品卡、接产品线测算平台取数并存档快照、角色与演示稿数字核对、接入逐字稿 / 演示稿 / 独立检核 / 对外交付）。包内不做任何计算，数字只来自平台；提交审核、撤回、删除只由策略师本人在平台网页上操作。在 Claude Code 上用真实平台走通，Codex 上未实测。升级前不需要特别预扫（v1.7.5 起的凭据判定仅对飞书文档对象代号放宽）；新建交接记录放 project/records/"
+    },
     {
       "version": "1.7.5",
       "date": "2026-10-11",

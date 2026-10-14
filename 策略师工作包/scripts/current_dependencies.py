@@ -115,11 +115,11 @@ def dispatch_issues(root,current_only=False):
             ended=[pair for pair in ended if pair not in live]
         retired=[pair for pair in refs if pair not in live and pair not in ended]
         prefix=f"分派 {item['dispatch_id']}："
-        current.extend(prefix+x for x in reference_issues(root,live))
+        current.extend(prefix+x for x in reference_issues(root,live,archived))
         for label,ref in ended:
-            historical.extend(prefix+'分派已结束，之后 '+x+'（只记历史；当前引用由任务自身核对）' for x in reference_issues(root,[(label,ref)]))
+            historical.extend(prefix+'分派已结束，之后 '+x+'（只记历史；当前引用由任务自身核对）' for x in reference_issues(root,[(label,ref)],archived))
         if not current_only:
-            historical.extend(prefix+x for x in reference_issues(root,retired))
+            historical.extend(prefix+x for x in reference_issues(root,retired,archived))
         else:
             # Daily recovery never hashes unrelated old media. Missing references and
             # known version replacements are cheap to explain; other history is deferred.

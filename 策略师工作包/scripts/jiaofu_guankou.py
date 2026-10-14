@@ -124,19 +124,22 @@ def review_state(root, task_id, light=False):
         try:
             from phase6_events import events as review_events, decision_valid
             from phase6_targets import catalog
-            target = catalog(root)[f"standalone/{task_id}"]["target"]
+            item = catalog(root)[f"standalone/{task_id}"]
+            target = item["target"]
             records = [r for r in review_events(root, "standalone_review") if r.get("target") == target]
             last = records[-1] if records else None
             if last and last.get("status") in {"passed", "passed_with_yellow"} and decision_valid(root, last):
-                # F07（v1.7.3）：再按 gate 的当前规则做静态判断（报告格式与视觉证据字段），不渲染、不读来源原件；
-                # 过不了就不说“有效”，与发客户 / 导出时 gate 的口径一致。
+                # F07（v1.7.3）：再按 gate 的当前规则做静态判断，不渲染、不读来源原件；过不了就不说“有效”。
+                # v1.7.6 H11：与 gate 共用 standalone_review.static_gate_problem——报告原件指纹（上面 decision_valid）、
+                # 检核员身份、模拟检核、派工用途（以登记时核对的为准）、报告格式与视觉证据字段。
                 from phase2_store import read_json
-                from standalone_visual import static_problem
-                reason = static_problem(root, catalog(root)[f"standalone/{task_id}"]["meta"], read_json(local(root, last["evidence"]["path"])))
+                from standalone_review import static_gate_problem
+                reason = static_gate_problem(root, target, item, read_json(local(root, last["evidence"]["path"])), last)
                 if reason:
                     return {"reviewed": False, "record_id": last["record_id"], "reason": reason,
                             "review_revision": target.get("version"), "review_date": str(last.get("created_at", ""))[:10]}
-                return {"reviewed": True, "record_id": last["record_id"], "checked": "记录与报告原件、视觉证据字段（resume 轻量核对）"}
+                return {"reviewed": True, "record_id": last["record_id"],
+                        "checked": "记录与报告原件、检核员身份、派工用途、视觉证据字段（resume 轻量核对，与 gate 共用身份、用途、格式与视觉字段判断）"}
             return {"reviewed": False}
         except (ValueError, OSError, KeyError, IndexError):
             return {"reviewed": False}
@@ -276,6 +279,8 @@ def status(root, task_id, light=False, file_issues=None):
                  f"但按当前规则不完整：{review['reason']}；发客户、导出前须重检或补视觉证据")
     elif waivers:
         label = "该版本未检核，原因：" + "、".join(sorted({waiver_label(w) for w in waivers}))
+    elif memory_only_since_pass(root, task_id):
+        label = "该版本未检核（只接受了新的项目记忆、成品没变；发客户前仍要再检查一次，会接着上次的结果准备）"
     else:
         label = "该版本未检核"
     pending = _tradeoffs(root, task_id)
@@ -326,6 +331,70 @@ def pptx_checks(root, current, sent):
     return out
 
 
+def _has_platform_page(root, current, sent):
+    """交付物（或选定的对外导出文件）里有没有登记过的平台提报页（按文件指纹对）。读不出来就当没有，不拦发客户。"""
+    try:
+        from pingtai_kuaizhao import snapshots
+        pages = {s["html"]["sha256"] for s in snapshots(root)}
+        if not pages:
+            return False
+        shas = {sha for _, sha in current["deliverables"]} | {f.get("sha256") for f in (sent or {}).get("files", []) if isinstance(f, dict)}
+        return bool(pages & shas)
+    except (ImportError, OSError, ValueError, KeyError, TypeError):
+        return False
+
+
+def platform_recheck_words():
+    """“需复核”标签 → 发客户被拦时给策略师的短说法。全盘细查返修 P2-4：标签从平台快照模块导入，不在这里抄字面量（标签改了不会悄悄失配）。"""
+    from pingtai_kuaizhao import STALE_LABEL, UNVERIFIED_LABEL, CHANGED_LABEL, COMPETITORS_LABEL
+    return {STALE_LABEL: "平台上的数据在你核对之后又更新了", UNVERIFIED_LABEL: "已绑定，但核对没通过",
+            CHANGED_LABEL: "核对之后这份文件又被改过", COMPETITORS_LABEL: "核对之后竞品对照表又被改过"}
+
+
+def platform_recheck_names(rows):
+    words = platform_recheck_words()
+    return "、".join(f"{r['path'].rsplit('/', 1)[-1]}（{words.get(r['label'], r['label'])}）" for r in rows)
+
+
+def _platform_unbound_note(root, task_id, current):
+    """U2（全盘细查返修）：同一任务以前的版本有交付物绑定过平台快照、这一版的交付物一个都没绑定 → 提醒一次（不拦；从没绑定过不提醒）。
+    记录读不出来时不提醒（拦不拦由 _platform_recheck 管）。"""
+    try:
+        from pingtai_kuaizhao import _events as platform_events, LOG as PLATFORM_LOG
+        if not local(root, PLATFORM_LOG).exists():
+            return None
+        bound = {e["path"] for e in platform_events(root) if e["event"] == "bind" and e.get("kind") in {"deck", "matrix"}}
+        now_paths = {d for d, _ in current["deliverables"] if isinstance(d, str)}
+        before = {d for event in _versions(root, task_id).values() for d, _ in _files(event) if isinstance(d, str)} - now_paths
+    except (ImportError, WorkflowError, OSError, ValueError, KeyError, TypeError):
+        return None
+    if not (before & bound) or (now_paths & bound):
+        return None
+    return ("这项工作以前的版本里有和平台测算数据绑定核对过的成果，这一版的交付物都没有和平台快照核对；"
+            "如果里面有平台的价格、规格、利润，发之前先核对一下")
+
+
+def _platform_recheck(root, current):
+    """交付物里有绑定了平台快照的成果（演示稿、矩阵表），但它现在“需复核”（平台数据更新了、上次核对没通过、核对后文件又被改过）→ 返回这些行。
+    没绑定过的不拦（本包不知道它含不含平台数字）；从没登记过平台快照（没有记录文件）也不拦。
+    v1.7.6 W8：记录文件在、却读不出来（损坏、格式不对）时不放行——拒绝记发客户，先修好记录或重新核对（批次四曾吞掉异常放行）。"""
+    try:
+        from pingtai_kuaizhao import needs_recheck, LOG as PLATFORM_LOG
+    except ImportError:
+        return []
+    if not local(root, PLATFORM_LOG).exists():
+        return []
+    paths = {d for d, _ in current["deliverables"] if isinstance(d, str)}
+    try:
+        return [r for r in needs_recheck(root) if r["path"] in paths]
+    except (WorkflowError, OSError, ValueError, KeyError, TypeError) as exc:
+        raise WorkflowError(
+            "这一版还不能记为已发给客户：平台快照的记录读不出来，没法确认里面的价格、规格、利润和平台对得上。"
+            "先把这份记录修好（或从备份恢复），再重新核对、绑定，之后再记发客户。"
+            f"技术附录（给 Agent）：{PLATFORM_LOG} 存在但读取失败（{type(exc).__name__}: {str(exc)[:200]}）；"
+            "v1.7.6 W8 起不再当作没有绑定放行。不改原件：核对损坏行后修复，或重新 register / bind（bind 当场核对）。") from exc
+
+
 def deliver(root, task_id, to, actor, words=None, export_record=None, pptx_words=None):
     from registration_guard import actor_check
     actor_check(actor); text(to, "发送对象")
@@ -345,8 +414,10 @@ def deliver(root, task_id, to, actor, words=None, export_record=None, pptx_words
         else:
             others = sorted({waiver_source(e) for e in rows if e["event"] == "waiver" and e["task_id"] == task_id
                              and e["fingerprint"] == current["fingerprint"] and waiver_source(e) != "strategist"})
+            memory_only = memory_only_since_pass(root, task_id)
             raise WorkflowError(
                 "这一版还不能记为已发给客户：这版没检查过，也没有你说的不用检查。"
+                + (memory_only_text(root, task_id, memory_only) if memory_only else "")
                 + ("已记下的“检查没跑成”或“事后补登记”只说明为什么没检查，不能当作发给客户的依据。" if others else "")
                 + "三条出路：① 先做一次检查，通过后再记；② 你明确说一句“这版不用检查，直接发客户”之类的话，记下后再记"
                 "（只说过自己先看、不用检查的，不能用来发客户）；③ 这一版交给你之后派了背后检查，也可以记，会照实写“已交出、检查中”。"
@@ -356,7 +427,18 @@ def deliver(root, task_id, to, actor, words=None, export_record=None, pptx_words
                 "（自看豁免 self_view 不能用于对外交付；--source not_run / retroactive 的豁免不算发客户依据"
                 + ("，本版现有：" + "、".join(others) if others else "") + "）；"
                 f"③ 先交后检（v1.7.5）：这一版已交给策略师（jiaofu_guankou.py handover，在线改稿自动登记）并已派背后检核"
-                f"（jianhe_zhunbei.py --task-id {task_id} --behind）后也可 deliver，标签照实写“已交出、检核中”。")
+                f"（jianhe_zhunbei.py --task-id {task_id} --behind）后也可 deliver，标签照实写“已交出、检核中”。"
+                + ("（v1.7.6 H10：与最近一次检核通过的版本相比只是显式接受了 project/records 下的追加式记录；任务版本签名含来源指纹，"
+                   "接受新记忆即新版本，发客户前须再检核，jianhe_zhunbei 按增量准备）" if memory_only else ""))
+        recheck = _platform_recheck(root, current)
+        if recheck:
+            names = platform_recheck_names(recheck)
+            raise WorkflowError(
+                "这一版还不能记为已发给客户：里面绑定了产品线测算平台数字的成果还没和平台数据对上——" + names + "。"
+                "发出去的价格、规格、利润要和平台上最新保存的一致：先重新核对，核对通过后再记发客户。"
+                "技术附录（给 Agent）：交付物含已绑定平台快照的成果但绑定状态需复核（pingtai_kuaizhao.needs_recheck）："
+                + json.dumps([{k: r[k] for k in ("path", "kind", "bound_to", "latest", "label")} for r in recheck], ensure_ascii=False)
+                + "；演示稿运行 juzhen_hedui.py deck、矩阵表运行 juzhen_hedui.py roles，对得上后用 pingtai_kuaizhao.py bind 重新绑定到最新一版快照（bind 当场核对，通过才记已核对）")
         exports = [e for e in rows if e["event"] == "external_version" and e["task_id"] == task_id and e["fingerprint"] == current["fingerprint"]]
         if export_record:
             chosen = next((e for e in exports if e["record_id"] == export_record), None)
@@ -387,6 +469,8 @@ def deliver(root, task_id, to, actor, words=None, export_record=None, pptx_words
                                 + "；改好 PPTX 登记新版后再 deliver，或策略师确认差异本来就是她要的，用 --pptx-words \"<原话>\" 记下再 deliver")
         urls = [d for d, _ in current["deliverables"] if isinstance(d, str) and d.startswith(("http:", "https:"))]
         unchecked = [c for c in checks if c["status"] == "unchecked"]
+        platform_page = _has_platform_page(root, current, sent)
+        unbound_note = _platform_unbound_note(root, task_id, current)
         # 候选 r2 #7：检查发现的问题（红灯）策略师还没确认时照样可以记（G02 用户选 A），提示里把那条提醒原样再说一遍
         reds = [x for x in reminders(root, task_id) if x["level"] == "red"]
         # 候选 r3 #8：多条红灯时每条的技术附录拆出来，合并放在提示末尾（给策略师的部分连在一起读）
@@ -407,6 +491,9 @@ def deliver(root, task_id, to, actor, words=None, export_record=None, pptx_words
                                 + ("；可编辑的 PPT 和网页版有不一样的地方，你已确认本来就要这样（原话已记下）" if different else "")
                                 # 批次四开工补修 3：图表页对照一致时也说图表里的字没核对
                                 + "".join(f"；可编辑的 PPT 第 {n} 页有图表，图表里的字没有核对" for c in checks for n in c.get("chart_unchecked_pages") or [])
+                                # v1.7.6 批次三返修：交付里有平台导出的提报页时提醒看负责人、状态、审核意见（只提醒，不拦）
+                                + ("；这份交付里有平台导出的提报页：给客户前请看一眼页上的负责人、状态（草稿、待审核、审核通过等）和审核意见有没有保留、对不对" if platform_page else "")
+                                + (f"；{unbound_note}" if unbound_note else "")
                                 + red_note
                                 # 批次四开工补修 6：命令名放技术附录；候选 r3 #8：红灯提醒的技术附录也合并到这里，放在最后
                                 + ("\n\n## 技术附录（给 Agent）\n" + "\n".join(appendix) if appendix else "")})
@@ -449,6 +536,36 @@ def last_pass(root, task_id):
     return passed[-1] if passed else None
 
 
+def memory_only_since_pass(root, task_id):
+    """v1.7.6 H10（评估后保留“接受新记忆即新版本、发客户前须再检核”，只补指引）：当前版本与最近一次检核通过的版本相比，
+    只是接受了新的项目记忆这类只追加的记录（成品、原话、目标、其他来源与依据都没变）→ 返回那次通过的版本号，否则 None。"""
+    try:
+        record = last_pass(root, task_id)
+        if not record:
+            return None
+        from phase6_targets import standalone_versions
+        from standalone_budget import substantive
+        from task_validation import is_records_path
+        current, passed = _target(root, task_id)["version"], record["target"]["version"]
+        if passed == current:
+            return None
+        tasks = {number: e["task"] for e, number, _ in standalone_versions([e for e in history(root)[0] if e["task_id"] == task_id])}
+        before, now_task = tasks[passed], tasks[current]
+        if substantive(before) != substantive(now_task) or before["completion_evidence"] != now_task["completion_evidence"]:
+            return None
+        old = {r.get("path"): r.get("sha256") for r in before["sources"]}
+        changed = [r for r in now_task["sources"] if old.get(r.get("path")) != r.get("sha256")]
+        return passed if changed and all(is_records_path(r.get("path")) for r in changed) else None
+    except (KeyError, OSError, ValueError, TypeError, WorkflowError):
+        return None
+
+
+def memory_only_text(root, task_id, passed):
+    shown = shown_version(root, task_id, passed)
+    return ((f"上次检查通过的是第 {shown} 版；" if shown else "") +
+            "这一版只接受了新的项目记忆、成品没变，但新加的记忆可能和稿子里的说法对不上，按规则发客户前还要再检查一次（会接着上次的结果准备，不用从头查）。")
+
+
 def _reviewer_dispatches(root, task_id, active_only=True):
     from agent_dispatch import ACTIVE, read_log, replay
     return [d for d in replay(read_log(root)).values()
@@ -470,8 +587,10 @@ def progress(root, task_id, target=None):
 
 
 def _state(root, task_id, target):
-    """当前版本的背后检核状态：passed / passed_with_notes / found_issues / checking / not_checked。
-    候选 r5 #6：这一版最后一条结果没通过、之后又准备了还没结束的检核分派（重新检查）时也算 checking（标签与“正在检查”同一个判断）。"""
+    """当前版本的背后检核状态：passed / passed_with_notes / found_issues / insufficient / checking / not_checked。
+    候选 r5 #6：这一版最后一条结果没通过、之后又准备了还没结束的检核分派（重新检查）时也算 checking（标签与“正在检查”同一个判断）。
+    v1.7.6 H05：最后一条结果是“资料不够、没看完”（insufficient_evidence）单列 insufficient，标签照实说，不并进“发现问题”；
+    发客户关口对它的判定与 found_issues 相同（都算“已有结果”，behind_basis 只拒 not_checked），只改说法。"""
     mine = [r for r in _reviews(root, task_id) if r.get("target") == target]
     running = [d for d in _reviewer_dispatches(root, task_id) if d["review_target"] == target]
     if mine:
@@ -482,7 +601,7 @@ def _state(root, task_id, target):
             return "passed_with_notes", last
         if any(_after(d.get("prepared_at", ""), last.get("created_at", "")) for d in running):
             return "checking", None
-        return "found_issues", last
+        return ("insufficient" if last.get("status") == "insufficient_evidence" else "found_issues"), last
     if running:
         return "checking", None
     return "not_checked", None
@@ -517,6 +636,7 @@ def behind_basis(root, task_id, current):
 CHECKING_LABEL = "检核中（这次检核还没有结果，不算已检核）"
 _STATE_LABEL = {"checking": "已交出、" + CHECKING_LABEL,
                 "found_issues": "已交出，检核结果：发现问题（见给策略师的提醒），这一版未通过检核",
+                "insufficient": "已交出，检核结果：资料不够，没看完（见给策略师的提醒），这一版不算检查过，不代表一定有错",
                 "passed_with_notes": "已交出，检核结果：通过（有可改进处，见提醒）",
                 "passed": "已交出，检核结果：通过"}
 
@@ -595,7 +715,8 @@ def status_line(root, task_id, handed=None):
     gap = f"距上次检查通过隔 {since} 版。" if since else ("之前还没有哪一版通过检查。" if info.get("last_pass_version") is None else "")
     parts = [f"{_said(root, task_id, target['version'])}已交给你；"]
     parts.append({"passed": "这一版已经检查过，没问题。", "passed_with_notes": "这一版已经检查过，有几处可以改进的地方，见下面的提醒。",
-                  "found_issues": "这一版检查发现了问题，见下面的提醒。", "checking": "还在检查中，",
+                  "found_issues": "这一版检查发现了问题，见下面的提醒。",
+                  "insufficient": "这一版检查时资料不够，没看完，还不算检查过，见下面的提醒。", "checking": "还在检查中，",
                   "not_checked": "还没检查，"}[state])
     if state in ("checking", "not_checked"):
         parts.append(gap or "这一版之前的版本已检查通过。")
@@ -663,6 +784,9 @@ def _reminder_text(number, record, findings, serious):
     yellows = [f for f in findings if f["level"] == "yellow"]
     if record.get("status") == "insufficient_evidence" and not findings:
         what = f"第 {number} 版交给你之后在背后做了检查，但资料不够，没能看完，这一版还不算检查过。"
+    elif record.get("status") == "insufficient_evidence":  # v1.7.6 H05：资料不够又看到了问题，两件事都照实说
+        counts = "、".join(x for x in (f"{len(reds)} 处要更正的问题" if reds else "", f"{len(yellows)} 处可以改进的地方" if yellows else "") if x)
+        what = f"第 {number} 版交给你之后在背后做了检查，资料不够，没能看完，这一版还不算检查过；已经看到的部分里有 {counts}。"
     else:
         counts = "、".join(x for x in (f"{len(reds)} 处要更正的问题" if reds else "", f"{len(yellows)} 处可以改进的地方" if yellows else "") if x)
         what = f"第 {number} 版交给你之后在背后做了检查，发现{counts or '问题'}。"
@@ -691,7 +815,8 @@ def acknowledge(root, task_id, review_record_id, words, actor):
         item = pending[review_record_id]
         return _append(root, {"event": "reminder_ack", "task_id": task_id, "version": item["version"], "review_record_id": review_record_id,
                               "level": item["level"], "words": words, "actor": actor,
-                              "record": f"交出后检核：{'发现问题' if item['level'] == 'red' else '有可改进处'}，已提醒，策略师已确认"})
+                              "record": "交出后检核：" + ("资料不够，没看完" if item.get("review_status") == "insufficient_evidence"
+                                                         else "发现问题" if item["level"] == "red" else "有可改进处") + "，已提醒，策略师已确认"})
 
 
 # ---------------- v1.7.5 G06 先交付后补登记、G07 最终版补检 ----------------
@@ -974,13 +1099,33 @@ def deliver_retroactive(root, task_id, to, actor, words, sent_at, versions=None)
                    "basis": r["basis"], "status": r.get("status", "recorded"), "record_id": r["record_id"]} for r in out]
         # 候选 r3 #4：回显给策略师看的序号（记录里的 version 仍是内部号），内部号不同时技术附录写对应
         said = "、".join(f"第 {x['shown_version']} 版（{x['when']}）" for x in listed)
+        reminder = _retroactive_platform_note(root, [history_versions[n] for n in wanted])
         return {"status": "recorded", "task_id": task_id, "versions": wanted, "deliveries": listed,
-                "text": f"已补登记发给{to}：{said}。" + version_note(root, task_id, wanted)}
+                **({"platform_reminder": reminder} if reminder else {}),
+                "text": f"已补登记发给{to}：{said}。" + (reminder or "") + version_note(root, task_id, wanted)}
+
+
+def _retroactive_platform_note(root, version_events):
+    """U1（全盘细查返修）：补登记记的是已经发生的发送，不拦；但交付物里有绑定了平台快照、现在“需复核”的成果时提醒一句。记录读不出来也提醒核实不了。"""
+    try:
+        from pingtai_kuaizhao import needs_recheck, LOG as PLATFORM_LOG
+        if not local(root, PLATFORM_LOG).exists():
+            return None
+        paths = {d for event in version_events for d, _ in _files(event) if isinstance(d, str)}
+        rows = [r for r in needs_recheck(root) if r["path"] in paths]
+    except ImportError:
+        return None
+    except (WorkflowError, OSError, ValueError, KeyError, TypeError):
+        return "提醒：平台快照的记录读不出来，没法确认发出去的价格、规格、利润和平台对得上，建议跟客户那边再核实一下。"
+    if not rows:
+        return None
+    return ("提醒：发出去的成果里有还没和平台数据对上的——" + platform_recheck_names(rows)
+            + "。这次只是照实补记，不拦；建议尽快核对，必要时跟客户更正。")
 
 
 def mark_final(root, task_id, words, actor, number=None, client_confirmed=False):
     """G07：策略师标“最终版”或转达“客户已确认”的版本（记原话）。同一任务只按最新一条（候选 r5）：之后这一版没有一次检查通过的记录时，
-    续做状态摆一行事实（见 recheck_state）。"""
+    续做状态摆一行事实（见 recheck_state）。v1.7.6 H04：每次调用都追加新的一条（带序号），不按内容去重。"""
     from registration_guard import actor_check
     actor_check(actor); text(words, "策略师原话")
     with serialized(root):
@@ -998,14 +1143,15 @@ def mark_final(root, task_id, words, actor, number=None, client_confirmed=False)
         echo = {"shown_version": shown,
                 "text": f"记下了：第 {shown} 版是{'客户已确认的版本' if client_confirmed else '你说的最终版'}。这只是记下你的话，不算检查通过。"
                         + version_note(root, task_id, [number])}
-        # 批次二返修 #8：客户确认是新事实——同一版先标最终版、后转达客户确认时追加一条，原来那句不丢；
-        # 候选 r5：只按最新一条去重（同一版、同一是否客户确认才原样返回），之后又定别的版本再定回来也是新记录
-        e = latest_final(events(root), task_id)
-        if e and e["version"] == number and bool(e.get("client_confirmed")) == bool(client_confirmed):
-            return {**e, "status": "existing", **echo}
+        # 批次二返修 #8：客户确认是新事实——同一版先标最终版、后转达客户确认时追加一条，原来那句不丢。
+        # v1.7.6 H04：每次标最终版都是新的一条（带本任务第几条最终版记录的序号 sequence，记录编号随之不同），旧记录保留；
+        # 同一版、同一句原话再标一次也是新记录——之前那条的“不用查”不沿用到新记录（同一任务只按最新一条，见 latest_final）。
+        sequence = 1 + sum(1 for e in events(root) if e["event"] == "final_version" and e["task_id"] == task_id)
+        if sequence > 1:
+            echo["text"] += "之前记过的最终版记录都保留，以这一条为准。"
         return {**_append(root, {"event": "final_version", "task_id": task_id, "version": number, "revision": history_versions[number]["revision"],
                                  "fingerprint": digest(files), "client_confirmed": bool(client_confirmed), "words": words, "actor": actor,
-                                 "notice": "只记录策略师说这是最终版 / 客户已确认，不是检核通过"}), **echo}
+                                 "sequence": sequence, "notice": "只记录策略师说这是最终版 / 客户已确认，不是检核通过"}), **echo}
 
 
 def _after(a, b):
@@ -1062,18 +1208,28 @@ def recheck_state(root, task_id, final, *, rows=None):
     base = {"task_id": task_id, "version": number, "final_record_id": final["record_id"], "current_version": current,
             "same_as_current": same, "checking": checking, "client_confirmed": bool(final.get("client_confirmed")),
             "active_dispatches": active, "passed_review": passed[-1]["record_id"] if passed else None,
-            "dont_record": dont[-1]["record_id"] if dont else None}
+            "dont_record": dont[-1]["record_id"] if dont else None, "files_changed_since_registered": False}
     if passed or dont:
         return {**base, "show": False, "text": None, "appendix": ""}
     K, M = _said(root, task_id, number), _said(root, task_id, current)
+    stale = _stale(root, target) if same else None
+    base["files_changed_since_registered"] = bool(stale)
     text = f"你定为最终版的{K}（{'客户手上这一版' if final.get('client_confirmed') else '你定的这一版'}）还没有一次检查通过的记录。"
-    if same:
+    if same and stale and checking:  # r2 #13：已有检核在跑——先说在查哪一版，再说改动不在这次检查里
+        text += (f"{K}正在检查（查的是登记时的那份）；但这一版的成品或用到的资料登记之后又被直接改过或删了，这些改动不在这次检查里："
+                 "要先把改动登记成新的一版（或把文件恢复原样）。不用查就告诉我，这行就不再出现。")
+    elif same and stale:  # v1.7.6 H03：成品或来源登记后被直接改过或删了，派检查会被拒，先登记新版
+        text += "这一版的成品或用到的资料登记之后被直接改过或删了，现在派不了检查：要先把改动登记成新的一版（或把文件恢复原样）。不用查就告诉我，这行就不再出现。"
+    elif same:
         text += "这一版正在检查，结果出来会照常告诉你。" if checking else "要查就照平常派背后检查；不用查就告诉我，这行就不再出现。"
     else:
         text += f"现在是{M}，{'正在检查' if checking else '没在检查'}；背后检查只能看现在的版本，看不到{K}本身。不用再提醒就告诉我。"
     misses = not_run_streak(root, task_id)
     if not same:
         why = "背后检核只看当前版本，补查不了这一版本身，不给命令"
+    elif stale:
+        why = (f"当前版本的成品或来源文件与登记不符（{stale}），检核准备会被拒：先回读并登记新版（standalone_tasks.py iterate / save）"
+               "或恢复文件，再准备检核；现在不给命令" + ("；进行中的检核查的是登记时的那份，改动不在其中" if checking else ""))
     elif active:
         why = "已有分派在跑，等它结束"
     elif [c for c in unregistered_candidates(root) if c["task_id"] == task_id]:
@@ -1087,6 +1243,18 @@ def recheck_state(root, task_id, final, *, rows=None):
     return {**base, "show": True, "text": text, "appendix": "技术附录（给 Agent）：" + "；".join(p for p in (why, pairs) if p) + "。"}
 
 
+def _stale(root, target):
+    """v1.7.6 H03：当前版本的成品或来源文件登记后被改过或删了（与检核准备同一个核对 phase6_targets.resolve）时返回原因，否则 None。"""
+    from phase6_targets import resolve
+    try:
+        resolve(root, target)
+    except WorkflowError as exc:
+        return str(exc)
+    except (OSError, ValueError, KeyError, TypeError) as exc:
+        return "文件读不出来：" + str(exc)[:120]
+    return None
+
+
 def final_checks(root, task_id=None):
     """续做状态、交付关口 status 里的最终版一行（G07，候选 r5）：每个任务只按最新一条最终版记录，出不出、说什么只由 recheck_state 定。"""
     rows = events(root)
@@ -1096,7 +1264,7 @@ def final_checks(root, task_id=None):
         s = recheck_state(root, tid, latest_final(rows, tid), rows=rows)
         if s["show"]:
             out.append({k: s[k] for k in ("task_id", "version", "final_record_id", "current_version", "checking", "client_confirmed",
-                                          "active_dispatches", "text", "appendix")})
+                                          "active_dispatches", "files_changed_since_registered", "text", "appendix")})
     return out
 
 

@@ -6,7 +6,7 @@ import re
 import stat
 from urllib.parse import unquote
 from runtime_structure import (DIAGNOSTIC_RUNTIME_FILES, PROJECT_MEMORY_RUNTIME_FILES, REQUIRED_RUNTIME_FILES,
-                               STANDALONE_RUNTIME_FILES, V175_RUNTIME_FILES, required_runtime_files_for)
+                               STANDALONE_RUNTIME_FILES, V175_RUNTIME_FILES, V176_RUNTIME_FILES, required_runtime_files_for)
 
 MANIFEST = "package-inventory.json"
 MATERIALS = "project/records/package-materials.json"
@@ -34,7 +34,7 @@ REQUIRED_FILES = (
 
 def required_package_files_for(names):
     runtime = set(required_runtime_files_for(names))
-    optional_generation_files = set(STANDALONE_RUNTIME_FILES + PROJECT_MEMORY_RUNTIME_FILES + DIAGNOSTIC_RUNTIME_FILES + V175_RUNTIME_FILES)
+    optional_generation_files = set(STANDALONE_RUNTIME_FILES + PROJECT_MEMORY_RUNTIME_FILES + DIAGNOSTIC_RUNTIME_FILES + V175_RUNTIME_FILES + V176_RUNTIME_FILES)
     return tuple(name for name in REQUIRED_FILES
                  if name not in optional_generation_files or name in runtime)
 RUNTIME_LOCK_FILES = {

@@ -101,6 +101,51 @@ def project_context(root: Path, task_id: str) -> tuple[dict, dict]:
     return memory_snapshot, task_snapshot
 
 
+MEMORY_CHANGED = "项目记忆版本已变化或来源失效，须重新准备分派"
+
+
+def memory_appended_for_review(root: Path, item: dict, expected_memory) -> bool:
+    """v1.7.6 H09：独立检核分派（含审查组成员）派出后，项目记忆只是在后面追加（派工时冻结的那份是当前记忆日志按行边界的前缀）——
+    放行交回、回读完成与续做状态。检核绑定的是登记时的任务版本与登记那部分记忆，追加的部分不在本次检核范围；
+    能否发客户只看登记的检核报告（gate），与这条分派走没走完无关，所以不放宽任何发客户条件。作者等其他分派、记忆被改写或删行仍拒。"""
+    if item.get("role") != "independent-reviewer" or not isinstance(expected_memory, dict):
+        return False
+    from project_memory_store import JOURNAL
+    from task_validation import appended_records
+    path = root / JOURNAL
+    try:
+        return path.is_file() and not path.is_symlink() and appended_records(path, JOURNAL, expected_memory.get("digest")) is not None
+    except OSError:
+        return False
+
+
+def memory_way_out(item: dict, root: Path | None = None) -> str:
+    """H09：记忆变了被拒时写明出路（技术附录给 Agent）。B3P #7：只多了空白行时单独说。"""
+    if item.get("role") == "independent-reviewer":
+        blank = False
+        if root is not None and isinstance(item.get("project_memory"), dict):
+            from project_memory_store import JOURNAL
+            from task_validation import blank_only_tail
+            try:
+                blank = (root / JOURNAL).is_file() and blank_only_tail(root / JOURNAL, JOURNAL, item["project_memory"].get("digest"))
+            except OSError:
+                blank = False
+        if blank:
+            return ("。这条检查是按旧的项目记忆派的，记忆文件后来只多了空白行，内容没变，但程序不把它当成单纯追加，这条检查不能接着用。"
+                    "技术附录（给 Agent）：记忆日志后面只多了空白行（H09 只放行有实际新增条目的追加）：先删掉多出来的空白行再试；"
+                    "不方便删就按下面办——检核员已写好报告的，主控照报告模板直接登记（standalone_review.py review），"
+                    "再 agent_dispatch.py cancel --reason-code inputs_changed 结束这条分派；还要检核就 cancel 后重跑 jianhe_zhunbei.py")
+        return ("。这条检查是按旧的项目记忆派的，记忆文件后来被改写或删了行（不是只在后面加），这条检查不能接着用。"
+                "技术附录（给 Agent）：检核分派只在记忆文件单纯追加时放行（H09）；现在是文件层面的改写、删行或截断：先核对原因。"
+                "（用记忆工具修改或退役已有事实在文件上是追加，检核派出期间算追加、不在此列。）检核员已写好报告的，"
+                "主控照报告模板直接登记（standalone_review.py review；登记会按登记指纹核对来源，改写后登记不进），"
+                "再 agent_dispatch.py cancel --reason-code inputs_changed 结束这条分派；确需采用新记忆，用 standalone_tasks.py save 显式 "
+                "accept_changed_references 登记新版，cancel 这条分派后重跑 jianhe_zhunbei.py 准备新的检核")
+    return ("。这项工作是按旧的项目记忆派出去的，记忆后来变了，交回的东西可能和新记忆对不上，要按新记忆重新派。"
+            "技术附录（给 Agent）：作者等非检核分派冻结派工时的记忆版本（H09 只放宽检核分派）。已交回或写好的成果留在成果目录不删；"
+            "用 agent_dispatch.py cancel --reason-code inputs_changed --reason \"<一句话>\" 结束这条分派，再按新记忆重新准备分派（prepare）")
+
+
 def verify_context(root: Path, item: dict) -> None:
     verify_refs(root, item)
     expected_memory = item.get("project_memory")
@@ -114,8 +159,8 @@ def verify_context(root: Path, item: dict) -> None:
         from incremental_review import current_input
         current_input(root,item['review_target'])
     current_memory, current_task = project_context(root, item["task_id"])
-    if expected_memory != current_memory:
-        raise WorkflowError("项目记忆版本已变化或来源失效，须重新准备分派")
+    if expected_memory != current_memory and not memory_appended_for_review(root, item, expected_memory):
+        raise WorkflowError(MEMORY_CHANGED + memory_way_out(item, root))
     if expected_task and "business_signature" in expected_task:
         same = (expected_task.get("business_signature") == current_task.get("business_signature")
                 and expected_task.get("kind") == current_task.get("kind")
@@ -243,7 +288,7 @@ def validate_request(root: Path, request: dict) -> dict:
     if required is not None:
         if not isinstance(required, list) or not required:
             raise WorkflowError("required_reading 须为 input_files 中必读文件的非空列表")
-        required_refs = [file_ref(root, value, "必读文件", number) if not (ledger and isinstance(value, (dict, str)) and
+        required_refs = [input_ref(root, value, number, "必读文件") if not (ledger and isinstance(value, (dict, str)) and
                          (value.get("path") if isinstance(value, dict) else value) == ledger["path"]) else
                          {"path": ledger["path"], "sha256": ledger["sha256"]} for number, value in enumerate(required, 1)]
         if any(r not in input_refs for r in required_refs):

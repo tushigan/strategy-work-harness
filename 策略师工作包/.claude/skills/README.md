@@ -16,6 +16,7 @@
 - `design-expression-review/SKILL.md`：按设计任务简报检查实际返回稿，逐页证据、区域和红黄绿依据。
 - `version-impact/SKILL.md`：跨阶段影响扫描、历史保留及重新对齐。
 - `knowledge-connectors/SKILL.md`：飞书/云端授权检索、项目归属、方法参考、精确授权回传和未知结果核对。
+- `product-matrix/SKILL.md`：产品矩阵策略——定起点（正推 / 反推）、市场研判、选品判断、矩阵与产品角色、产品卡，接产品线测算平台，登记平台快照，核对角色与演示稿数字（数字只来自平台，包内不做计算）。
 
 Codex 或 Claude Code 自然语言对话是主入口；结构及命令由主控执行，不要求策略师写 JSON。角色与流程见根目录 `AGENTS.md`，格式及边界见 `提案与设计检核运行说明.md`。角色文件只定义职责，主控显式调 fresh 独立实例，不通过换角色名自审。
 
@@ -23,4 +24,4 @@ Codex 或 Claude Code 自然语言对话是主入口；结构及命令由主控�
 
 方法适配来源见 `方法来源.json`。不依赖源 Skill 的本机绝对路径，这些项目内规则随包复制。跨阶段及结项操作见根目录 `项目检核与结项运行说明.md`；外部适配不代表真实账号已接通，方法参考不提供外部操作权限。本地检查不证明客户批准或真实返工改善。
 
-以上共 14 个业务 Skill，不包含开发技能。六个角色在 `.codex/agents/`：project-controller 总控，strategy-author 写策略内容，proposal-author 写逐字稿，deck-builder 制作演示稿，design-expression-reviewer 做设计诊断，independent-reviewer 检核所有正式产出。设计诊断须再由不同的中立实例核对原件与逐页证据，形成最终报告。`huashu-design` 样式必须接入 `html-deck` 的同一份正式 HTML，而非另产一个不受检核的视觉稿；PDF、自由多文件或 PPTX 都不自动继承 HTML 批准。
+以上共 15 个业务 Skill，不包含开发技能。六个角色在 `.codex/agents/`：project-controller 总控，strategy-author 写策略内容，proposal-author 写逐字稿，deck-builder 制作演示稿，design-expression-reviewer 做设计诊断，independent-reviewer 检核所有正式产出。设计诊断须再由不同的中立实例核对原件与逐页证据，形成最终报告。`huashu-design` 样式必须接入 `html-deck` 的同一份正式 HTML，而非另产一个不受检核的视觉稿；PDF、自由多文件或 PPTX 都不自动继承 HTML 批准。

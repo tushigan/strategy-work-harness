@@ -125,6 +125,21 @@ def records_prefix(path, relative, expected):
     return {"length":length,"added":added} if matched and added else None
 
 
+def blank_only_tail(path, relative, expected):
+    """v1.7.6 B3P #7：登记指纹是当前文件按行边界的前缀，之后只多了空白行（内容没变）→ True；其余返回 False。给报错说清“只多了空白行”用。"""
+    if not is_records_path(relative) or not isinstance(expected,str):
+        return False
+    h=hashlib.sha256();matched=h.hexdigest()==expected;extra=False;length=0
+    with Path(path).open('rb') as stream:
+        for line in stream:
+            if matched:
+                if line.strip():return False
+                extra=True;continue
+            h.update(line);length+=len(line)
+            matched=line.endswith(b'\n') and h.hexdigest()==expected
+    return bool(matched and extra)
+
+
 def appended_records(path, relative, expected):
     """F06（v1.7.3）：登记指纹是当前文件按行边界的某个前缀 → 返回之后追加的条数，否则 None（见 records_prefix）。"""
     found=records_prefix(path,relative,expected)

@@ -1,0 +1,10 @@
+{
+  "说明": "产品矩阵表模板：每款一行。sku 填平台里这一款的品项编号（拿不到编号就填平台里的款名）；price（零售价）和 net_weight（净含量，克）必须和绑定的平台快照一致，不要自己算、不要手抄旧数字——填完用 python scripts/juzhen_hedui.py roles --workspace . --matrix <本文件> 核对。角色只能是：形象款、引流款、利润款、基础盘。形象款与基础盘不做数字核对。引流款可以亏，不设亏损上限；利润款比平台算出的工厂净利率。group 可以不填（不填就是整张表为一组）。",
+  "snapshot_id": null,
+  "layout": "pyramid",
+  "items": [
+    {"sku": "（平台品项编号或款名）", "name": "（款名，虚构示例）", "role": "利润款", "group": null,
+     "positioning": "（一句话定位）", "spec": "（规格描述）", "price": null, "net_weight": null,
+     "channel": "（主推渠道）", "strategy": "（表现策略）"}
+  ]
+}

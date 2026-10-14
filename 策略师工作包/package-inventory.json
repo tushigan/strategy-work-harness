@@ -16,9 +16,9 @@
       "path": ".agents/skills/README.md",
       "kind": "file",
       "excluded": false,
-      "size": 3368,
+      "size": 3651,
       "mode": 420,
-      "sha256": "f3e8e0bfde2e97724406e1cc354a330d55633bf8b10e173030ab3e99703629dd"
+      "sha256": "a3dec06c1f0b40c744a62c87043c4135d6f0a8803de18dd31609d5021f549a30"
     },
     {
       "path": ".agents/skills/brand-house",
@@ -1791,9 +1791,9 @@
       "path": ".agents/skills/independent-review/SKILL.md",
       "kind": "file",
       "excluded": false,
-      "size": 12013,
+      "size": 13699,
       "mode": 420,
-      "sha256": "cc84951ae240186ddc6776e288883535cc5ac82351677d1518ea5cd4536a1bc7"
+      "sha256": "ad9b435db737a7a5e43222b70d99d76b9282df0ab37e751d0566956e67feed7f"
     },
     {
       "path": ".agents/skills/independent-review/references",
@@ -1833,6 +1833,19 @@
       "size": 3499,
       "mode": 420,
       "sha256": "b1f845c8b1627e07d1eac6471049aaa54c39c65678334df8b57f62c13c3c8b8d"
+    },
+    {
+      "path": ".agents/skills/product-matrix",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".agents/skills/product-matrix/SKILL.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 16699,
+      "mode": 420,
+      "sha256": "b1d396cd6b4ce12cf66acb43a4f49e39660fdeb8b3079b1422e9a3086b4c1222"
     },
     {
       "path": ".agents/skills/project-control",
@@ -1950,9 +1963,9 @@
       "path": ".agents/skills/方法来源.json",
       "kind": "file",
       "excluded": false,
-      "size": 2851,
+      "size": 3982,
       "mode": 420,
-      "sha256": "ee4ec6982686a6bafeef63f7e6dcd02be429b9fe58d8db42d61c46cffa1c2f0e"
+      "sha256": "f851192a25f3ddf93f7f8e72ffc63d6a86efad30a36628b4d66c976d260b5462"
     },
     {
       "path": ".claude",
@@ -1984,9 +1997,9 @@
       "path": ".claude/agents/independent-reviewer.md",
       "kind": "file",
       "excluded": false,
-      "size": 9734,
+      "size": 10654,
       "mode": 420,
-      "sha256": "2cfaf034b799d300206da6226cdf8e593eded41839193a78dda634c2c76cc733"
+      "sha256": "0cf13e8fcea1557036eb1c362139303b76b1fc4497fc8f294d2b36893194c69a"
     },
     {
       "path": ".claude/agents/project-controller.md",
@@ -2042,9 +2055,9 @@
       "path": ".claude/skills/README.md",
       "kind": "file",
       "excluded": false,
-      "size": 3368,
+      "size": 3651,
       "mode": 420,
-      "sha256": "f3e8e0bfde2e97724406e1cc354a330d55633bf8b10e173030ab3e99703629dd"
+      "sha256": "a3dec06c1f0b40c744a62c87043c4135d6f0a8803de18dd31609d5021f549a30"
     },
     {
       "path": ".claude/skills/brand-house",
@@ -3817,9 +3830,9 @@
       "path": ".claude/skills/independent-review/SKILL.md",
       "kind": "file",
       "excluded": false,
-      "size": 12013,
+      "size": 13699,
       "mode": 420,
-      "sha256": "cc84951ae240186ddc6776e288883535cc5ac82351677d1518ea5cd4536a1bc7"
+      "sha256": "ad9b435db737a7a5e43222b70d99d76b9282df0ab37e751d0566956e67feed7f"
     },
     {
       "path": ".claude/skills/independent-review/references",
@@ -3859,6 +3872,19 @@
       "size": 3499,
       "mode": 420,
       "sha256": "b1f845c8b1627e07d1eac6471049aaa54c39c65678334df8b57f62c13c3c8b8d"
+    },
+    {
+      "path": ".claude/skills/product-matrix",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".claude/skills/product-matrix/SKILL.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 16699,
+      "mode": 420,
+      "sha256": "b1d396cd6b4ce12cf66acb43a4f49e39660fdeb8b3079b1422e9a3086b4c1222"
     },
     {
       "path": ".claude/skills/project-control",
@@ -3976,17 +4002,17 @@
       "path": ".claude/skills/方法来源.json",
       "kind": "file",
       "excluded": false,
-      "size": 2851,
+      "size": 3982,
       "mode": 420,
-      "sha256": "ee4ec6982686a6bafeef63f7e6dcd02be429b9fe58d8db42d61c46cffa1c2f0e"
+      "sha256": "f851192a25f3ddf93f7f8e72ffc63d6a86efad30a36628b4d66c976d260b5462"
     },
     {
       "path": ".claude/宿主同步清单.json",
       "kind": "file",
       "excluded": false,
-      "size": 29533,
+      "size": 29645,
       "mode": 420,
-      "sha256": "ea4a14b604ae8d880bce2ec29abf9432d9a9119ae1ff8a4f97add6b7866145db"
+      "sha256": "b0c11e905c9140628a78a1ba5dc3ebd2b52eae283ae9d7b35e1ea0c39ed964cb"
     },
     {
       "path": ".codex",
@@ -4018,9 +4044,9 @@
       "path": ".codex/agents/independent-reviewer.toml",
       "kind": "file",
       "excluded": false,
-      "size": 9727,
+      "size": 10647,
       "mode": 420,
-      "sha256": "f7051e69dd4e137644074eb2884f406840287663acdf702fd90852ab120aee91"
+      "sha256": "a1e807912fe2ea763b743ec150fdac44feb9cb4504e22bce93032e49ccdc029b"
     },
     {
       "path": ".codex/agents/project-controller.toml",
@@ -4087,9 +4113,9 @@
       "path": "AGENTS.md",
       "kind": "file",
       "excluded": false,
-      "size": 90658,
+      "size": 118638,
       "mode": 420,
-      "sha256": "aea4df2ee733a081bfaa0aca273480ac54cb3405735e774982b0e412b7682575"
+      "sha256": "33aa7c9a57a7f5c0034fb6b146328e884ade84c562238791c7e135421931fe47"
     },
     {
       "path": "CLAUDE.md",
@@ -4103,9 +4129,9 @@
       "path": "README.md",
       "kind": "file",
       "excluded": false,
-      "size": 25884,
+      "size": 30536,
       "mode": 420,
-      "sha256": "066a014c9504868a18e2886115b2b123713822ef9a95503bf6df6b2f4600acc8"
+      "sha256": "bcf143426971ace1f4e61e1e69b099c63debaa70d4f30d89f593f43df941dd2f"
     },
     {
       "path": "project",
@@ -4279,9 +4305,9 @@
       "path": "scripts/agent_dispatch.py",
       "kind": "file",
       "excluded": false,
-      "size": 50599,
+      "size": 54591,
       "mode": 420,
-      "sha256": "a5dbba346afc3b4fc03575980580f2b61b61e915a058220b4c4c5e57317aaa8c"
+      "sha256": "220b06859e018fdc985bfb0b01224e9f357be4aaa5ca4dd1f759d40e68a36cbf"
     },
     {
       "path": "scripts/author_budget.py",
@@ -4295,9 +4321,9 @@
       "path": "scripts/banben_baoliu.py",
       "kind": "file",
       "excluded": false,
-      "size": 43919,
+      "size": 47627,
       "mode": 420,
-      "sha256": "206d721a8b2506e41f2745b233482ab333bb0cee613770c378f1f51daccf2ae1"
+      "sha256": "efc817428e7b80e9fb61e3b767a4ddf8739b093098e29e2a6639afaec57e0b33"
     },
     {
       "path": "scripts/brand_house.py",
@@ -4575,9 +4601,9 @@
       "path": "scripts/current_dependencies.py",
       "kind": "file",
       "excluded": false,
-      "size": 7664,
+      "size": 7691,
       "mode": 420,
-      "sha256": "6cb29d025f05e6539f0a2586a68bc8194bb28816b9617fd585a7f8ffbcd42540"
+      "sha256": "3b53d1307a8ff2b5ce9effacb7649a9048e661719cf231a15246967eb9f04d79"
     },
     {
       "path": "scripts/deck_browser.mjs",
@@ -4623,17 +4649,17 @@
       "path": "scripts/deck_page_render.py",
       "kind": "file",
       "excluded": false,
-      "size": 1919,
+      "size": 3288,
       "mode": 420,
-      "sha256": "1ce5e94136f2ae02ffab253194c3cc4632831545f83c2343893f826212e841f0"
+      "sha256": "bf66077d90d9c8c1b0cee9e3f59abaf9575fc18c757d44c7fbb198c177ddc059"
     },
     {
       "path": "scripts/deck_plan.py",
       "kind": "file",
       "excluded": false,
-      "size": 9328,
+      "size": 12109,
       "mode": 420,
-      "sha256": "b4bbf4ce16e9b25d311ccb2636e7620caebb9df06e100e6ee785c4c833ee1996"
+      "sha256": "ce5f62e6e2a33e1a560d376c3dfed732d8f3a3f8fc60d24e637d04a327350d12"
     },
     {
       "path": "scripts/deck_shots.mjs",
@@ -4687,9 +4713,9 @@
       "path": "scripts/dispatch_files.py",
       "kind": "file",
       "excluded": false,
-      "size": 9851,
+      "size": 11922,
       "mode": 420,
-      "sha256": "4e79be69f3b625bf1ff6a10ae6e84e3a4c14df2c65ca7a2bc1bdf090ffecfee4"
+      "sha256": "08272342ae694e3ae8bacef67cd7e227f5be82821f8ddbd63aeb314b5ddc623c"
     },
     {
       "path": "scripts/duiwai_daochu.py",
@@ -4823,9 +4849,9 @@
       "path": "scripts/jiaofu_guankou.py",
       "kind": "file",
       "excluded": false,
-      "size": 86343,
+      "size": 99872,
       "mode": 420,
-      "sha256": "d3d58f223b6bec319558e6a8e6c838c4b35fe64ca062bf74295ee56f445e455a"
+      "sha256": "f35237b8bf3b0f60125f28a051ebe0c3d5738eede09b822f35ac9135122ed3fb"
     },
     {
       "path": "scripts/jiaojie_shishi.py",
@@ -4844,6 +4870,14 @@
       "sha256": "40a074d04a609ee3d1c9d39234bcfa9258f347a792b3f81594299ca12329dae1"
     },
     {
+      "path": "scripts/juzhen_hedui.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 34348,
+      "mode": 420,
+      "sha256": "ca5138e5d53d2ff23986260e1f10f1bb04a1d8ca6b49cf9a1f3bdd9e9f5b0f94"
+    },
+    {
       "path": "scripts/knowledge_connectors.py",
       "kind": "file",
       "excluded": false,
@@ -4858,6 +4892,14 @@
       "size": 3715,
       "mode": 420,
       "sha256": "085643ddac952018b60562660dc8820291e9984218c4696c40c0b3cd1aa80f92"
+    },
+    {
+      "path": "scripts/matrix_plan.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 34026,
+      "mode": 420,
+      "sha256": "888a8180260cc5b54bf551e1f92819c9790ff5b0372e4200db1e65cb1e9d2dfb"
     },
     {
       "path": "scripts/mingan_xinxi.py",
@@ -4895,17 +4937,17 @@
       "path": "scripts/package_checks.py",
       "kind": "file",
       "excluded": false,
-      "size": 9019,
+      "size": 9060,
       "mode": 420,
-      "sha256": "3b925caadd7dd9924e9eefd1337dea9c28583bd9ad7d8c2d8b09babb1c311d05"
+      "sha256": "e553b7f4616bd53a559be16393a8016a380646c6591aeaf6354f35d46fa88a4c"
     },
     {
       "path": "scripts/package_checks_content.py",
       "kind": "file",
       "excluded": false,
-      "size": 19656,
+      "size": 25205,
       "mode": 420,
-      "sha256": "47982e1a4dc3376b8b8df08b5c3b67956f80a1c8066d67729e24d655523fd58a"
+      "sha256": "4d4fd13440567023fccdb936f23fc9818bc5b24dff24f59e15e4a97eafbad32d"
     },
     {
       "path": "scripts/package_checks_dependencies.py",
@@ -4927,9 +4969,9 @@
       "path": "scripts/package_checks_materials.py",
       "kind": "file",
       "excluded": false,
-      "size": 11374,
+      "size": 11581,
       "mode": 420,
-      "sha256": "45b063df9f6847cf202035377cff27459f743546356cda0fefe5843e73105a61"
+      "sha256": "8e592678885b83e95f68335140d8f87bc2a765950ebe30a37fc73fef659399e2"
     },
     {
       "path": "scripts/package_checks_office.py",
@@ -5127,9 +5169,17 @@
       "path": "scripts/phase6_targets.py",
       "kind": "file",
       "excluded": false,
-      "size": 9652,
+      "size": 9784,
       "mode": 420,
-      "sha256": "ddfa11841c61ddb358c8c98de031550f26f35e20d15cbef8244340844f2352d4"
+      "sha256": "ee73a2cc019cfb3a2ad5da4c2810548ef99f8560ef535b5a9973016d39db65f5"
+    },
+    {
+      "path": "scripts/pingtai_kuaizhao.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 48306,
+      "mode": 420,
+      "sha256": "e59b0d4d78747ef6865590d2f6d37e4d9b495a527aa6515d969e72f30a9a1e09"
     },
     {
       "path": "scripts/pptx_hedui.py",
@@ -5223,17 +5273,17 @@
       "path": "scripts/runtime_structure.py",
       "kind": "file",
       "excluded": false,
-      "size": 11954,
+      "size": 12745,
       "mode": 420,
-      "sha256": "a73164946e4fe93fcad897d4e2d6dd93d4a371fca21f03605b1fd09732eaed7a"
+      "sha256": "d280aa8c7f258b1db4a2bb96f8a102b4b45b33fa3e7a6d189bccab0727be40c2"
     },
     {
       "path": "scripts/shencha_zu.py",
       "kind": "file",
       "excluded": false,
-      "size": 22511,
+      "size": 22705,
       "mode": 420,
-      "sha256": "25ecbc325de15ad5449be1aadff512df0be2ff33f23a2e4d958cbccf7df0e43b"
+      "sha256": "59fcf813030b693e90a25c98f9e1435e4948f607f8bc062e79218ef3bebdff4d"
     },
     {
       "path": "scripts/shijue_zengliang.py",
@@ -5271,9 +5321,9 @@
       "path": "scripts/shuo_renhua.py",
       "kind": "file",
       "excluded": false,
-      "size": 20369,
+      "size": 21742,
       "mode": 420,
-      "sha256": "6e87a37f6ea33ee9a3d98d49b63a979570f4eecebc1caa53443ee7537844f982"
+      "sha256": "6d394bffa768162f95eae13bb8e13dd04f846bf205abbd696c19dd27f1f1aca3"
     },
     {
       "path": "scripts/source_verification.py",
@@ -5287,17 +5337,17 @@
       "path": "scripts/standalone_budget.py",
       "kind": "file",
       "excluded": false,
-      "size": 6479,
+      "size": 6964,
       "mode": 420,
-      "sha256": "a5d0960bfeca593ef01272da6cf718019bfb7e277f340c3ccc5bb451489769df"
+      "sha256": "a1576e3cec4275b901689188f7f10dda699091b5b3e16bfc629fb7261aab4c06"
     },
     {
       "path": "scripts/standalone_review.py",
       "kind": "file",
       "excluded": false,
-      "size": 8507,
+      "size": 10673,
       "mode": 420,
-      "sha256": "30abca5d47ed574da6e9f5a2c24f70f68b0658f23acd5a1de8d475fb17435375"
+      "sha256": "94857b6e414f2934a7a331d00a4394b567cad7047e421255ff85551f79cdb37a"
     },
     {
       "path": "scripts/standalone_store.py",
@@ -5311,17 +5361,17 @@
       "path": "scripts/standalone_tasks.py",
       "kind": "file",
       "excluded": false,
-      "size": 39980,
+      "size": 41416,
       "mode": 420,
-      "sha256": "ba6f704442c49948fc4a0315779eba375d4a88edf031f3319005a4fb884d9818"
+      "sha256": "6a7e483dbd89d7145f641822e2a6b970031348f0a604a232cde0cce423d8d509"
     },
     {
       "path": "scripts/standalone_visual.py",
       "kind": "file",
       "excluded": false,
-      "size": 11728,
+      "size": 12256,
       "mode": 420,
-      "sha256": "4ba3c330926dd80337263fec7fc9cd062091924496f6e6a469b418d5203768f2"
+      "sha256": "6fa1ba00259f8ca893b287e6336466053cf77f035153ea9ecfe90e22567d3246"
     },
     {
       "path": "scripts/sucai_ku.py",
@@ -5359,9 +5409,9 @@
       "path": "scripts/task_validation.py",
       "kind": "file",
       "excluded": false,
-      "size": 4919,
+      "size": 5656,
       "mode": 420,
-      "sha256": "f3d4f0ac7bf61e103a04c69cac42f556242af49b588555f86af840665289617f"
+      "sha256": "33f91d615df1d356294af0953a84dc8e3ccaea36fc6ffef8547b25ed8569b0b8"
     },
     {
       "path": "scripts/template_profile.py",
@@ -5383,9 +5433,9 @@
       "path": "scripts/validate_project.py",
       "kind": "file",
       "excluded": false,
-      "size": 25866,
+      "size": 31064,
       "mode": 420,
-      "sha256": "f91034a9aa1c4eebf1c9ccc9683d2503fad45839d7b67eaad175ecc7d74aae3b"
+      "sha256": "6dc092a620eb52248d4afb4d5f66f19f52320750dc4700eb9b0cb706272b6f4f"
     },
     {
       "path": "scripts/waibu_wendang.py",
@@ -5431,17 +5481,25 @@
       "path": "scripts/workspace_resume.py",
       "kind": "file",
       "excluded": false,
-      "size": 26937,
+      "size": 28674,
       "mode": 420,
-      "sha256": "9b1bf8ac2ba1d4f82be02414c5aeade8344e923b45c95ae5bdcd84d5e0ac67a8"
+      "sha256": "8bd3d2adc3638f0616f93e0fc9a10021c5ba135add83306ace3f3075db30e98f"
     },
     {
       "path": "scripts/workspace_status.py",
       "kind": "file",
       "excluded": false,
-      "size": 7644,
+      "size": 7739,
       "mode": 420,
-      "sha256": "3b1766db2f65638f3b7d438d8dd2ac88195ab791f1ef445900c81b98cbf97a82"
+      "sha256": "ee9ac11e91223f14d0655d47fb5fd261f4bc09e1f748ba10f758ffd5f09d2dfa"
+    },
+    {
+      "path": "scripts/wubao_dengji.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 17972,
+      "mode": 420,
+      "sha256": "fd0882d83bc5b87385f4aa3b6fd1e85edf76bdd0c668c478f3a786e436daf49b"
     },
     {
       "path": "scripts/xiugai_fenpai.py",
@@ -5516,9 +5574,17 @@
       "path": "templates/proposal-deck.html",
       "kind": "file",
       "excluded": false,
-      "size": 10959,
+      "size": 12117,
       "mode": 420,
-      "sha256": "420db3e79648c1deaa973620cd341d049439e7bfa046f21c101f60089fd28f1d"
+      "sha256": "9a6616b98846645c7d08025eca45612cde72146b3c7aeebb397e2b5c5ff47d31"
+    },
+    {
+      "path": "templates/产品矩阵表.json",
+      "kind": "file",
+      "excluded": false,
+      "size": 998,
+      "mode": 420,
+      "sha256": "35c292a2732071525f2d3bfa4441a41c69fd30ec66e4836dd60bad8245ac6ef0"
     },
     {
       "path": "templates/台账慎用说法.txt",
@@ -5527,6 +5593,14 @@
       "size": 1894,
       "mode": 420,
       "sha256": "ddc2b8e3313dd3f15a9081541c64f0c267ff57e97b3d62475e2556622de31db6"
+    },
+    {
+      "path": "templates/竞品对照表.json",
+      "kind": "file",
+      "excluded": false,
+      "size": 611,
+      "mode": 420,
+      "sha256": "ce442e84fc16628c9d7fc83c2847048680e1b4d3474b4b66057fdc76fbd2319d"
     },
     {
       "path": "templates/给策略师-交稿说明.md",
@@ -5561,6 +5635,14 @@
       "sha256": "80588e6788b1d38e8e799dce0547f7f8b135a9867f96ff64b64ba46bc1e5f8c0"
     },
     {
+      "path": "templates/选品打分表.json",
+      "kind": "file",
+      "excluded": false,
+      "size": 1818,
+      "mode": 420,
+      "sha256": "ef6eea1538c4556e7cafeba80c2041b9bf9034981d3f15e511d81c30fbc72f89"
+    },
+    {
       "path": "品牌屋HTML运行说明.md",
       "kind": "file",
       "excluded": false,
@@ -5572,9 +5654,9 @@
       "path": "外部连接说明.md",
       "kind": "file",
       "excluded": false,
-      "size": 8614,
+      "size": 10378,
       "mode": 420,
-      "sha256": "d1f1668097ed161c3df2e4417b704e297fcfb4b601c770723a40b777a4d1e6dd"
+      "sha256": "324b4874d77dd00b7a8b1b92271eb0a893eb6e241f18ca154d476acd80e0449a"
     },
     {
       "path": "工作包移交说明.md",
@@ -5582,15 +5664,15 @@
       "excluded": false,
       "size": 14396,
       "mode": 420,
-      "sha256": "4d272b9dffe83906912c05f03c1e566df188d136973976719f2df09db11ae9b0"
+      "sha256": "b95a1260ff4eb027eb1676c96c8bbbeac2b5995f466b9e0b60e830bf1b9bcbc9"
     },
     {
       "path": "工作能力与流程总览.md",
       "kind": "file",
       "excluded": false,
-      "size": 9899,
+      "size": 11814,
       "mode": 420,
-      "sha256": "c46f26f3bddee4b3508869ce2350df5a76a441c8156666f77235a2bf544ff0ea"
+      "sha256": "bec9c9365332c5d2a044329d3e6a50b3d23f11014bc031e090fdb8888cfedf32"
     },
     {
       "path": "提案与设计检核运行说明.md",
@@ -5614,15 +5696,15 @@
       "excluded": false,
       "size": 5898,
       "mode": 420,
-      "sha256": "e26e19a94989cf8a5efda0ca0ccb96b03783d66f064626a536a66fec2ca710f1"
+      "sha256": "9d634c18441b7125bfd9efa5ba032c4728b4535ffcb0b8347a1961cbe548dea1"
     },
     {
       "path": "运行环境与命令.md",
       "kind": "file",
       "excluded": false,
-      "size": 48114,
+      "size": 50446,
       "mode": 420,
-      "sha256": "65e6e86295258e3870a2312e56daac446155e1bb1428cd7b6b78903e5f907d59"
+      "sha256": "3d34d8fda6bfd8b730f2efaecf63aa583cd3d5d55f6b3b893bf4847a8e7a50b3"
     },
     {
       "path": "项目检核与结项运行说明.md",
@@ -5633,5 +5715,10 @@
       "sha256": "82061c947f5a9ae0b596af2c2f58a8a4e375cb954e2eb7d360904b94c7da27c1"
     }
   ],
-  "excluded_from_source": []
+  "excluded_from_source": [
+    {
+      "path": ".DS_Store",
+      "reason": "runtime_cache"
+    }
+  ]
 }

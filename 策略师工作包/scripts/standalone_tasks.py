@@ -125,6 +125,16 @@ def save(root, request, actor, *, _observations=None, _commit_observations=None,
                 os.fsync(stream.fileno())
             if (path.read_bytes() if path.exists() else b"") != raw:
                 raise WorkflowError("保存期间记录被修改，请重新读取；未覆盖原件")
+            # v1.7.6 H13：判定键与 phase6_targets.resolve 统一为路径——同一文件既登记为交付物、又以另一个指纹登记为来源 / 过程 / 决定引用，
+            # 检核登记会按交付物整文件核对它的每个指纹而必然失败；这里先拒，不写入一条之后登不了检核的记录
+            delivered_sha = {ref["path"]: ref["sha256"] for ref in normalized_task["deliverables"] if "path" in ref}
+            clash = sorted({ref["path"] for ref in normalized_task["sources"] + normalized_task.get("process_refs", [])
+                            + normalized_task.get("decision_refs", []) if ref.get("path") in delivered_sha
+                            and ref.get("sha256") != delivered_sha[ref["path"]]})
+            if clash:
+                raise WorkflowError("同一个文件既是来源又是交付物，但两处登记的版本不一样，这次没有登记。技术附录（给 Agent）："
+                                    + "、".join(clash) + " 在 sources / process_refs / decision_refs 与 deliverables 里指纹不同；"
+                                    "交付物按整文件核对，先把来源里的这条引用换成当前版本（accept_changed_references）或从交付物里拿掉，未写业务事件")
             commit_references = {ref["path"]: ref["sha256"] for ref in
                                  normalized_task["sources"] + normalized_task["deliverables"]
                                  + normalized_task.get("process_refs",[]) + normalized_task.get("decision_refs",[])
@@ -322,7 +332,8 @@ def live_next_action(root, task_id, recorded):
         return None
     said = {"checking": "背后检核已派出，结果出来告诉她", "passed": "背后检核已有结果：检查通过",
             "passed_with_notes": "背后检核已有结果：通过，有可改进处，见给策略师的提醒",
-            "found_issues": "背后检核已有结果：发现问题，先把给策略师的提醒转述给她"}.get(state)
+            "found_issues": "背后检核已有结果：发现问题，先把给策略师的提醒转述给她",
+            "insufficient": "背后检核已有结果：资料不够，没看完（不算检查过），先把给策略师的提醒转述给她"}.get(state)
     if not said:
         return None
     # adopt 登记的版本还没登记交出时照实说（交给她时当场登记交出）

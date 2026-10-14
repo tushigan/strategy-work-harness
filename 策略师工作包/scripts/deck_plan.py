@@ -8,7 +8,7 @@ import re
 import phase5_common as c
 
 NUMBERS = re.compile(r"[-+]?(?:(?:\d{1,3}(?:,\d{3})+|\d+)(?:\.\d+)?|\.\d+)(?:[eE][-+]?\d+)?")
-KINDS = {"cover", "points", "table", "chart", "image"}
+KINDS = {"cover", "points", "table", "chart", "image", "card", "pyramid"}  # v1.7.6 K7：产品卡页、金字塔页
 
 
 def text(value, label, limit=240):
@@ -57,6 +57,50 @@ def _table(table):
             or any(not isinstance(row, list) or len(row) != len(columns) for row in rows)):
         raise c.WorkflowError("每页表格须 2-4 列、1-6 行且行列一致；更多内容请拆页")
     return [text(v, "表格文字", 100) for v in [*columns, *(v for row in rows for v in row)]]
+
+
+def _card(card):
+    """v1.7.6 K7 产品卡页：角色、定位、渠道、表现策略，加 1—6 个平台字段（field 为平台字段名，value 为画面上的写法）。
+    画面数字照旧必须出现在引用的逐字稿原文里；这些数字与平台快照是否一致由 juzhen_hedui.py deck 核对。"""
+    fields(card, ("sku", "role", "positioning", "channel", "strategy", "facts"), ("snapshot",))
+    if "snapshot" in card:
+        text(card["snapshot"], "产品卡绑定的平台快照编号", 80)
+    sku = text(card["sku"], "产品卡品项", 60)
+    role = text(card["role"], "产品卡角色", 12)
+    if role not in {"形象款", "引流款", "利润款", "基础盘"}:
+        raise c.WorkflowError("产品卡角色须是形象款、引流款、利润款或基础盘")
+    facts = card["facts"]
+    if not isinstance(facts, list) or not 1 <= len(facts) <= 6:
+        raise c.WorkflowError("每张产品卡须有 1-6 个平台数据项")
+    output = [role, text(card["positioning"], "产品卡定位", 120), text(card["channel"], "产品卡渠道", 60), text(card["strategy"], "产品卡表现策略", 120)]
+    seen = set()
+    for fact in facts:
+        fields(fact, ("field", "label", "value"))
+        name = fact["field"]
+        if not isinstance(name, str) or not re.fullmatch(r"[A-Za-z][A-Za-z0-9]{0,39}", name) or name in seen:
+            raise c.WorkflowError("产品卡数据项的平台字段名须是字母数字、不重复")
+        seen.add(name)
+        output.extend((text(fact["label"], "产品卡数据项名称", 24), text(fact["value"], "产品卡数据项数值", 40)))
+    return sku, output
+
+
+def _pyramid(pyramid):
+    """v1.7.6 K7 金字塔页：2—4 层，由上到下；每层有名称、可选角色、1—4 个产品名。"""
+    fields(pyramid, ("layers",))
+    layers = pyramid["layers"]
+    if not isinstance(layers, list) or not 2 <= len(layers) <= 4:
+        raise c.WorkflowError("金字塔须 2-4 层")
+    output = []
+    for layer in layers:
+        fields(layer, ("name", "items"), ("role",))
+        output.append(text(layer["name"], "金字塔层名", 40))
+        if "role" in layer:
+            output.append(text(layer["role"], "金字塔层角色", 12))
+        items = layer["items"]
+        if not isinstance(items, list) or not 1 <= len(items) <= 4:
+            raise c.WorkflowError("金字塔每层须 1-4 个产品")
+        output.extend(text(v, "金字塔产品名", 40) for v in items)
+    return output
 
 
 def _chart(chart, refs):
@@ -118,15 +162,15 @@ def build(root, document, script_ref, plan):
     sections = {s["id"]: (i, s) for i, s in enumerate(document["sections"])}
     pages, assets, covered = [], {}, set()
     for number, entry in enumerate(candidates, 1):
-        fields(entry, ("kind", "title", "section_id", "bullets", "citations"), ("table", "chart", "image"))
+        fields(entry, ("kind", "title", "section_id", "bullets", "citations"), ("table", "chart", "image", "card", "pyramid"))
         kind, section = entry["kind"], entry["section_id"]
         if not isinstance(kind, str) or kind not in KINDS or ((number == 1) != (kind == "cover")):
             raise c.WorkflowError("第一张必须是唯一封面，内容页类型不支持")
         if (kind == "cover" and (section is not None or entry["title"] != document["title"])) or (
                 kind != "cover" and (not isinstance(section, str) or section not in sections)):
             raise c.WorkflowError("页面章节或封面标题与逐字稿不一致")
-        extra = {k for k in ("table", "chart", "image") if k in entry}
-        if extra != ({kind} if kind in {"table", "chart", "image"} else set()):
+        extra = {k for k in ("table", "chart", "image", "card", "pyramid") if k in entry}
+        if extra != ({kind} if kind in {"table", "chart", "image", "card", "pyramid"} else set()):
             raise c.WorkflowError("页面类型与表格、图表或图片结构不一致")
         title = text(entry["title"], "标题", 100)
         bullets = entry["bullets"]
@@ -140,6 +184,10 @@ def build(root, document, script_ref, plan):
             display.extend(_table(entry["table"]))
         elif kind == "chart":
             display.extend(_chart(entry["chart"], refs))
+        elif kind == "card":
+            display.extend(_card(entry["card"])[1])
+        elif kind == "pyramid":
+            display.extend(_pyramid(entry["pyramid"]))
         elif kind == "image":
             asset = _image(root, entry["image"])
             role = "asset-" + entry["image"]["sha256"]

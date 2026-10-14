@@ -43,12 +43,31 @@ DOTFILE = re.compile(r"\.[A-Za-z][A-Za-z0-9_\-.]*")
 VERSION = re.compile(r"v\d+(?:\.\d+)*")
 
 
+NAME_NUMBER = re.compile(r"([A-Za-z]{1,10})-(\d{1,6})")
+
+
+def name_number(word):
+    """v1.7.6 H08（批次一返修 r2 #11 收紧；批次二开工 P2 #1 再收紧）：引号里像产品名、型号的“名称-数字”（「iPhone-16」「Pixel-9」「gpt-5」）
+    按名称处理，列进引号内英文自查表、不报编号。只放过两种写法，数字都不以 0 开头：
+      1. 至少 3 个字母、大小写混写（「iPhone-16」「Pixel-9」）；
+      2. 至少 3 个小写字母接 1 位数字（「gpt-5」「qwen-3」）。
+    其余一律仍按编号照报（宁可多报）：数字 0 开头（「Task-001」「gpt-0」）、字母全大写（「GPT-4」「ST-001」）、
+    字母不到 3 个（含大小写混写，「st-12」「St-12」「Pr-3」）、全小写但数字多于 1 位（「abc-12」）。引号外一律照报（不看这条）。"""
+    match = NAME_NUMBER.fullmatch(word)
+    if not match or match.group(2).startswith("0"):
+        return False
+    letters, digits = match.groups()
+    if len(letters) < 3 or letters.isupper():  # B3P #9：大小写混写也要至少 3 个字母（「St-12」「Pr-3」照报）
+        return False
+    return len(digits) == 1 if letters.islower() else True
+
+
 def shaped(word):
     """像程序用的东西（候选 r4 #6）：参数（- 开头）、文件名（带后缀）、带 _ 的字段、带 / 的路径、版本号（v 加数字）、任务编号。
-    这些在引号里也照报——英文例外只放名称与画面上照原样显示的字。"""
+    这些在引号里也照报——英文例外只放名称与画面上照原样显示的字。v1.7.6 H08：“名称-数字”的产品名、型号不算任务编号（见 name_number）。"""
     word = word.rstrip(".,;:!?)]}'\"")  # 候选 r5 #7：句末标点不算词的一部分
     return bool(word.startswith(("-", "~")) or "/" in word or "_" in word or FILE_SUFFIX.search(word) or DOTFILE.fullmatch(word)
-                or VERSION.fullmatch(word) or TASK_ID.fullmatch(word))
+                or VERSION.fullmatch(word) or (TASK_ID.fullmatch(word) and not name_number(word)))
 
 
 def _words(line, head):

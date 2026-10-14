@@ -70,7 +70,8 @@ def project_progress(state, workflows):
     project["progress_source"] = "recorded_state"
     standalone = workflows.get("standalone", {})
     independent = standalone.get("tasks", [])
-    active_independent = [t for t in independent if t["status"] in {"planned", "in_progress", "waiting"}]
+    from standalone_store import ACTIVE_STATUSES  # v1.7.6 H13：进行中状态只在 standalone_store 定义一处
+    active_independent = [t for t in independent if t["status"] in ACTIVE_STATUSES]
     attention_independent = [t for t in independent
                              if t["status"] != "archived" and t["file_issues"]]
     actionable_independent = [t for t in independent

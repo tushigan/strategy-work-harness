@@ -95,6 +95,78 @@ SECRET = re.compile(
 # 逐条取用 assignments()，不直接用这两个正则。
 ASSIGNMENT_KEY = re.compile(r"""(?<![A-Za-z0-9_-])([A-Za-z0-9_-]+)["']?\s*(?::|=(?!=|>))""")
 ASSIGNMENT_VALUE = re.compile(r"""\s*(?:"([^"\r\n]*)"|'([^'\r\n]*)'|([^\s,;#]+))""")
+# v1.7.6 H01：飞书文档内嵌对象的代号不是凭据。飞书文档读出来的正文里，白板、表格、多维表格、思维笔记、图片、附件、引用、同步块
+# 写成带对象代号属性的标签（如白板标签的 token 属性、表格标签的 sheet-id 与 token 属性、同步块的 src-token 属性），代号拿到也不能直接读文档
+# （读要另有授权）。只放过同时满足这几条的一处：在下面列出的标签名的开标签里（尖括号后紧跟标签名）、属性名正好是 token 或 src-token、
+# 值用英文双引号（JSON 原文里反斜杠转义的双引号也认）包住、值只有英文字母和数字且 10—64 位、收引号后紧跟空白、斜杠或右尖括号。
+# 别的一律照旧：不在这些标签里、单引号或不带引号、值里有连字符、下划线、点、加号、斜杠、等号或空格、同一标签里的其他凭据键名
+# （如应用密钥属性）、文字里别处的赋值、SECRET 里的密钥样式（sk-、ghp_、AKIA…、Bearer、私钥头，整段先查，不受这里影响）都照拦。
+# XML 元数据路径（scan_xml 按属性字典查）不放宽。
+FEISHU_OBJECT_TAG = re.compile(r"<(?:whiteboard|sheet|bitable|mindnote|img|image|source|file|cite|synced_reference|synced_source)"
+                               r"(?=[\s/>])[^<>]{0,1000}>")
+# 批次一返修 r2 #12：img、image、source、file、cite 是通用标签名（网页里也有），只在同一段文字里有“飞书文档上下文”时才按飞书对象放行；
+# 没有的文字（如包内 HTML、JS）里这些标签的 token 属性照旧判。
+# 批次二开工 P2 #2：飞书文档上下文＝一个飞书专有标签（白板、表格、多维表格、思维笔记、同步块）本身带合格代号属性（同下面的放行条件）。
+# 空的专有标签（<whiteboard/>、<whiteboard></whiteboard>）、只有别的属性的、代号不合格的都不算；HTML 注释（<!-- … -->，含跨行、
+# 未闭合到文末）里的标签一概不算标签——既不构成上下文，自身的代号也不放过（同 v1.7.5）。
+FEISHU_SPECIFIC_TAG = re.compile(r"<(?:whiteboard|sheet|bitable|mindnote|synced_reference|synced_source)(?=[\s/>])")
+FEISHU_TOKEN_ATTR = re.compile(r'(?<=\s)(?:src-)?token=(\\?")[A-Za-z0-9]{10,64}\1(?=[\s/>])')
+HTML_COMMENT = re.compile(r"<!--.*?(?:-->|\Z)", re.S)
+
+
+def _blank(match):
+    return re.sub(r"[^\n]", " ", match.group(0))
+
+
+def mask_comments(text, in_comment=False):
+    """把 HTML 注释换成等长空白（换行保留，位置不变）。in_comment=True：这段文字开头就在上一行没闭合的注释里（逐行扫描用）。
+    返回 (遮掉注释后的文字, 结尾是否仍在注释里)。"""
+    head = ""
+    if in_comment:
+        end = text.find("-->")
+        if end < 0:
+            return _blank(re.match(r"(?s).*", text)), True
+        head, text = re.sub(r"[^\n]", " ", text[:end + 3]), text[end + 3:]
+    masked = HTML_COMMENT.sub(_blank, text)
+    last = text.rfind("<!--")
+    still = last >= 0 and text.find("-->", last + 4) < 0
+    return head + masked, still
+
+
+def _feishu_object_tags(masked):
+    for tag in FEISHU_OBJECT_TAG.finditer(masked):
+        yield tag, list(FEISHU_TOKEN_ATTR.finditer(masked, tag.start(), tag.end()))
+
+
+def feishu_context_in(text, masked=None):
+    """这段文字里有没有飞书文档上下文（P2 #2）：注释以外有一个飞书专有标签本身带合格代号属性。masked 是已遮掉注释的同一段文字（可省）。"""
+    if "token=" not in text or "<" not in text:
+        return False
+    masked = mask_comments(text)[0] if masked is None else masked
+    return any(attrs and FEISHU_SPECIFIC_TAG.match(masked, tag.start()) for tag, attrs in _feishu_object_tags(masked))
+
+
+def feishu_lines_context(lines):
+    """逐行扫描的整份文件有没有飞书文档上下文（跨行注释照遮）。lines 是可迭代的行。"""
+    in_comment = False
+    for line in lines:
+        masked, in_comment = mask_comments(line, in_comment)
+        if feishu_context_in(line, masked):
+            return True
+    return False
+
+
+def feishu_object_tokens(text, feishu_context=False, masked=None):
+    """飞书文档对象标签里的代号属性：{属性名开始位置: 属性结束位置}（H01）。文字里没有代号属性写法或没有尖括号时不扫。
+    feishu_context=True：调用方已确认整份文件里有飞书文档上下文（逐行扫描的文件，见 feishu_lines_context），这一行不必自己带。
+    masked：调用方已遮掉注释的同一段文字（逐行扫描时带上一行没闭合的注释状态）；不给就按这段文字自己遮。"""
+    if "token=" not in text or "<" not in text:
+        return {}
+    masked = mask_comments(text)[0] if masked is None else masked
+    tags = list(_feishu_object_tags(masked))
+    if not (feishu_context or any(attrs and FEISHU_SPECIFIC_TAG.match(masked, tag.start()) for tag, attrs in tags)):
+        return {}
+    return {attr.start(): attr.end() for _, attrs in tags for attr in attrs}
 
 
 class Assignment:
@@ -119,13 +191,17 @@ class Assignment:
         return self.value.end()
 
 
-def assignments(text):
-    """文字里凭据键名的赋值（Assignment）。"""
+def assignments(text, feishu_context=False, masked=None):
+    """文字里凭据键名的赋值（Assignment）。飞书文档对象标签里的代号属性（H01，见 feishu_object_tokens）跳过。"""
     position = 0
+    feishu = feishu_object_tokens(text, feishu_context, masked)
     while True:
         key = ASSIGNMENT_KEY.search(text, position)
         if not key:
             return
+        if key.start(1) in feishu:
+            position = feishu[key.start(1)]
+            continue
         # 先只看键名（不看值时像凭据才往下认值）：键名不像凭据的赋值不读值，长值不重复扫描
         value = ASSIGNMENT_VALUE.match(text, key.end()) if secret_key_name(key.group(1)) else None
         if value and secret_key_name(key.group(1), _literal_value(value)):
@@ -208,12 +284,12 @@ def startup_placeholder(value):
     return bool(PLACEHOLDER.fullmatch(value.strip()))
 
 
-def text_has_secret(text, assignments_too=True):
+def text_has_secret(text, assignments_too=True, feishu_context=False, masked=None):
     """文字里像凭据（发行检查、启动检查、记一笔三处共用）：常见密钥格式、Bearer、Authorization 头、带凭据的网址，
-    或凭据键名（secret_key_name）赋了非占位的值。"""
+    或凭据键名（secret_key_name）赋了非占位的值。feishu_context、masked 见 feishu_object_tokens（逐行扫描整份文件时用）。"""
     if SECRET.search(text):
         return True
-    return assignments_too and any(not placeholder(assignment_value(m)) for m in assignments(text))
+    return assignments_too and any(not placeholder(assignment_value(m)) for m in assignments(text, feishu_context, masked))
 
 
 def scan_literal(text, name, errors, line=None, assignments=True):

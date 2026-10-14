@@ -46,15 +46,20 @@ def file_ref(root: Path, value: object, label: str, index: int | None = None) ->
     if expected is not None and expected != actual:
         raise WorkflowError(f"{name}在登记之后改过，和写下的版本对不上，这次没有准备。技术附录（给 Agent）：{label} {path_value} "
                             f"指纹与当前文件不符（请求写的 {str(expected)[:12]}…，当前 {actual[:12]}…；改成当前指纹或只写路径后重新准备）"
-                            + records_hint(root, value))
+                            + records_hint(root, value, label))
     # macOS may expose one temporary directory through two equivalent aliases.
     # Compare and store the canonical path so a valid local file is not rejected
     # merely because the workspace spelling differs.
     return {"path": path.resolve().relative_to(root.resolve()).as_posix(), "sha256": actual}
 
 
-def records_hint(root: Path, value: dict) -> str:
-    """F09（v1.7.4 r2）：只追加的记录（如项目记忆）指纹不符时，说清是追加还是改写、该怎么办。"""
+# 准备分派时按前缀接受只追加记录的引用种类（input_ref 的 label）；其余引用（回传候选、文字证据、调用证据等）按整份文件核对
+PREFIX_ACCEPTED_LABELS = ("输入文件", "必读文件")
+
+
+def records_hint(root: Path, value: dict, label: str = "输入文件") -> str:
+    """F09（v1.7.4 r2）：只追加的记录（如项目记忆）指纹不符时，说清是追加还是改写、该怎么办。
+    v1.7.6 H13：按引用种类（label）说，不按派工种类——输入文件、必读文件准备时自动按前缀接受（任何角色），其余按整份文件核对。"""
     from task_validation import is_records_path
     if not is_records_path(value.get("path")):
         return ""
@@ -62,21 +67,30 @@ def records_hint(root: Path, value: dict) -> str:
         added = appended(root, value)
     except OSError:
         return ""
+    if added and label in PREFIX_ACCEPTED_LABELS:
+        return (f"（{value['path']} 自登记后已追加 {added} 条、登记部分未变：作为输入文件或必读文件时，准备分派时自动按前缀接受、"
+                "按当前指纹登记，不必改任务记录）")
     if added:
-        return (f"（{value['path']} 自登记后已追加 {added} 条、登记部分未变：检核派工会自动按前缀接受；"
-                "其他分派把这条引用改成当前指纹或只写路径后重新准备分派，不必改任务记录）")
-    return (f"（{value['path']} 是只追加的记录，登记那部分已被改写、删行或截断，不是单纯追加：先核对原因；"
-            "确需采用新版，用 standalone_tasks.py save 显式 accept_changed_references 登记后再准备分派）")
+        return (f"（{value['path']} 自登记后已追加 {added} 条、登记部分未变；{label}按整份文件核对、不按前缀接受："
+                "把这条引用改成当前指纹或只写路径后重试，不必改任务记录）")
+    if blank_only(root, value):
+        return (f"（{value['path']} 自登记后只多了空白行，内容没有变：先把多出来的空白行删掉再重试；"
+                "确需保留，用 standalone_tasks.py save 显式 accept_changed_references 登记后再准备分派；"
+                "已派出、还没结束的那条分派先用 agent_dispatch.py cancel --reason-code inputs_changed 结束）")
+    return (f"（{value['path']} 是只追加的记录，登记那部分在文件层面已被改写、删行或截断，不是单纯追加：先核对原因；"
+            "确需采用新版，用 standalone_tasks.py save 显式 accept_changed_references 登记后再准备分派；"
+            "已派出、还没结束的那条分派先用 agent_dispatch.py cancel --reason-code inputs_changed 结束）")
 
 
-def input_ref(root: Path, value: object, index: int | None = None) -> dict[str, str]:
+def input_ref(root: Path, value: object, index: int | None = None, label: str = "输入文件") -> dict[str, str]:
     """F09（v1.7.4 r2）：分派输入文件里 project/records/*.jsonl 的登记指纹是当前文件按行边界的前缀（之后只追加）也收，
-    按当前指纹登记（与 APPENDABLE 含“输入文件”同一口径：之后的核对照样按前缀判定）；其余照 file_ref 整文件核对。"""
+    按当前指纹登记（与 APPENDABLE 含“输入文件”同一口径：之后的核对照样按前缀判定）；其余照 file_ref 整文件核对。
+    v1.7.6 H11：必读文件（required_reading，只能从输入文件里选）同一口径，label 传“必读文件”。"""
     try:
-        return file_ref(root, value, "输入文件", index)
+        return file_ref(root, value, label, index)
     except WorkflowError:
         if isinstance(value, dict) and appended(root, value) is not None:
-            return file_ref(root, value["path"], "输入文件", index)
+            return file_ref(root, value["path"], label, index)
         raise
 
 
@@ -129,10 +143,12 @@ def required_refs(item):
 APPENDABLE={'输入文件','接手证据','回读原件'}
 
 
-def reference_issues(root,refs):
+def reference_issues(root,refs,archived=None):
+    """archived：调用方已读好的归档索引（v1.7.6 H13：逐条分派核对时共用一次，不每条重读）；不给就现读。"""
     errors=[]
-    from guidang import archived_index
-    archived=archived_index(root)
+    if archived is None:
+        from guidang import archived_index
+        archived=archived_index(root)
     for label,value in refs:
         try:file_ref(root,value,label)
         except (OSError,ValueError,KeyError,TypeError) as exc:
@@ -146,6 +162,17 @@ def reference_issues(root,refs):
             path=value.get('path','未提供') if isinstance(value,dict) else str(value)
             errors.append(f'{label} {path}：{exc}')
     return errors
+
+
+def blank_only(root,value):
+    """B3P #7：引用的只追加记录自登记后只多了空白行（内容没变）。"""
+    from task_validation import blank_only_tail
+    try:
+        path=local(root,value.get('path'))
+        if path.is_symlink() or not path.is_file():return False
+        return blank_only_tail(path,value['path'],value.get('sha256'))
+    except (ValueError,KeyError,TypeError,AttributeError,OSError):
+        return False
 
 
 def appended(root,value):

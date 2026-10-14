@@ -43,7 +43,7 @@ def _record(root,entry,artifact,verify_render):
         raise WorkflowError(f'无法重新渲染核对像素指纹（{exc}）；去掉 fingerprint/inherited_pages 按全页登记') from None
 
 
-def _inherited(root,target,report,entry,artifact,record):
+def _inherited(root,target,report,entry,artifact,record,purpose):
     import shijue_zengliang as z
     claimed=entry.get('inherited_pages',[])
     if not isinstance(claimed,list):raise WorkflowError('inherited_pages 必须为列表')
@@ -52,7 +52,7 @@ def _inherited(root,target,report,entry,artifact,record):
         return set()
     if record is None:raise WorkflowError('继承页须绑定程序生成的当前指纹记录（fingerprint），不能自报')
     if report.get('report_schema_version')!=2 or target is None:raise WorkflowError('视觉继承只用于第2版报告')
-    purpose=z.dispatched_purpose(root,target,report.get('reviewer_instance'))
+    purpose=_recorded_purpose(root,target,report,purpose)
     if purpose is None:raise WorkflowError('找不到本次检核的派工记录（agent_dispatch 分派或 jianhe_zhunbei 请求），用途无法核实，不能继承；按全页登记')
     if purpose=='stage':raise WorkflowError('阶段首次检核须全页视觉检查，不能继承（以派工记录的用途为准）')
     kind='pdf' if artifact['path'].lower().endswith('.pdf') else 'html'
@@ -120,11 +120,20 @@ def _same_version(root,visuals,records,verify_render,entries):
             raise WorkflowError(f'{html["path"]} 与 {pdf["path"]} 不是同一版：'+'；'.join(problems[:5]))
 
 
-def _purpose_matches(root,target,report):
-    """A6：报告用途须与派工记录一致（有记录时）。"""
-    if target is None or report.get('report_schema_version')!=2:return
+LOOKUP='lookup'  # v1.7.6 H11：派工用途按现存派工记录现查（登记时；以及记录里没存用途的旧记录）
+
+
+def _recorded_purpose(root,target,report,purpose):
+    """派工用途：purpose 是登记时核对并记下的（v1.7.6 H11，None＝登记时没有派工记录）；LOOKUP 就按现存派工记录现查。"""
+    if purpose!=LOOKUP:return purpose
     import shijue_zengliang as z
-    recorded=z.dispatched_purpose(root,target,report.get('reviewer_instance'))
+    return z.dispatched_purpose(root,target,report.get('reviewer_instance'))
+
+
+def purpose_matches(root,target,report,purpose=LOOKUP):
+    """A6：报告用途须与派工记录一致（有记录时）。gate 与续做状态轻量判断共用（v1.7.6 H11）。"""
+    if target is None or report.get('report_schema_version')!=2:return
+    recorded=_recorded_purpose(root,target,report,purpose)
     if recorded is not None and report.get('review_purpose')!=recorded:
         note='，阶段首次检核须全页' if 'stage' in (recorded,report.get('review_purpose')) else ''
         raise WorkflowError(f'报告用途（{report.get("review_purpose")}）与派工记录（{recorded}）不一致{note}，不能登记')
@@ -160,8 +169,8 @@ def static_problem(root,meta,report):
     return None
 
 
-def validate(root,meta,report,*,target=None,verify_render=False):
-    _purpose_matches(root,target,report)
+def validate(root,meta,report,*,target=None,verify_render=False,purpose=LOOKUP):
+    purpose_matches(root,target,report,purpose)
     visuals=_visuals(meta)
     entries=report.get('visual_evidence',[])
     records={}
@@ -170,7 +179,7 @@ def validate(root,meta,report,*,target=None,verify_render=False):
         expected=set(required_pages(local(root,artifact['path'])));seen=set();digests=set()
         record=_record(root,entry,artifact,verify_render)
         if record is not None:records[artifact['path']]=record
-        inherited=_inherited(root,target,report,entry,artifact,record)
+        inherited=_inherited(root,target,report,entry,artifact,record,purpose)
         for page in entry['pages']:
             if not isinstance(page,dict) or set(page)!={'page','file','observation'} or str(page['page']) not in expected or not isinstance(page['observation'],str) or not page['observation'].strip():
                 raise WorkflowError('逐页视觉记录字段或范围无效')

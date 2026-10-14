@@ -1,0 +1,7 @@
+{
+  "说明": "竞品对照表模板。每一行的价格要有查到的日期和来源（链接、证据编号或资料名）；查不到就把 price 写成 \"未查到\"，不要编数字。演示稿里引用竞品价格时，用这里的 id 对应到行；没有来源的价格不进演示稿。写完用 python scripts/matrix_plan.py check-competitors --file <本文件> 检查。",
+  "rows": [
+    {"id": "C1", "brand": "（品牌名，虚构示例）", "product": "（产品名）", "spec": "（规格，如 500g）", "channel": "（渠道）",
+     "price": "未查到", "as_of": "", "source": ""}
+  ]
+}

@@ -29,6 +29,24 @@ def render(page, assets):
             content += f'<div class="bar-track" aria-hidden="true"><div class="bar-fill" style="width:{width:.6f}%"></div></div>'
             content += field(item["value"], "span", ' class="bar-value"') + '</div>'
         content += '</figure>'
+    elif kind == "card":
+        card = page["card"]
+        snapshot = f' data-pingtai-snapshot="{escape(card["snapshot"], quote=True)}"' if card.get("snapshot") else ""
+        content += (f'<div class="product-card" data-pingtai-sku="{escape(card["sku"], quote=True)}"{snapshot}>'
+                    + field(card["role"], "p", ' class="card-role"') + field(card["positioning"], "p", ' class="card-positioning"')
+                    + '<dl class="card-facts">')
+        for fact in card["facts"]:
+            content += ('<div class="card-fact">' + field(fact["label"], "dt")
+                        + field(fact["value"], "dd", f' data-field="{escape(fact["field"], quote=True)}"') + '</div>')
+        content += '</dl>' + field(card["channel"], "p", ' class="card-channel"') + field(card["strategy"], "p", ' class="card-strategy"') + '</div>'
+    elif kind == "pyramid":
+        content += '<div class="pyramid" role="list">'
+        for number_in, layer in enumerate(page["pyramid"]["layers"], 1):
+            content += f'<div class="pyramid-layer layer-{number_in}" role="listitem">' + field(layer["name"], "strong")
+            if "role" in layer:
+                content += field(layer["role"], "em", ' class="layer-role"')
+            content += ''.join(field(v, "span", ' class="layer-item"') for v in layer["items"]) + '</div>'
+        content += '</div>'
     elif kind == "image":
         picture = page["image"]
         _, raw, mime = assets['asset-' + picture["sha256"]]

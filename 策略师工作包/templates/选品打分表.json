@@ -1,0 +1,22 @@
+{
+  "说明": "选品打分表模板。维度可以按项目增删（改 dimensions 就行），刻度可以按维度改；综合判断由策略师写在每个候选的“理由”里，表里不算总分。写完用 python scripts/matrix_plan.py check-scoring --file <本文件> 检查有没有填全。",
+  "dimensions": [
+    {"name": "替代性", "scale": ["高", "中", "低"], "meaning": "消费者能不能轻易用别的东西替代它"},
+    {"name": "竞争烈度", "scale": ["高", "中", "低"], "meaning": "同类产品多不多、打得凶不凶"},
+    {"name": "普适度", "scale": ["高", "中", "低"], "meaning": "受众面广不广，是不是多数人都会买"},
+    {"name": "原料波动", "scale": ["高", "中", "低"], "meaning": "原料价格起伏大不大，成本稳不稳"},
+    {"name": "主要竞品", "scale": ["强", "一般", "弱"], "meaning": "最直接的对手强不强"},
+    {"name": "定位", "scale": ["清晰", "一般", "模糊"], "meaning": "我们能不能占住一个说得清的位置"},
+    {"name": "综合可行性", "scale": ["高", "中", "低"], "meaning": "策略师综合上面各项后的判断，不是上面各项的合计"}
+  ],
+  "quadrants": [
+    {"label": "先做", "meaning": "价值高、做得成"},
+    {"label": "补条件再做", "meaning": "价值高、现在还做不成，缺什么要写清"},
+    {"label": "顺带做", "meaning": "价值一般、做得成，不占主力资源"},
+    {"label": "不做", "meaning": "价值一般、也做不成"}
+  ],
+  "candidates": [
+    {"name": "（候选产品名，虚构示例）", "scores": {"替代性": null, "竞争烈度": null, "普适度": null, "原料波动": null, "主要竞品": null, "定位": null, "综合可行性": null},
+     "quadrant": null, "decision": null, "reason": ""}
+  ]
+}

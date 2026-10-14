@@ -20,7 +20,37 @@ def _required(root, target):
     return meta, item, sources(root, target)
 
 
-def checks(root, target, report, *, new_report=False, release=False):
+from standalone_visual import LOOKUP  # 用途按现存派工记录现查（登记时；以及 v1.7.6 之前登记、记录里没存用途的旧记录）
+
+
+def purpose_at_registration(record):
+    """v1.7.6 H11：登记时核对过的派工用途（记录里存的；None 表示登记时没有派工记录）。旧记录没存，返回 LOOKUP（照旧现查）。"""
+    return record.get("purpose_at_registration") if isinstance(record, dict) and "purpose_at_registration" in record else LOOKUP
+
+
+def reviewer_ok(root, target, report, item):
+    """检核员身份与模拟检核：gate（经 checks）与续做状态的轻量判断共用这一处（v1.7.6 H11）。"""
+    reviewer = report.get("reviewer_instance")
+    if not isinstance(reviewer, str) or not reviewer.strip() or reviewer in excluded_instances(root,target,item["authors"]):
+        raise WorkflowError("任务记录者或作者不能自审，须实际使用不同实例")
+    if type(report.get("simulation")) is not bool or report["simulation"] and not test_mode(root):
+        raise WorkflowError("模拟检核只允许用于 test_mode 合成项目")
+
+
+def static_gate_problem(root, target, item, report, record):
+    """v1.7.6 H11：续做状态说“已有有效独立检核”之前，按 gate 里不读来源与成品原件的那几条判断——检核员身份、模拟检核、
+    派工用途（以登记时核对的为准）、报告格式与视觉证据字段。能过返回 None，否则返回与 gate 拒绝时相同的原文。
+    来源与成品原件是否改过由续做状态另行核对（file_issues），报告原件指纹由调用方先用 decision_valid 判。"""
+    from standalone_visual import purpose_matches, static_problem
+    try:
+        reviewer_ok(root, target, report, item)
+        purpose_matches(root, target, report, purpose_at_registration(record))
+    except WorkflowError as exc:
+        return str(exc)
+    return static_problem(root, item["meta"], report)
+
+
+def checks(root, target, report, *, new_report=False, release=False, purpose=LOOKUP):
     _, item, expected_sources = _required(root, target)
     fields = {"target", "reviewer_instance", "status", "scope", "checked_sources",
               "uncovered", "findings", "summary", "simulation"}
@@ -29,11 +59,7 @@ def checks(root, target, report, *, new_report=False, release=False):
     schema(report)
     if new_report and report.get('report_schema_version')!=2:
         raise WorkflowError('新登记报告必须使用当前第2版格式；旧格式仅供历史读取')
-    reviewer = report["reviewer_instance"]
-    if not isinstance(reviewer, str) or not reviewer.strip() or reviewer in excluded_instances(root,target,item["authors"]):
-        raise WorkflowError("任务记录者或作者不能自审，须实际使用不同实例")
-    if type(report["simulation"]) is not bool or report["simulation"] and not test_mode(root):
-        raise WorkflowError("模拟检核只允许用于 test_mode 合成项目")
+    reviewer_ok(root, target, report, item)
     if report["status"] not in PASS | {"returned", "insufficient_evidence"}:
         raise WorkflowError("独立检核状态无效")
     for name in ("scope", "checked_sources", "uncovered", "findings"):
@@ -72,7 +98,7 @@ def checks(root, target, report, *, new_report=False, release=False):
             raise WorkflowError("存在红灯或未覆盖内容，不能判定通过")
         if new_report or release or report.get('report_schema_version')==2:
             from standalone_visual import validate
-            validate(root,item['meta'],report,target=target,verify_render=new_report)
+            validate(root,item['meta'],report,target=target,verify_render=new_report,purpose=purpose)
         yellow = any(x["level"] == "yellow" for x in report["findings"])
         if yellow != (report["status"] == "passed_with_yellow"):
             raise WorkflowError("黄灯意见与整体结论不一致")
@@ -94,12 +120,16 @@ def _record_review(root, target, report_path):
     meta, item, expected = _required(root,target)
     baseline = capture(root,target,report,evidence,expected,meta,item["authors"])
     checks(root,target,report,new_report=True)
+    # v1.7.6 H11：把登记时核对过的派工用途记进检核记录；之后 gate 与续做状态都以它为准，之后再写出的分派请求、
+    # 视觉计划或新派工不会反过来否定已登记的报告（登记当时没有派工记录则记 None，之后也不再现查）
+    from shijue_zengliang import dispatched_purpose
+    purpose = dispatched_purpose(root, target, report.get("reviewer_instance")) if report.get("report_schema_version") == 2 else None
     # 批次四开工补修 5：把本版检核准备时写下的台账截止时间记进检核记录；下一轮“上次通过之后改过的说法”从这一刻算起，
     # 同一版之后重新准备（覆盖视觉必看页）也不会让起点变晚
     from shijue_zengliang import registration_cutoff
     cutoff = registration_cutoff(root, target, report.get("reviewer_instance"))
     return append(root, "standalone_review", {**report, "evidence": evidence, "baseline":baseline,
-                                              **({"ledger_cutoff": cutoff} if cutoff else {})})
+                                              **({"ledger_cutoff": cutoff} if cutoff else {}), "purpose_at_registration": purpose})
 
 
 def gate(root, key):
@@ -112,7 +142,7 @@ def gate(root, key):
     if not decision_valid(root, record):
         raise WorkflowError("独立检核报告原件失效")
     report = read_json(local(root, record["evidence"]["path"]))
-    checks(root, target, report, release=True)
+    checks(root, target, report, release=True, purpose=purpose_at_registration(record))
     if report["status"] not in PASS:
         raise WorkflowError("当前独立任务版本未获独立检核通过")
     return item["meta"]

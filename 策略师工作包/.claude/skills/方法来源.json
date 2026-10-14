@@ -7,7 +7,11 @@
       "skill": "brand-house-assistant",
       "file": "SKILL.md",
       "sha256": "286c470d4f904bf13ebbac057c8c802e99908efcd68795c1aa63cfb4177307b5",
-      "used_in": ["brand-house", "research-evidence", "task-brief"],
+      "used_in": [
+        "brand-house",
+        "research-evidence",
+        "task-brief"
+      ],
       "adopted": "定位三要素校准、证据与反证、现状和目标区分、使命愿景价值观各自成立。",
       "excluded": "不强制更XX句式、MVV先行或把所有图示认定为未来状态；按本项目确认顺序起草。"
     },
@@ -15,7 +19,11 @@
       "skill": "strategy-director",
       "file": "SKILL.md",
       "sha256": "53e74577a6814d4ad257c8b4a646b6954d4ddf6f58258db665b0ec43ecd75ba5",
-      "used_in": ["task-brief", "research-evidence", "brand-house"],
+      "used_in": [
+        "task-brief",
+        "research-evidence",
+        "brand-house"
+      ],
       "adopted": "任务目标、消费者利益、竞争比较、证据支持和可执行取舍。",
       "excluded": "不照搬三岗位审批；缺资料按影响区分可做与不可做，不一律停止；来源层级不等于真伪权重。"
     },
@@ -23,7 +31,11 @@
       "skill": "copywriting-skill",
       "file": "SKILL.md",
       "sha256": "052a30ee3b14adb703d30c5cfef7f49ce6a60f96150cbd0ea75faf8fb43967e3",
-      "used_in": ["brand-house", "task-brief", "research-evidence"],
+      "used_in": [
+        "brand-house",
+        "task-brief",
+        "research-evidence"
+      ],
       "adopted": "受众、语气、场景、明确利益及表达误读检查；区分内部主张和外部口号。",
       "excluded": "人物菜单不是每次必问；不仿固定人物句式，不将喜好替代策略判断。"
     },
@@ -31,7 +43,11 @@
       "skill": "packaging-expression-strategy",
       "file": "SKILL.md",
       "sha256": "d6cb750c18a3b06760501ee758a1bd33eae6c70ed207350095bd218a70b8943e",
-      "used_in": ["task-brief", "research-evidence", "brand-house"],
+      "used_in": [
+        "task-brief",
+        "research-evidence",
+        "brand-house"
+      ],
       "adopted": "消费者应懂的利益、卖点证据、信息优先级、误读风险、必留信息与创意空间。",
       "excluded": "不规定视觉手法，不因人工权威自动覆盖证据，不引入飞书写回；实际设计稿检核留后续。"
     },
@@ -39,9 +55,22 @@
       "skill": "huashu-design",
       "file": "SKILL.md",
       "sha256": "4317648da4431bbbb2e77a837804f8c23c494acfa8871134b2edbc40cd1e3cc5",
-      "used_in": ["huashu-design", "html-deck"],
+      "used_in": [
+        "huashu-design",
+        "html-deck"
+      ],
       "adopted": "HTML优先的视觉层级和排印；样式通过 visual_style 与正式正文一起登记，实际浏览器与逐页证据检核；确认后原生 PDF 派生导出。保留同提交的上游设计与格式参考。",
       "excluded": "不采用通用工作室的策略改写、角色轮换、强制三版、按模型名称降级、客户确认或云端权限。自由多文件和 PPTX 仅为扩展候选，不自动继承原生 HTML 门禁。"
+    },
+    {
+      "skill": "product-matrix",
+      "file": "SKILL.md",
+      "sha256": "无（案例是客户提报文件，不放客户资料、不放客户数字）",
+      "used_in": [
+        "product-matrix"
+      ],
+      "adopted": "参照三份真实产品线策略案例（一份卤味休食类、一份礼盒类、一份多渠道零食类）的结构，案例是客户提报文件、不随包，包里不放任何客户名称、数字、竞品价格与图片：先市场与品类研判、再多维度打分表加四象限做选品；金字塔三层（长期品牌资产、短期增长、基础盘）与产品卡（定位、规格、价格带、渠道、表现策略）；产品矩阵与渠道、规格的对应关系。只取结构与做事顺序。",
+      "excluded": "不放任何客户名称、数字、竞品价格与图片；不沿用旧产品矩阵技能里的任何计算公式或计算脚本——数字一律来自产品线测算平台已保存的数据。"
     }
   ]
 }

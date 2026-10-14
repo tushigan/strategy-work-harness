@@ -15,12 +15,18 @@ v1.7.5 G11：
 - 对外导出（project/exports/对外/<任务>/r<修订>-<序号>/，duiwai_daochu 登记的对外版本）随独立任务一起保留：每任务留最新 2 版的导出（按版算，同一版重导几次都留；批次三返修 r2 #8），
   另留已发客户的（发客户记录指明的那份；没指明是哪份时，这一版的导出都留）、最终版 / 客户确认版的、当前版本的，其余移归档。
   没登记过的导出文件夹不动（可能是发出去却没登记的，先按 G09 问清）。结果在输出 exports 一项，带给策略师的白话告知。
-- 检核基线整份副本（project/records/review-baselines/blobs/）：只在主控明确运行 --baselines 时处理（不随登记自动跑）。
+- 检核基线整份副本（project/records/review-baselines/blobs/）：主控明确运行 --baselines 时处理。
   先判定没人再用才移：各成果最近一份完整基线（更早的完整基线已被替代，增量检核不会再用）、未结束检核分派计划里的基线、
   当前任务正在引用的文件（手改预览比对用）用到的副本都留下；其余移到归档。增量检核找不到可用基线时本来就退回完整检核，
-  并给白话说明（incremental_review.default_plan 的 baseline_notice）。"""
+  并给白话说明（incremental_review.default_plan 的 baseline_notice）。
+
+v1.7.6 H12：检核基线副本纳入版本保留——每次登记新版本自动执行 retain 时一并整理（结果在输出 baselines 一项），
+  规则同上，只是自动时每份成果留最近 2 份完整基线（与成品“只留最新 2 版”同数，偏保守：万一最近一份基线用不了，
+  增量检核会退回上一份），手动 --baselines 仍只留最近 1 份。判定不了（基线清单、进行中检核或当前引用读不出来）就这次不移；
+  任何失败只报告，不影响登记。"""
 import argparse
 import json
+import re
 import traceback
 import uuid
 from pathlib import Path
@@ -285,9 +291,22 @@ def retain(root, task_id=None, *, key=None):
         result = _retain_versions(root, task_id, key=key)
         if task_id and not key:
             result = {**result, "exports": retain_exports(root, task_id)}
+        result = {**result, "baselines": auto_baselines(root)}
     finally:
         _RUN["id"] = None
     return result
+
+
+AUTO_BASELINE_VERSIONS = 2
+
+
+def auto_baselines(root):
+    """v1.7.6 H12：登记新版本时一并整理检核基线副本（每份成果留最近 2 份完整基线，其余同 --baselines 的判定）。
+    任何失败只报告（status=skipped 与原因），不抛出、不影响登记。"""
+    try:
+        return retain_baselines(root, keep_versions=AUTO_BASELINE_VERSIONS)
+    except Exception as exc:  # noqa: BLE001 —— 同 _retain_versions：整理失败不得影响已成功的登记
+        return {"status": "skipped", "moved": [], "reason": f"检核基线副本这次没整理：{type(exc).__name__}: {exc}", "for_strategist": ""}
 
 
 def _retain_versions(root, task_id=None, *, key=None):
@@ -626,8 +645,46 @@ def _exports_text(root, task_id, out):
 BLOBS = "project/records/review-baselines/blobs"
 
 
-def baseline_plan(root):
-    """判定哪些基线副本没人再用：返回 {keep: {副本: 原因}, candidates: [副本], baselines: n}。读不出的基线一律留（偏保守）。"""
+REQUEST_FILES = ("检核分派请求.json", "报告模板.json", "视觉必看页.json")
+
+
+def _base_refs(node):
+    """从请求文件里找出 base_review 引用的基线清单路径（任意层级的 base_review.baseline.path）。"""
+    found = set()
+    if isinstance(node, dict):
+        base = node.get("base_review")
+        if isinstance(base, dict) and isinstance(base.get("baseline"), dict) and isinstance(base["baseline"].get("path"), str):
+            found.add(base["baseline"]["path"])
+        for value in node.values():
+            found |= _base_refs(value)
+    elif isinstance(node, list):
+        for value in node:
+            found |= _base_refs(value)
+    return found
+
+
+def _request_file_baselines(root):
+    """B3P #4：每个独立任务 project/reviews/<任务>/r<n>/ 里编号最大的那个目录（最近一次准备的检核请求，含 --request-only 写出的请求与视觉必看页）
+    引用的基线清单路径。读不出来就抛出，由 baseline_plan 按“读不出来，这次不移”处理（偏保守）。"""
+    from phase2_store import local, read_json
+    folder = local(root, "project/reviews")
+    paths = set()
+    for task in sorted(folder.iterdir()) if folder.is_dir() else []:
+        if not task.is_dir():  # .DS_Store 之类的普通文件不是任务目录
+            continue
+        rounds = sorted((int(m.group(1)), d) for d in task.iterdir() if d.is_dir() and (m := re.fullmatch(r"r(\d+)", d.name)))
+        if not rounds:
+            continue
+        for name in REQUEST_FILES:
+            target = rounds[-1][1] / name
+            if target.is_file():
+                paths |= _base_refs(read_json(target))
+    return paths
+
+
+def baseline_plan(root, keep_versions=1):
+    """判定哪些基线副本没人再用：返回 {keep: {副本: 原因}, candidates: [副本], baselines: n}。读不出的基线一律留（偏保守）。
+    keep_versions：每份成果留最近几份完整基线（手动 1；v1.7.6 H12 随登记自动整理时 2）。"""
     from phase2_store import local, read_json
     root = Path(root).resolve()
     folder = local(root, "project/records/review-baselines")
@@ -641,20 +698,20 @@ def baseline_plan(root):
         except (OSError, ValueError, KeyError, TypeError, WorkflowError):
             return {"keep": {}, "candidates": [], "baselines": None, "reason": f"有基线清单读不出来（{path.parent.name}），这次不移"}
     keep = {}
-    latest = {}
+    versions_by_key = {}
     for m in manifests:
         t = m["target"]
         if not isinstance(t, dict) or type(t.get("version")) is not int:
             for b in m["blobs"]:
                 keep.setdefault(b, "版本号不是整数，无法判断先后，留下")
             continue
-        k = (t.get("space"), t.get("key"))
-        latest[k] = max(latest.get(k, t["version"]), t["version"])
+        versions_by_key.setdefault((t.get("space"), t.get("key")), set()).add(t["version"])
+    recent = {k: set(sorted(v)[-keep_versions:]) for k, v in versions_by_key.items()}
     for m in manifests:
         t = m["target"]
-        if isinstance(t, dict) and type(t.get("version")) is int and t["version"] >= latest[(t.get("space"), t.get("key"))]:
+        if isinstance(t, dict) and type(t.get("version")) is int and t["version"] in recent[(t.get("space"), t.get("key"))]:
             for b in m["blobs"]:
-                keep.setdefault(b, "最近一份完整基线")
+                keep.setdefault(b, "最近一份完整基线" if keep_versions == 1 else f"最近 {keep_versions} 份完整基线")
     try:
         from agent_dispatch import read_log, replay, ACTIVE
         from phase2_store import read_json as rj
@@ -663,6 +720,9 @@ def baseline_plan(root):
             if isinstance(base, dict) and isinstance(base.get("baseline"), dict):
                 for x in rj(local(root, base["baseline"]["path"]))["files"]:
                     keep.setdefault(x["snapshot"]["path"], "进行中的检核要用")
+        for base_path in _request_file_baselines(root):  # B3P #4：各任务最近一次检核请求目录里引用的基线
+            for x in rj(local(root, base_path))["files"]:
+                keep.setdefault(x["snapshot"]["path"], "最近一次检核请求要用")
         from current_dependencies import current_references
         live = {d for _, d in current_references(root)}
     except (OSError, ValueError, KeyError, TypeError, WorkflowError) as exc:
@@ -680,12 +740,12 @@ def baseline_plan(root):
     return {"keep": keep, "candidates": candidates, "baselines": len(manifests)}
 
 
-def retain_baselines(root, dry_run=False):
-    """检核基线副本保留（G11）：只移没人再用的副本，W02 规则依据；输出带给策略师的白话告知。"""
+def retain_baselines(root, dry_run=False, keep_versions=1):
+    """检核基线副本保留（G11）：只移没人再用的副本，W02 规则依据；输出带给策略师的白话告知。keep_versions 见 baseline_plan。"""
     from guidang import archive
     from phase2_store import local
     root = Path(root).resolve()
-    found = baseline_plan(root)
+    found = baseline_plan(root, keep_versions)
     paths = found["candidates"]
     total = sum(local(root, p).stat().st_size for p in paths)
     out = {"status": "nothing", "moved": [], "kept": len(found["keep"]), "baselines": found["baselines"], "bytes": total,
@@ -746,6 +806,7 @@ def main():
         out = preview(root, args.task_id, key=args.key)
         if args.task_id:
             out = {**out, "exports": retain_exports(root, args.task_id, dry_run=True)}
+        out = {**out, "baselines": retain_baselines(root, dry_run=True, keep_versions=AUTO_BASELINE_VERSIONS)}  # B3P #5：与登记时的自动整理同规则
     else:
         from workspace_lock import serialized
         with serialized(root):

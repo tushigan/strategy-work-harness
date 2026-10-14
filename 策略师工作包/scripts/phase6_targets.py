@@ -142,8 +142,9 @@ def resolve(root, target, seen=()):
         # F09（v1.7.4）：来源里的 project/records/*.jsonl 登记部分原样、之后只追加，不算改变（valid_or_appended）；
         # 交付物不放宽（r2），仍须整文件指纹相符，与发客户 deliver 的核对一致。
         from phase6_events import valid_or_appended
-        delivered = {(d["path"], d.get("sha256")) for d in item["meta"]["task"]["deliverables"] if "path" in d}
-        if any(not (valid_file if (f["path"], f.get("sha256")) in delivered else valid_or_appended)(root, f) for f in item["files"]):
+        # v1.7.6 H13：与 standalone_tasks.save 写入前核对同一个判定键（路径）：登记为交付物的路径，所有登记的指纹都按整文件核对
+        delivered = {d["path"] for d in item["meta"]["task"]["deliverables"] if "path" in d}
+        if any(not (valid_file if f["path"] in delivered else valid_or_appended)(root, f) for f in item["files"]):
             raise p2.WorkflowError("独立任务来源或交付文件改变/丢失，需登记新版")
         return item["meta"]
     if any(not valid_file(root, f) for f in item["files"]):

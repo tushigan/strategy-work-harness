@@ -102,7 +102,8 @@ def validate_dispatch(root,payload):
         raise WorkflowError('审查组只允许计划内只读独立审查')
     if payload['task_id']!=plan['target']['key'].split('::')[0] or payload['upstream_refs']!=[plan['target']]:raise WorkflowError('组分派任务或冻结版本不一致')
     required=[f for f in plan['checked_sources_required'] if f['path'] in member['paths']]
-    if payload['input_files']!=required or payload['completion_criteria']!=member['scope'] or set(payload['excluded_instances'])!=set(plan['excluded_instances']):
+    from dispatch_files import same_inputs  # v1.7.6 H13：与单人检核派工同一口径——records 输入按当前指纹登记，登记指纹是其前缀即同一份
+    if not same_inputs(root,payload['input_files'],required) or payload['completion_criteria']!=member['scope'] or set(payload['excluded_instances'])!=set(plan['excluded_instances']):
         raise WorkflowError('组分派范围/原文/独立性须精确对应冻结计划')
     from agent_dispatch import replay,read_log
     if any(x.get('review_group_id')==plan['group_id'] and x.get('review_member_id')==member['member_id'] and x.get('status')!='cancelled' for x in replay(read_log(root)).values()):

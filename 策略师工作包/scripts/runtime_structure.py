@@ -14,8 +14,12 @@ SKILLS = (
     "project-control", "contract-schedule", "project-import-template", "task-brief",
     "research-evidence", "brand-house", "editable-brand-house", "proposal-script",
     "html-deck", "huashu-design", "design-expression-review", "independent-review", "version-impact",
-    "knowledge-connectors",
+    "knowledge-connectors", "product-matrix",
 )
+# v1.7.6 K5—K7：产品矩阵策略新增的脚本、模板与技能（两宿主）；发行清单列了其中任何一个就全部必需，旧版本的包不受影响
+V176_RUNTIME_FILES = ("scripts/matrix_plan.py", "scripts/pingtai_kuaizhao.py", "scripts/juzhen_hedui.py",
+                      "templates/选品打分表.json", "templates/竞品对照表.json", "templates/产品矩阵表.json",
+                      ".agents/skills/product-matrix/SKILL.md", ".claude/skills/product-matrix/SKILL.md")
 MANUALS = (
     "策略与品牌屋运行说明.md", "品牌屋HTML运行说明.md",
     "提案与设计检核运行说明.md", "项目检核与结项运行说明.md",
@@ -34,10 +38,12 @@ REQUIRED_RUNTIME_FILES = (
     "scripts/task_receipts.py", "scripts/standalone_review.py",
     "scripts/mingan_xinxi.py", "scripts/shuo_renhua.py", "scripts/shishi_taizhang.py", "scripts/pptx_hedui.py", "scripts/zifu_yujian.py",
     "templates/说人话词表.tsv", "templates/台账慎用说法.txt",
+    *V176_RUNTIME_FILES,
     ".agents/skills/README.md", *MANUALS,
     *(f".codex/agents/{name}.toml" for name in AGENTS),
     *(f".agents/skills/{name}/SKILL.md" for name in SKILLS),
 )
+REQUIRED_RUNTIME_FILES = tuple(dict.fromkeys(REQUIRED_RUNTIME_FILES))  # 技能文件既在 SKILLS 里、也在 V176 里，去重
 STANDALONE_RUNTIME_FILES = (
     "scripts/standalone_store.py", "scripts/standalone_tasks.py",
     "scripts/dengji_qingqiu.py",  # v1.7.5 r3 #7：独立任务登记、启动检查、运行日志守卫都依赖它
@@ -56,7 +62,7 @@ V175_RUNTIME_FILES = ("scripts/mingan_xinxi.py", "scripts/shuo_renhua.py", "scri
                       "scripts/zifu_yujian.py", "templates/说人话词表.tsv", "templates/台账慎用说法.txt")
 BASE_RUNTIME_FILES = tuple(name for name in REQUIRED_RUNTIME_FILES
                            if name not in STANDALONE_RUNTIME_FILES + PROJECT_MEMORY_RUNTIME_FILES + EFFICIENCY_RUNTIME_FILES
-                           + DIAGNOSTIC_RUNTIME_FILES + V175_RUNTIME_FILES)
+                           + DIAGNOSTIC_RUNTIME_FILES + V175_RUNTIME_FILES + V176_RUNTIME_FILES)
 ROUTING_FILES = ("AGENTS.md", ".agents/skills/project-control/SKILL.md",
                  ".codex/agents/project-controller.toml")
 DEVELOPMENT_ROOTS = {"tests", "outputs", "harness-template", "Product-Spec.md",
@@ -117,6 +123,8 @@ def required_runtime_files_for(names):
         required.extend(DIAGNOSTIC_RUNTIME_FILES)
     if names.intersection(V175_RUNTIME_FILES):
         required.extend(V175_RUNTIME_FILES)
+    if names.intersection(V176_RUNTIME_FILES):
+        required.extend(V176_RUNTIME_FILES)
     return tuple(required)
 
 
