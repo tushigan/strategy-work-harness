@@ -151,6 +151,7 @@ def inspect_workspace(root: Path) -> dict[str, object]:
 
     package = inspect_package(root)
     errors.extend(package["errors"])
+    warnings.extend(package.get("warnings", []))
 
     manifest_path = root / "project/records/handoff-manifest.json"
     manifest = None

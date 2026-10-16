@@ -16,9 +16,9 @@
       "path": ".agents/skills/README.md",
       "kind": "file",
       "excluded": false,
-      "size": 3651,
+      "size": 3999,
       "mode": 420,
-      "sha256": "a3dec06c1f0b40c744a62c87043c4135d6f0a8803de18dd31609d5021f549a30"
+      "sha256": "5fbbaf49c6fcdc9d858601cad92e6461067020a669b743815b9c9c44c93cd237"
     },
     {
       "path": ".agents/skills/brand-house",
@@ -73,6 +73,19 @@
       "sha256": "93f91768c34a865dcb980299b74b810d247006356a26ec611de2b36973dd0ced"
     },
     {
+      "path": ".agents/skills/handoff",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".agents/skills/handoff/SKILL.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 17810,
+      "mode": 420,
+      "sha256": "9e73b9a0cfdb0323aecb8521855a1f08b1865ce9827089ef1e350d004402b373"
+    },
+    {
       "path": ".agents/skills/html-deck",
       "kind": "directory",
       "excluded": false
@@ -81,9 +94,9 @@
       "path": ".agents/skills/html-deck/SKILL.md",
       "kind": "file",
       "excluded": false,
-      "size": 17864,
+      "size": 18881,
       "mode": 420,
-      "sha256": "5a4a90590787262a132131a420cc20617b12b03a1681a93010b1fbec3557879d"
+      "sha256": "956be3adc9adcb3cfbab9027aee4065bf7585f211276a664611250c1e84e1a8c"
     },
     {
       "path": ".agents/skills/html-deck/references",
@@ -123,17 +136,17 @@
       "path": ".agents/skills/huashu-design/README.en.md",
       "kind": "file",
       "excluded": false,
-      "size": 18704,
+      "size": 18770,
       "mode": 420,
-      "sha256": "570e517364e3d4dc76c866cbc3b29023e2cdc421f237a993312c3f673326d448"
+      "sha256": "ed065aa82317bb3972b8b17838ffb138fe306f3b4fae2b31ce621ac33a63ae81"
     },
     {
       "path": ".agents/skills/huashu-design/README.md",
       "kind": "file",
       "excluded": false,
-      "size": 19671,
+      "size": 19726,
       "mode": 420,
-      "sha256": "a443fc390ef0d06740b80ec1e2aead415a992bd197f0fdbf191ae26523b69739"
+      "sha256": "277fa288b6f34ec49c6a9d879cd95d6cf86c82fca19e916d6aa4f41a2b47a428"
     },
     {
       "path": ".agents/skills/huashu-design/SECURITY.md",
@@ -147,9 +160,9 @@
       "path": ".agents/skills/huashu-design/SKILL.md",
       "kind": "file",
       "excluded": false,
-      "size": 4551,
+      "size": 4986,
       "mode": 420,
-      "sha256": "e144b9ef5601b7f03df0f2cab82c1161368bd7a096c632f007a97e854b48434e"
+      "sha256": "7a07caefec5e779ce17fae6bacd7b40f5c7019e1ad4e662cddd588131df5f3f8"
     },
     {
       "path": ".agents/skills/huashu-design/SOURCE.md",
@@ -163,9 +176,9 @@
       "path": ".agents/skills/huashu-design/UPSTREAM.md",
       "kind": "file",
       "excluded": false,
-      "size": 65159,
+      "size": 65268,
       "mode": 420,
-      "sha256": "c2385d6f9349263aea2d7fbf8712ec170105d4d4af5ca1375f2b6db77d63d4cd"
+      "sha256": "6c95749b61a8c5e1568ff8abed826a3fdc0b890dee9ffa2815b0b95dc8a38530"
     },
     {
       "path": ".agents/skills/huashu-design/assets",
@@ -195,54 +208,6 @@
       "size": 9502,
       "mode": 420,
       "sha256": "d8660a8e0cd300a773b21308b651ffdd4258ecdc723505724216e47425016b05"
-    },
-    {
-      "path": ".agents/skills/huashu-design/assets/bgm-ad.mp3",
-      "kind": "file",
-      "excluded": false,
-      "size": 4950071,
-      "mode": 420,
-      "sha256": "538e4dbf911afd6c6502e8ea008e994f2f6c5219cd498dbda4053f02f0b7dd95"
-    },
-    {
-      "path": ".agents/skills/huashu-design/assets/bgm-educational-alt.mp3",
-      "kind": "file",
-      "excluded": false,
-      "size": 4468765,
-      "mode": 420,
-      "sha256": "e100757b60afa69ffd6200012dcaba3d7c2c55e8f543cc25c1765ce59e795f46"
-    },
-    {
-      "path": ".agents/skills/huashu-design/assets/bgm-educational.mp3",
-      "kind": "file",
-      "excluded": false,
-      "size": 4047162,
-      "mode": 420,
-      "sha256": "f4d7fa4d6f612c92bbac39706757b331a333dc5ca125aff5f8d3c36b5903ebd3"
-    },
-    {
-      "path": ".agents/skills/huashu-design/assets/bgm-tech.mp3",
-      "kind": "file",
-      "excluded": false,
-      "size": 4818429,
-      "mode": 420,
-      "sha256": "37f55c71ef0aea6312efb8c735ecbf028b06219b42cc265bddc482d7b4adc2e9"
-    },
-    {
-      "path": ".agents/skills/huashu-design/assets/bgm-tutorial-alt.mp3",
-      "kind": "file",
-      "excluded": false,
-      "size": 3937926,
-      "mode": 420,
-      "sha256": "ead7cefd527b3fee1ef4c83c82b284690717c89b6aeb4ece4b91603059a7bd3c"
-    },
-    {
-      "path": ".agents/skills/huashu-design/assets/bgm-tutorial.mp3",
-      "kind": "file",
-      "excluded": false,
-      "size": 5542744,
-      "mode": 420,
-      "sha256": "2a49275922e2e197109d5c9969e6832e09f4c140da1edde22aa508fcddb9a46b"
     },
     {
       "path": ".agents/skills/huashu-design/assets/browser_window.jsx",
@@ -1384,9 +1349,9 @@
       "path": ".agents/skills/huashu-design/references/audio-design-rules.md",
       "kind": "file",
       "excluded": false,
-      "size": 9613,
+      "size": 9788,
       "mode": 420,
-      "sha256": "aa8c76e64100507b7f264a78b9408028935b2bdafe2bbde695ed4a49555a75a0"
+      "sha256": "ce40fcdea2e47cbcd44f512654403b5a98b6286ca6f15c157ea9825e4f092add"
     },
     {
       "path": ".agents/skills/huashu-design/references/brand-asset-protocol.md",
@@ -1584,17 +1549,17 @@
       "path": ".agents/skills/huashu-design/references/video-export.md",
       "kind": "file",
       "excluded": false,
-      "size": 11527,
+      "size": 11111,
       "mode": 420,
-      "sha256": "7ed97faa22b49f407c61a482eddb3b30a7463c3e5e491e5a4b2bcb48ad7929f6"
+      "sha256": "614428fc02d4cb4ecc685224cd2e4086f87702f3ec4003a221c8e99eec351a9b"
     },
     {
       "path": ".agents/skills/huashu-design/references/voiceover-pipeline.md",
       "kind": "file",
       "excluded": false,
-      "size": 20121,
+      "size": 20227,
       "mode": 420,
-      "sha256": "c8e992779eb3de74b7c46c195a46dd716ee922def7ea5f9e19beef814834e756"
+      "sha256": "11c1c4b9087ca0cdfbba03d9a87593d72ab055b33e44849d99335a9eb56cee7c"
     },
     {
       "path": ".agents/skills/huashu-design/references/workflow.md",
@@ -1613,9 +1578,9 @@
       "path": ".agents/skills/huashu-design/scripts/add-music.sh",
       "kind": "file",
       "excluded": false,
-      "size": 4146,
+      "size": 4150,
       "mode": 420,
-      "sha256": "ad59e18e0e87fc987e60d1cad6c4f0da97b76144035faa480af2e82c69da48ce"
+      "sha256": "5778cf108d2b8b98c45f5e1741310ba3c2f1dd3a3ebcac19e36bdd85c9e6d1ff"
     },
     {
       "path": ".agents/skills/huashu-design/scripts/cloud",
@@ -1706,9 +1671,9 @@
       "path": ".agents/skills/huashu-design/scripts/mix-voiceover.sh",
       "kind": "file",
       "excluded": false,
-      "size": 4461,
+      "size": 4972,
       "mode": 420,
-      "sha256": "6d3b5dfcf874593b9b7b82147a44e72e40077608f23ff4a3d4429e53c9cac1aa"
+      "sha256": "5e7681bd4e807b8327698d4548f4fb03dca595b5c127ff2909b9d9877be82a5c"
     },
     {
       "path": ".agents/skills/huashu-design/scripts/narrate-pipeline.mjs",
@@ -1730,9 +1695,9 @@
       "path": ".agents/skills/huashu-design/scripts/render-narration.sh",
       "kind": "file",
       "excluded": false,
-      "size": 5425,
+      "size": 5528,
       "mode": 420,
-      "sha256": "30703fff8de2f7d94ceb0714dd8ce3c712ff1b7f5dd9803d41bcdc1c6a0330b2"
+      "sha256": "534bde7c4725d85d99a177ec09c9b39ac491c9e35d5d67caab1e99b16ac1778d"
     },
     {
       "path": ".agents/skills/huashu-design/scripts/render-video-seek.js",
@@ -1856,9 +1821,9 @@
       "path": ".agents/skills/project-control/SKILL.md",
       "kind": "file",
       "excluded": false,
-      "size": 22561,
+      "size": 24122,
       "mode": 420,
-      "sha256": "e0e3ec48a43b63dd0adde6a7574b359377878604cc84d0720388275a75be3477"
+      "sha256": "c8c7571fbdb6a17de93ae9d0414f82f6a813d1aef40f9b7995470ed2dfa95a37"
     },
     {
       "path": ".agents/skills/project-import-template",
@@ -1981,9 +1946,9 @@
       "path": ".claude/agents/deck-builder.md",
       "kind": "file",
       "excluded": false,
-      "size": 7136,
+      "size": 7431,
       "mode": 420,
-      "sha256": "62e0ce452c6483af408667bcc1ff4c7b362006334f103b1a71a46963d301fe1f"
+      "sha256": "df2467be7114d162d6196e179032a2a5f068e8ac2b71809dc4d4d388d159e13b"
     },
     {
       "path": ".claude/agents/design-expression-reviewer.md",
@@ -2005,9 +1970,9 @@
       "path": ".claude/agents/project-controller.md",
       "kind": "file",
       "excluded": false,
-      "size": 17564,
+      "size": 18015,
       "mode": 420,
-      "sha256": "b9018507d1af4894fdc95dadafa85449e9a88aeeea79c1fd90762dc731d0a66f"
+      "sha256": "1018f28c23445106ffe26b7f07296ad55beee59e3eb61071148e53ac5cc163db"
     },
     {
       "path": ".claude/agents/proposal-author.md",
@@ -2055,9 +2020,9 @@
       "path": ".claude/skills/README.md",
       "kind": "file",
       "excluded": false,
-      "size": 3651,
+      "size": 3999,
       "mode": 420,
-      "sha256": "a3dec06c1f0b40c744a62c87043c4135d6f0a8803de18dd31609d5021f549a30"
+      "sha256": "5fbbaf49c6fcdc9d858601cad92e6461067020a669b743815b9c9c44c93cd237"
     },
     {
       "path": ".claude/skills/brand-house",
@@ -2112,6 +2077,19 @@
       "sha256": "93f91768c34a865dcb980299b74b810d247006356a26ec611de2b36973dd0ced"
     },
     {
+      "path": ".claude/skills/handoff",
+      "kind": "directory",
+      "excluded": false
+    },
+    {
+      "path": ".claude/skills/handoff/SKILL.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 17810,
+      "mode": 420,
+      "sha256": "9e73b9a0cfdb0323aecb8521855a1f08b1865ce9827089ef1e350d004402b373"
+    },
+    {
       "path": ".claude/skills/html-deck",
       "kind": "directory",
       "excluded": false
@@ -2120,9 +2098,9 @@
       "path": ".claude/skills/html-deck/SKILL.md",
       "kind": "file",
       "excluded": false,
-      "size": 17864,
+      "size": 18881,
       "mode": 420,
-      "sha256": "5a4a90590787262a132131a420cc20617b12b03a1681a93010b1fbec3557879d"
+      "sha256": "956be3adc9adcb3cfbab9027aee4065bf7585f211276a664611250c1e84e1a8c"
     },
     {
       "path": ".claude/skills/html-deck/references",
@@ -2162,17 +2140,17 @@
       "path": ".claude/skills/huashu-design/README.en.md",
       "kind": "file",
       "excluded": false,
-      "size": 18704,
+      "size": 18770,
       "mode": 420,
-      "sha256": "570e517364e3d4dc76c866cbc3b29023e2cdc421f237a993312c3f673326d448"
+      "sha256": "ed065aa82317bb3972b8b17838ffb138fe306f3b4fae2b31ce621ac33a63ae81"
     },
     {
       "path": ".claude/skills/huashu-design/README.md",
       "kind": "file",
       "excluded": false,
-      "size": 19671,
+      "size": 19726,
       "mode": 420,
-      "sha256": "a443fc390ef0d06740b80ec1e2aead415a992bd197f0fdbf191ae26523b69739"
+      "sha256": "277fa288b6f34ec49c6a9d879cd95d6cf86c82fca19e916d6aa4f41a2b47a428"
     },
     {
       "path": ".claude/skills/huashu-design/SECURITY.md",
@@ -2186,9 +2164,9 @@
       "path": ".claude/skills/huashu-design/SKILL.md",
       "kind": "file",
       "excluded": false,
-      "size": 4551,
+      "size": 4986,
       "mode": 420,
-      "sha256": "e144b9ef5601b7f03df0f2cab82c1161368bd7a096c632f007a97e854b48434e"
+      "sha256": "7a07caefec5e779ce17fae6bacd7b40f5c7019e1ad4e662cddd588131df5f3f8"
     },
     {
       "path": ".claude/skills/huashu-design/SOURCE.md",
@@ -2202,9 +2180,9 @@
       "path": ".claude/skills/huashu-design/UPSTREAM.md",
       "kind": "file",
       "excluded": false,
-      "size": 65159,
+      "size": 65268,
       "mode": 420,
-      "sha256": "c2385d6f9349263aea2d7fbf8712ec170105d4d4af5ca1375f2b6db77d63d4cd"
+      "sha256": "6c95749b61a8c5e1568ff8abed826a3fdc0b890dee9ffa2815b0b95dc8a38530"
     },
     {
       "path": ".claude/skills/huashu-design/assets",
@@ -2234,54 +2212,6 @@
       "size": 9502,
       "mode": 420,
       "sha256": "d8660a8e0cd300a773b21308b651ffdd4258ecdc723505724216e47425016b05"
-    },
-    {
-      "path": ".claude/skills/huashu-design/assets/bgm-ad.mp3",
-      "kind": "file",
-      "excluded": false,
-      "size": 4950071,
-      "mode": 420,
-      "sha256": "538e4dbf911afd6c6502e8ea008e994f2f6c5219cd498dbda4053f02f0b7dd95"
-    },
-    {
-      "path": ".claude/skills/huashu-design/assets/bgm-educational-alt.mp3",
-      "kind": "file",
-      "excluded": false,
-      "size": 4468765,
-      "mode": 420,
-      "sha256": "e100757b60afa69ffd6200012dcaba3d7c2c55e8f543cc25c1765ce59e795f46"
-    },
-    {
-      "path": ".claude/skills/huashu-design/assets/bgm-educational.mp3",
-      "kind": "file",
-      "excluded": false,
-      "size": 4047162,
-      "mode": 420,
-      "sha256": "f4d7fa4d6f612c92bbac39706757b331a333dc5ca125aff5f8d3c36b5903ebd3"
-    },
-    {
-      "path": ".claude/skills/huashu-design/assets/bgm-tech.mp3",
-      "kind": "file",
-      "excluded": false,
-      "size": 4818429,
-      "mode": 420,
-      "sha256": "37f55c71ef0aea6312efb8c735ecbf028b06219b42cc265bddc482d7b4adc2e9"
-    },
-    {
-      "path": ".claude/skills/huashu-design/assets/bgm-tutorial-alt.mp3",
-      "kind": "file",
-      "excluded": false,
-      "size": 3937926,
-      "mode": 420,
-      "sha256": "ead7cefd527b3fee1ef4c83c82b284690717c89b6aeb4ece4b91603059a7bd3c"
-    },
-    {
-      "path": ".claude/skills/huashu-design/assets/bgm-tutorial.mp3",
-      "kind": "file",
-      "excluded": false,
-      "size": 5542744,
-      "mode": 420,
-      "sha256": "2a49275922e2e197109d5c9969e6832e09f4c140da1edde22aa508fcddb9a46b"
     },
     {
       "path": ".claude/skills/huashu-design/assets/browser_window.jsx",
@@ -3423,9 +3353,9 @@
       "path": ".claude/skills/huashu-design/references/audio-design-rules.md",
       "kind": "file",
       "excluded": false,
-      "size": 9613,
+      "size": 9788,
       "mode": 420,
-      "sha256": "aa8c76e64100507b7f264a78b9408028935b2bdafe2bbde695ed4a49555a75a0"
+      "sha256": "ce40fcdea2e47cbcd44f512654403b5a98b6286ca6f15c157ea9825e4f092add"
     },
     {
       "path": ".claude/skills/huashu-design/references/brand-asset-protocol.md",
@@ -3623,17 +3553,17 @@
       "path": ".claude/skills/huashu-design/references/video-export.md",
       "kind": "file",
       "excluded": false,
-      "size": 11527,
+      "size": 11111,
       "mode": 420,
-      "sha256": "7ed97faa22b49f407c61a482eddb3b30a7463c3e5e491e5a4b2bcb48ad7929f6"
+      "sha256": "614428fc02d4cb4ecc685224cd2e4086f87702f3ec4003a221c8e99eec351a9b"
     },
     {
       "path": ".claude/skills/huashu-design/references/voiceover-pipeline.md",
       "kind": "file",
       "excluded": false,
-      "size": 20121,
+      "size": 20227,
       "mode": 420,
-      "sha256": "c8e992779eb3de74b7c46c195a46dd716ee922def7ea5f9e19beef814834e756"
+      "sha256": "11c1c4b9087ca0cdfbba03d9a87593d72ab055b33e44849d99335a9eb56cee7c"
     },
     {
       "path": ".claude/skills/huashu-design/references/workflow.md",
@@ -3652,9 +3582,9 @@
       "path": ".claude/skills/huashu-design/scripts/add-music.sh",
       "kind": "file",
       "excluded": false,
-      "size": 4146,
+      "size": 4150,
       "mode": 420,
-      "sha256": "ad59e18e0e87fc987e60d1cad6c4f0da97b76144035faa480af2e82c69da48ce"
+      "sha256": "5778cf108d2b8b98c45f5e1741310ba3c2f1dd3a3ebcac19e36bdd85c9e6d1ff"
     },
     {
       "path": ".claude/skills/huashu-design/scripts/cloud",
@@ -3745,9 +3675,9 @@
       "path": ".claude/skills/huashu-design/scripts/mix-voiceover.sh",
       "kind": "file",
       "excluded": false,
-      "size": 4461,
+      "size": 4972,
       "mode": 420,
-      "sha256": "6d3b5dfcf874593b9b7b82147a44e72e40077608f23ff4a3d4429e53c9cac1aa"
+      "sha256": "5e7681bd4e807b8327698d4548f4fb03dca595b5c127ff2909b9d9877be82a5c"
     },
     {
       "path": ".claude/skills/huashu-design/scripts/narrate-pipeline.mjs",
@@ -3769,9 +3699,9 @@
       "path": ".claude/skills/huashu-design/scripts/render-narration.sh",
       "kind": "file",
       "excluded": false,
-      "size": 5425,
+      "size": 5528,
       "mode": 420,
-      "sha256": "30703fff8de2f7d94ceb0714dd8ce3c712ff1b7f5dd9803d41bcdc1c6a0330b2"
+      "sha256": "534bde7c4725d85d99a177ec09c9b39ac491c9e35d5d67caab1e99b16ac1778d"
     },
     {
       "path": ".claude/skills/huashu-design/scripts/render-video-seek.js",
@@ -3895,9 +3825,9 @@
       "path": ".claude/skills/project-control/SKILL.md",
       "kind": "file",
       "excluded": false,
-      "size": 22561,
+      "size": 24122,
       "mode": 420,
-      "sha256": "e0e3ec48a43b63dd0adde6a7574b359377878604cc84d0720388275a75be3477"
+      "sha256": "c8c7571fbdb6a17de93ae9d0414f82f6a813d1aef40f9b7995470ed2dfa95a37"
     },
     {
       "path": ".claude/skills/project-import-template",
@@ -4010,9 +3940,9 @@
       "path": ".claude/宿主同步清单.json",
       "kind": "file",
       "excluded": false,
-      "size": 29645,
+      "size": 28990,
       "mode": 420,
-      "sha256": "9523699acb31cb1172a67ddfcec7ab8f5218b2486ffe3dfaa501105c91318d84"
+      "sha256": "ceaedd0456251fe8b8564b3981e8a0abe31b1ae32575e6663364ac4ec7e8daa9"
     },
     {
       "path": ".codex",
@@ -4028,9 +3958,9 @@
       "path": ".codex/agents/deck-builder.toml",
       "kind": "file",
       "excluded": false,
-      "size": 7109,
+      "size": 7404,
       "mode": 420,
-      "sha256": "c0f2c6308228199e051a6a10067650c3694d2fce517e923f0fbd52906d93e4cb"
+      "sha256": "4df35cf1bb234063087ea7d18ed56c074e973607a4a8b1360c33d6c5e3cc30a4"
     },
     {
       "path": ".codex/agents/design-expression-reviewer.toml",
@@ -4052,9 +3982,9 @@
       "path": ".codex/agents/project-controller.toml",
       "kind": "file",
       "excluded": false,
-      "size": 17532,
+      "size": 17983,
       "mode": 420,
-      "sha256": "1b88a06995633528e7593fb7e0154768b0da02d1b535fafe542a1d1cc8a2eab3"
+      "sha256": "fe3204fb02773b69ef36017db47c64760f78f4be4a5d75e0497a690ecf388ef8"
     },
     {
       "path": ".codex/agents/proposal-author.toml",
@@ -4113,9 +4043,9 @@
       "path": "AGENTS.md",
       "kind": "file",
       "excluded": false,
-      "size": 123123,
+      "size": 149953,
       "mode": 420,
-      "sha256": "d07b179055bd02e62a7da1027990b43c946c9005e886a08415bb5d0632f14844"
+      "sha256": "a51275cde5535710326aa9a4a6ff276249ac7bf41ff3b6eb9e29d7dfebf53103"
     },
     {
       "path": "CLAUDE.md",
@@ -4129,9 +4059,9 @@
       "path": "README.md",
       "kind": "file",
       "excluded": false,
-      "size": 32054,
+      "size": 39106,
       "mode": 420,
-      "sha256": "892fdae68c996b73b55e551f56041fa102f8425cd46b1fdfee24f0369f45d5a2"
+      "sha256": "c01ed2bc9def34025b3e884d6c9019583160cf48c9a618e0cc17e3d4f6d42e74"
     },
     {
       "path": "project",
@@ -4750,6 +4680,14 @@
       "sha256": "d7a7f2d7d030880ec5f61445f022eb518dc686b6152b824f713f353c3467bfb6"
     },
     {
+      "path": "scripts/guocheng_zhengli.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 48885,
+      "mode": 420,
+      "sha256": "d8f967d676ffff985d5df4391604a23e3bc3fbbcc2c7025374012fbcd1456093"
+    },
+    {
       "path": "scripts/handoff_history.py",
       "kind": "file",
       "excluded": false,
@@ -4761,9 +4699,9 @@
       "path": "scripts/handoff_inspection.py",
       "kind": "file",
       "excluded": false,
-      "size": 9704,
+      "size": 9753,
       "mode": 420,
-      "sha256": "0a6a2b3dc8d45d40f5581498af164be224ba0e9a96112df176b824fd3eaae0e9"
+      "sha256": "45a3f81ee715e86c612a96ab90f7f3bc5a7975e1c9de3fca3aaa7df600d037d2"
     },
     {
       "path": "scripts/handoff_inventory.py",
@@ -4777,9 +4715,9 @@
       "path": "scripts/handoff_package.py",
       "kind": "file",
       "excluded": false,
-      "size": 6664,
+      "size": 8631,
       "mode": 420,
-      "sha256": "5510c5b75bdf87dce87824900837ba6e165432b5cd36e3ce8bc0b4d728c476b5"
+      "sha256": "882b1ddb34eb6479178c5d95460e4d4a7653807056c927395ebd5c8f83b7112d"
     },
     {
       "path": "scripts/handoff_records.py",
@@ -4793,9 +4731,9 @@
       "path": "scripts/handoff_transfer.py",
       "kind": "file",
       "excluded": false,
-      "size": 9197,
+      "size": 10712,
       "mode": 420,
-      "sha256": "fffe8cfdfe5779ec8a12512301819a594e82f6fdf53f74d77b589f05e7120808"
+      "sha256": "b623c5023dc261d8cafa05e92659ffc79c815d0b11f15ac706a71ff17dcff6a1"
     },
     {
       "path": "scripts/html_deck.py",
@@ -4849,9 +4787,33 @@
       "path": "scripts/jiaofu_guankou.py",
       "kind": "file",
       "excluded": false,
-      "size": 99872,
+      "size": 102214,
       "mode": 420,
-      "sha256": "f35237b8bf3b0f60125f28a051ebe0c3d5738eede09b822f35ac9135122ed3fb"
+      "sha256": "c7f8c9b9e48bd913714d0b6ce71050f34a790cb18e1ada8261b96f837781e48a"
+    },
+    {
+      "path": "scripts/jiaojie_dabao.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 67410,
+      "mode": 420,
+      "sha256": "8ccc5d1a0984d05bed30e9d9b2734d111fb5bac14a73e6e166cebd44c496948f"
+    },
+    {
+      "path": "scripts/jiaojie_jieshou.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 40522,
+      "mode": 420,
+      "sha256": "b88b5afe0aafe6566d78c5f51da971e05bd7aff1d9e9bee56e0561f473fecc83"
+    },
+    {
+      "path": "scripts/jiaojie_renwu.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 51360,
+      "mode": 420,
+      "sha256": "caa9b887f4b5ae250864dd509cd153d5ac022e366e7c6bd11301cb7db9551980"
     },
     {
       "path": "scripts/jiaojie_shishi.py",
@@ -4860,6 +4822,14 @@
       "size": 14318,
       "mode": 420,
       "sha256": "8a271017bc19e35bb6dd412bded0c057e9ed3e679052ce55935b2e46bee5b49a"
+    },
+    {
+      "path": "scripts/jiaojie_yindao.py",
+      "kind": "file",
+      "excluded": false,
+      "size": 71394,
+      "mode": 420,
+      "sha256": "1b759e36ac614c9728ae23f8082dc3c6798dd2980b55af992cd5b91378e35c75"
     },
     {
       "path": "scripts/jiyibi.py",
@@ -4905,9 +4875,9 @@
       "path": "scripts/mingan_xinxi.py",
       "kind": "file",
       "excluded": false,
-      "size": 5769,
+      "size": 6069,
       "mode": 420,
-      "sha256": "ff5316c276c6762f9986d53c3ace616967553735b85806cefa393f0b60d71b2c"
+      "sha256": "84d0214a5cbfa296daf651f3cc198d9e2d828611611d3749f7e58ddc4fcd9046"
     },
     {
       "path": "scripts/neibu_yongyu.py",
@@ -4937,9 +4907,9 @@
       "path": "scripts/package_checks.py",
       "kind": "file",
       "excluded": false,
-      "size": 9060,
+      "size": 9101,
       "mode": 420,
-      "sha256": "e553b7f4616bd53a559be16393a8016a380646c6591aeaf6354f35d46fa88a4c"
+      "sha256": "93ddcd1a80d21446ee4cbc30021b5e9bdcdf8c82abfce1e97b5bf833b8353b00"
     },
     {
       "path": "scripts/package_checks_content.py",
@@ -4969,9 +4939,9 @@
       "path": "scripts/package_checks_materials.py",
       "kind": "file",
       "excluded": false,
-      "size": 11581,
+      "size": 11690,
       "mode": 420,
-      "sha256": "8e592678885b83e95f68335140d8f87bc2a765950ebe30a37fc73fef659399e2"
+      "sha256": "400c51766ad904ffc90a5f7577cfeedbb230673225152041226378c953beaf2e"
     },
     {
       "path": "scripts/package_checks_office.py",
@@ -5201,9 +5171,9 @@
       "path": "scripts/project_handoff.py",
       "kind": "file",
       "excluded": false,
-      "size": 7110,
+      "size": 7302,
       "mode": 420,
-      "sha256": "856b378cb16a10ee0104c129239549d72b77d1d9402200df97753e76acb8e0e1"
+      "sha256": "6ecaf4e201c432386afab3d7257ed490258aaa1d33d7d1cd52a6f663b8ae6bff"
     },
     {
       "path": "scripts/project_memory.py",
@@ -5273,9 +5243,9 @@
       "path": "scripts/runtime_structure.py",
       "kind": "file",
       "excluded": false,
-      "size": 12745,
+      "size": 13365,
       "mode": 420,
-      "sha256": "d280aa8c7f258b1db4a2bb96f8a102b4b45b33fa3e7a6d189bccab0727be40c2"
+      "sha256": "e76fde34b9e04ad53b8d31e5fde2fa3bc92b3c460aed1dc47b9932a9f1268f63"
     },
     {
       "path": "scripts/shencha_zu.py",
@@ -5385,9 +5355,9 @@
       "path": "scripts/sync_hosts.py",
       "kind": "file",
       "excluded": false,
-      "size": 5579,
+      "size": 6084,
       "mode": 420,
-      "sha256": "c6527b44c01e9c0f50da3a93cce60f012e86c6bdc373f86a5de8cee485f425bd"
+      "sha256": "5f08b79699d44a8b7f9219dad8415a6a976f15cff5ae5b5464291ec65265bb32"
     },
     {
       "path": "scripts/task_context.py",
@@ -5433,9 +5403,9 @@
       "path": "scripts/validate_project.py",
       "kind": "file",
       "excluded": false,
-      "size": 31064,
+      "size": 31355,
       "mode": 420,
-      "sha256": "6dc092a620eb52248d4afb4d5f66f19f52320750dc4700eb9b0cb706272b6f4f"
+      "sha256": "94d53cf97efae2429c8dd28dcbda176f3d065058f87f668479496c376868a842"
     },
     {
       "path": "scripts/waibu_wendang.py",
@@ -5481,9 +5451,9 @@
       "path": "scripts/workspace_resume.py",
       "kind": "file",
       "excluded": false,
-      "size": 28904,
+      "size": 33852,
       "mode": 420,
-      "sha256": "ddb767a53dfcbf4787e8143cc7036b81daa9502a99a20fcfd04bfcdcc935f933"
+      "sha256": "d5449f7ab2639dc812a7765cc970ff6919faeccf7e128b72fd0fb3f9af691e44"
     },
     {
       "path": "scripts/workspace_status.py",
@@ -5497,9 +5467,9 @@
       "path": "scripts/wubao_dengji.py",
       "kind": "file",
       "excluded": false,
-      "size": 17972,
+      "size": 20217,
       "mode": 420,
-      "sha256": "fd0882d83bc5b87385f4aa3b6fd1e85edf76bdd0c668c478f3a786e436daf49b"
+      "sha256": "e804d08dc494e0430d4932814eefd9284ed253f4e8818050f2df90fb843484f1"
     },
     {
       "path": "scripts/xiugai_fenpai.py",
@@ -5577,6 +5547,14 @@
       "size": 12117,
       "mode": 420,
       "sha256": "9a6616b98846645c7d08025eca45612cde72146b3c7aeebb397e2b5c5ff47d31"
+    },
+    {
+      "path": "templates/交接说明.md",
+      "kind": "file",
+      "excluded": false,
+      "size": 666,
+      "mode": 420,
+      "sha256": "6b671508b9324fc35d8cd38f637eb702a8b8c9c4c1311ef8fdbb058a15050e6c"
     },
     {
       "path": "templates/产品矩阵表.json",
@@ -5662,17 +5640,17 @@
       "path": "工作包移交说明.md",
       "kind": "file",
       "excluded": false,
-      "size": 14396,
+      "size": 16452,
       "mode": 420,
-      "sha256": "b95a1260ff4eb027eb1676c96c8bbbeac2b5995f466b9e0b60e830bf1b9bcbc9"
+      "sha256": "d30fd6841d3e29c9eeefc34f05dc280f99023d4eaf26704db6b6ce060447b92d"
     },
     {
       "path": "工作能力与流程总览.md",
       "kind": "file",
       "excluded": false,
-      "size": 11814,
+      "size": 11915,
       "mode": 420,
-      "sha256": "bec9c9365332c5d2a044329d3e6a50b3d23f11014bc031e090fdb8888cfedf32"
+      "sha256": "5523632a1ce6401a1a153be45d1c264d884e18a7fda38ddeeb796f47a0bfd4ad"
     },
     {
       "path": "提案与设计检核运行说明.md",
@@ -5696,15 +5674,15 @@
       "excluded": false,
       "size": 5898,
       "mode": 420,
-      "sha256": "9d634c18441b7125bfd9efa5ba032c4728b4535ffcb0b8347a1961cbe548dea1"
+      "sha256": "0e52703b383d3545d36f8b19ce51c92bb0271f367034af57feb63abab3d4de0c"
     },
     {
       "path": "运行环境与命令.md",
       "kind": "file",
       "excluded": false,
-      "size": 50446,
+      "size": 55725,
       "mode": 420,
-      "sha256": "3d34d8fda6bfd8b730f2efaecf63aa583cd3d5d55f6b3b893bf4847a8e7a50b3"
+      "sha256": "3bc778ddfe09d521419932fe9651b4c7f9ccba4bc3f6c96dca92f15a0385f95d"
     },
     {
       "path": "项目检核与结项运行说明.md",
@@ -5719,6 +5697,56 @@
     {
       "path": ".DS_Store",
       "reason": "runtime_cache"
+    }
+  ],
+  "removed_in_release": [
+    {
+      "path": ".agents/skills/huashu-design/assets/bgm-ad.mp3",
+      "reason": "v1.7.8 起工作包不再自带背景音乐（安装包瘦身）；做旁白影片需要音乐时由用户提供音乐文件"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/bgm-educational-alt.mp3",
+      "reason": "v1.7.8 起工作包不再自带背景音乐（安装包瘦身）；做旁白影片需要音乐时由用户提供音乐文件"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/bgm-educational.mp3",
+      "reason": "v1.7.8 起工作包不再自带背景音乐（安装包瘦身）；做旁白影片需要音乐时由用户提供音乐文件"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/bgm-tech.mp3",
+      "reason": "v1.7.8 起工作包不再自带背景音乐（安装包瘦身）；做旁白影片需要音乐时由用户提供音乐文件"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/bgm-tutorial-alt.mp3",
+      "reason": "v1.7.8 起工作包不再自带背景音乐（安装包瘦身）；做旁白影片需要音乐时由用户提供音乐文件"
+    },
+    {
+      "path": ".agents/skills/huashu-design/assets/bgm-tutorial.mp3",
+      "reason": "v1.7.8 起工作包不再自带背景音乐（安装包瘦身）；做旁白影片需要音乐时由用户提供音乐文件"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/bgm-ad.mp3",
+      "reason": "v1.7.8 起工作包不再自带背景音乐（安装包瘦身）；做旁白影片需要音乐时由用户提供音乐文件"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/bgm-educational-alt.mp3",
+      "reason": "v1.7.8 起工作包不再自带背景音乐（安装包瘦身）；做旁白影片需要音乐时由用户提供音乐文件"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/bgm-educational.mp3",
+      "reason": "v1.7.8 起工作包不再自带背景音乐（安装包瘦身）；做旁白影片需要音乐时由用户提供音乐文件"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/bgm-tech.mp3",
+      "reason": "v1.7.8 起工作包不再自带背景音乐（安装包瘦身）；做旁白影片需要音乐时由用户提供音乐文件"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/bgm-tutorial-alt.mp3",
+      "reason": "v1.7.8 起工作包不再自带背景音乐（安装包瘦身）；做旁白影片需要音乐时由用户提供音乐文件"
+    },
+    {
+      "path": ".claude/skills/huashu-design/assets/bgm-tutorial.mp3",
+      "reason": "v1.7.8 起工作包不再自带背景音乐（安装包瘦身）；做旁白影片需要音乐时由用户提供音乐文件"
     }
   ]
 }

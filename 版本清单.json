@@ -1,21 +1,21 @@
 {
   "name": "策略师工作包（Codex / Claude Code 统一包）",
   "repository": "https://github.com/tushigan/strategy-work-harness",
-  "version": "1.7.7",
-  "released": "2026-10-14",
+  "version": "1.7.8",
+  "released": "2026-10-16",
   "package_dir": "策略师工作包",
   "package_inventory": "策略师工作包/package-inventory.json",
-  "package_inventory_sha256": "300db5fcd4a38a999528398397306f58f3d2e750a91f914d4936772db3c07e0a",
+  "package_inventory_sha256": "8156fa47d013d3a39e4320e8e1326f9c7a845865a035164c14c9ec7e73cd3c8f",
   "release_zip": {
-    "name": "strategist-harness-v1.7.7-20261014.zip",
-    "url": "https://github.com/tushigan/strategy-work-harness/releases/download/v1.7.7/strategist-harness-v1.7.7-20261014.zip",
-    "sha256": "6a0f044edb897bf610ac01c175759cb21f220cba31e6a2235233bd0596626a9f",
-    "bytes": 64700841,
-    "files": 645,
+    "name": "strategist-harness-v1.7.8-20261016.zip",
+    "url": "https://github.com/tushigan/strategy-work-harness/releases/download/v1.7.8/strategist-harness-v1.7.8-20261016.zip",
+    "sha256": "24733f032ac48fae9414b86cff52aefe9a97f554732b1c3f0e19a9bc5384bd36",
+    "bytes": 9441924,
+    "files": 641,
     "zip_root": "统一包",
-    "note": "与开发仓库定稿包 策略师工作包-统一版-v1.7.7-定稿-20261014.zip 逐字节相同，仅附件名改为英文（GitHub 会改写中文附件名）"
+    "note": "与开发仓库定稿包 策略师工作包-统一版-v1.7.8-定稿-20261016.zip 逐字节相同，仅附件名改为英文（GitHub 会改写中文附件名）"
   },
-  "git_tag": "v1.7.7",
+  "git_tag": "v1.7.8",
   "requirements": {
     "python": ">=3.11",
     "hosts": [
@@ -38,7 +38,8 @@
       "66118d46d38137496ee9cb712f253deba124b991e38f5fbc3fb1731414f76d12": "1.7.4",
       "39dca03f308412fe6a17835a982c48dcbdebd9a41702930ed2f0d4ae2913f932": "1.7.5",
       "6a07506db056e2a0e4ebe899da8672cf68e565542bc8cd69bb2a3681b31bc8ca": "1.7.6",
-      "300db5fcd4a38a999528398397306f58f3d2e750a91f914d4936772db3c07e0a": "1.7.7"
+      "300db5fcd4a38a999528398397306f58f3d2e750a91f914d4936772db3c07e0a": "1.7.7",
+      "8156fa47d013d3a39e4320e8e1326f9c7a845865a035164c14c9ec7e73cd3c8f": "1.7.8"
     },
     "note": "fbe96d2d… 为 v1.7.2 候选 r2（代码与 v1.7.2 定稿逐字节相同，只差 README 版本记录与一处注释），按 1.7.2 处理"
   },
@@ -58,6 +59,11 @@
     ]
   },
   "history": [
+    {
+      "version": "1.7.8",
+      "date": "2026-10-16",
+      "note": "交接与接手：说“交接”，AI 先列清单（带走多少、不带多少）给你看，你回“好”才打成一个压缩包（整个工作区或只交一个任务），并给一段能转发给对方的话；对方打开自己的文件夹、把压缩包拖进对话说“接手”，AI 先核对压缩包、看清情况再一步一步带他，接好后三句话报现在到哪了。凭据类内容一律不进包。过程文件整理：每个任务的成果文件夹里固定一个“过程”子文件夹，标最终版后自动把过程文件、暂存和内容完全相同的多余副本移到项目旁边的归档（只移不删），也可说“整理过程文件”先看清单再移。安装包瘦身：设计技能不再自带 6 首背景音乐（两宿主共 12 个文件、约 56MB），安装包约 64.7MB → 9MB；升级时旧版有、新版没有的文件照旧移到“升级移出”文件夹，不删，发行清单里列了本版移除的文件，残留只是一条提示。"
+    },
     {
       "version": "1.7.7",
       "date": "2026-10-14",

@@ -1,4 +1,5 @@
 """Validate release metadata without freezing mutable project business records."""
+import json
 import os
 from pathlib import Path, PurePosixPath, PureWindowsPath
 import posixpath
@@ -17,7 +18,7 @@ def canonical_name(value):
 
 def release_entries(value):
     if (not isinstance(value, dict)
-            or set(value) != {"schema_version", "mode", "inventory", "excluded_from_source"}
+            or not {"schema_version", "mode", "inventory", "excluded_from_source"} <= set(value) <= {"schema_version", "mode", "inventory", "excluded_from_source", "removed_in_release"}
             or type(value["schema_version"]) is not int or value["schema_version"] != 1
             or value["mode"] not in ("template", "synthetic")
             or not isinstance(value["inventory"], list) or not value["inventory"]
@@ -71,7 +72,23 @@ def release_entries(value):
         if not valid:
             raise ValueError("发行排除记录不是允许的运行缓存或锁文件")
         excluded.add(name)
+    removed = value.get("removed_in_release", [])
+    if not isinstance(removed, list):
+        raise ValueError("发行清单里“本版移除的文件”名单无效")
+    for item in removed:
+        if (not isinstance(item, dict) or set(item) != {"path", "reason"} or not canonical_name(item["path"]) or item["path"] in entries
+                or not isinstance(item["reason"], str) or not item["reason"].strip()):
+            raise ValueError("发行清单里“本版移除的文件”名单条目无效")
     return entries
+
+
+def removed_paths(root):
+    """发行清单里“本版移除的文件”名单（旧版带、新版不再带的工作包文件）。读不出来返回空集合（不放过任何东西）。"""
+    try:
+        value = json.loads(read_local(root, MANIFEST).decode("utf-8"))
+        return {x["path"] for x in value.get("removed_in_release", []) if isinstance(x, dict) and isinstance(x.get("path"), str)}
+    except (OSError, ValueError, UnicodeError, KeyError, TypeError, RuntimeError):
+        return set()
 
 
 def project_data(name):
@@ -111,7 +128,7 @@ def current_release_entries(root):
 
 
 def inspect_package(root: Path):
-    result = {"status": "absent", "errors": []}
+    result = {"status": "absent", "errors": [], "warnings": []}
     path = root / MANIFEST
     if not path.exists() and not path.is_symlink():
         return result
@@ -123,10 +140,19 @@ def inspect_package(root: Path):
         release_names = {name for name in expected if not project_data(name)}
         release_changes = [name for name in sorted(release_names | set(actual))
                    if not same_content(expected.get(name, {}), actual.get(name, {}))]
+        listed = {x["path"] for x in value.get("removed_in_release", [])}
+        residual = [name for name in release_changes if name in listed and name not in expected and name in actual]
+        release_changes = [name for name in release_changes if name not in residual]
         if release_changes:
             raise ValueError("发行文件缺失、新增或指纹已变化: " + ", ".join(release_changes))
         result.update(status="valid", schema_version=value["schema_version"], mode=value["mode"],
                       release_entry_count=len(expected), mutable_root="project")
+        if residual:
+            names = sorted({PurePosixPath(n).name for n in residual})
+            shown = "、".join(names[:3]) + (f" 等共 {len(residual)} 个" if len(residual) > 3 else "")
+            what = "旧版带的背景音乐" if all("bgm-" in n for n in residual) else "旧版带的文件"
+            result["warnings"] = [f"这些是{what}，新版不用了，工作区里还留着；不影响使用，可以移到“升级移出”文件夹（移出，不要删）：{shown}"]
+            result["removed_residual"] = residual
     except (OSError, ValueError, UnicodeError, RuntimeError) as exc:
         result.update(status="invalid", errors=[f"{MANIFEST} 核验失败: {exc}"])
     return result

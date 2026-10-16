@@ -13,12 +13,21 @@ AUTHOR_MAX_TURNS = AUTHOR_BUDGET["tool_calls"]
 def digest(data):
     return hashlib.sha256(data).hexdigest()
 
+def removed(root):
+    """发行清单里“本版移除的文件”（旧版带、新版不带）：工作区里还残留时，宿主同步不把它们当作需要对账的入口文件。读不出来返回空集合。"""
+    try:
+        from handoff_package import removed_paths
+        return removed_paths(Path(root))
+    except Exception:
+        return set()
+
 def expected(root):
     for name in (".agents", ".agents/skills", ".codex", ".codex/agents"):
         safe(root, name)
     result = {"CLAUDE.md": b"# \xe7\xad\x96\xe7\x95\xa5\xe5\xb8\x88\xe7\xbb\x9f\xe4\xb8\x80\xe5\xb7\xa5\xe4\xbd\x9c\xe5\x8c\x85\n\n@AGENTS.md\n"}
+    gone = removed(root)
     for p in sorted((root / ".agents/skills").rglob("*")):
-        if "__pycache__" in p.parts or p.name == ".DS_Store":
+        if "__pycache__" in p.parts or p.name == ".DS_Store" or p.relative_to(root).as_posix() in gone:
             continue
         if p.is_symlink():
             raise ValueError("技能源不能使用符号链接")
@@ -43,9 +52,10 @@ def expected(root):
 
 def actual_files(root):
     result = set()
+    gone = removed(root)
     for directory in (".claude/skills", ".claude/agents"):
         for p in (root / directory).rglob("*"):
-            if "__pycache__" not in p.parts and p.name != ".DS_Store" and (p.is_file() or p.is_symlink()):
+            if "__pycache__" not in p.parts and p.name != ".DS_Store" and p.relative_to(root).as_posix() not in gone and (p.is_file() or p.is_symlink()):
                 result.add(p.relative_to(root).as_posix())
     return result
 

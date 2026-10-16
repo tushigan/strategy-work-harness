@@ -8,8 +8,8 @@
 #   --voiceover=<path>    Path to voiceover mp3 (人声主轨, 来自 narrate-pipeline.mjs)
 #
 # Optional:
-#   --bgm=<path>          BGM mp3 path (overrides --bgm-mood)
-#   --bgm-mood=<name>     Pick a preset BGM from assets/ (educational / tech / tutorial / ...)
+#   --bgm=<path>          背景音乐文件（由用户提供；工作包不带背景音乐）
+#   --bgm-mood=<name>     旧版预设名；新包已不带预设音乐，找不到时先不加音乐、不报错
 #   --bgm-volume=<0-1>    BGM 静态音量, 默认 0.18 (相对人声)
 #   --no-ducking          关闭 sidechain ducking（默认开启：人声响时 BGM 自动让路）
 #   --voice-volume=<0-2>  人声音量倍率, 默认 1.0
@@ -23,9 +23,8 @@
 #
 # Examples:
 #   bash mix-voiceover.sh anim.mp4 --voiceover=narration/voiceover.mp3
-#   bash mix-voiceover.sh anim.mp4 --voiceover=v.mp3 --bgm-mood=educational
 #   bash mix-voiceover.sh anim.mp4 --voiceover=v.mp3 --bgm=path/to/song.mp3 --bgm-volume=0.12
-#   bash mix-voiceover.sh anim.mp4 --voiceover=v.mp3 --bgm-mood=tech --no-ducking
+#   bash mix-voiceover.sh anim.mp4 --voiceover=v.mp3 --bgm=path/to/song.mp3 --no-ducking
 #
 set -e
 
@@ -65,13 +64,21 @@ if [ -z "$VOICEOVER" ] || [ ! -f "$VOICEOVER" ]; then
 fi
 
 # 解析 BGM 来源
+BGM_FROM_MOOD=""
 if [ -z "$BGM" ] && [ -n "$BGM_MOOD" ]; then
   BGM="$ASSETS_DIR/bgm-${BGM_MOOD}.mp3"
+  BGM_FROM_MOOD="1"
 fi
+# 工作包不带背景音乐：找不到音乐文件时不报错，先出不带音乐的影片，并用白话提示
 if [ -n "$BGM" ] && [ ! -f "$BGM" ]; then
-  echo "✗ BGM 文件不存在: $BGM" >&2
-  echo "  可用 mood: $(ls "$ASSETS_DIR" 2>/dev/null | grep -E '^bgm-.*\.mp3$' | sed 's/^bgm-//;s/\.mp3$//' | tr '\n' ' ')" >&2
-  exit 1
+  if [ -n "$BGM_FROM_MOOD" ]; then
+    echo "提示：工作包不带背景音乐，这次的影片先不加音乐。想加的话，请你提供一个音乐文件。" >&2
+    echo "  （给 Agent：用户给了音乐文件后，重新运行并加 --bgm=<音乐文件>；--bgm-mood 的预设音乐已随包移除）" >&2
+  else
+    echo "提示：找不到你指定的音乐文件（${BGM}），工作包也不带背景音乐，这次的影片先不加音乐。" >&2
+    echo "  （给 Agent：核对 --bgm= 的路径后重新运行）" >&2
+  fi
+  BGM=""
 fi
 
 # 输出路径

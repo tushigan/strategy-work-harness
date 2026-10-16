@@ -15,7 +15,7 @@ try:
     from dengji_qingqiu import REQUESTS_DIR, USED_DIR
 except ImportError:  # r3 #7：缺这个必需文件时照常报“缺少必需文件”，不在导入时崩掉（登记请求按普通记录核对）
     REQUESTS_DIR = USED_DIR = None
-from runtime_structure import (PROJECT_MEMORY_RUNTIME_FILES, STANDALONE_RUNTIME_FILES, V175_RUNTIME_FILES, V176_RUNTIME_FILES,
+from runtime_structure import (PROJECT_MEMORY_RUNTIME_FILES, STANDALONE_RUNTIME_FILES, V175_RUNTIME_FILES, V176_RUNTIME_FILES, V178_RUNTIME_FILES,
                                runtime_requirements_for_root, startup_structure_errors)
 REQUIRED_FILES = (
     "AGENTS.md",
@@ -278,6 +278,8 @@ def inspect_structured_data(
         if not target.exists() and value not in required_paths and source.endswith("/报告模板.json") \
                 and source.startswith("project/reviews/") and value.rsplit("/", 1)[-1].startswith("填写"):
             continue  # 候选 r3 #3：检核报告模板里的截图占位（“截图/填写截图文件”，检核员照模板填写）不是引用，不报
+        if not target.exists() and source.startswith("project/records/handoff-imports/"):
+            continue  # 接手时留的原记录备查副本：里面写的是交出方的路径（可能没带过来），只是备查，不核对引用目标
         if not target.exists():
             message = f"{source} 引用目标不存在: {value}"
             (errors if value in required_paths else warnings).append(message)
@@ -311,7 +313,7 @@ def _check(root: Path, current_only=False) -> tuple[list[str], list[str], dict[s
     capabilities: dict[str, Any] = {}
 
     runtime_required = set(runtime_requirements_for_root(root))
-    optional_generation_files = set(STANDALONE_RUNTIME_FILES + PROJECT_MEMORY_RUNTIME_FILES + V175_RUNTIME_FILES + V176_RUNTIME_FILES)
+    optional_generation_files = set(STANDALONE_RUNTIME_FILES + PROJECT_MEMORY_RUNTIME_FILES + V175_RUNTIME_FILES + V176_RUNTIME_FILES + V178_RUNTIME_FILES)
     required_files = [relative for relative in REQUIRED_FILES
                       if relative not in optional_generation_files or relative in runtime_required]
     for relative in required_files:

@@ -10,6 +10,8 @@ tools: Read, Write, Edit, Bash, Glob, Grep, TodoWrite, Agent
 Codex 自然语言对话是主入口，资料、反馈及决定由策略师提供，结构化输入和现有 CLI 由你操作。
 把合同范围、任务状态、产出状态、机器检核、人工确认、客户确认和系统导入分开记录。
 只使用当前项目的相对路径。按项目检核与结项运行说明.md处理跨阶段检核、影响、交付和结项；外部适配已实现但真实账号和线上读写未验，不伪造连接结果。
+过程文件（v1.7.8）：派工请求的 task_text 写明草稿、生图、上色、中间脚本、暂存都写进该任务成果文件夹里的“过程”子文件夹、成品放任务文件夹本层，permissions 的可写范围含这个子文件夹；策略师说“整理过程文件”时先 guocheng_zhengli.py preview 给她看，她回“好”再 organize；标最终版后看输出里的 process_cleanup，把那句白话原样转述。
+
 调用其他角色前提供任务目标、原始依据、实际文件、上游版本、检核标准、权限边界及当前项目记忆。agent_dispatch.py 已冻结任务和记忆版本；分派期间任一版本变化时重新准备，不让旧上下文覆盖新纠正。
 简报、研究分析和品牌屋任务必须显式调用 strategy-author，分别使用 task-brief、research-evidence、brand-house。作者只写候选，总控回读并登记后，再调用不同的 independent-reviewer 读取全部原文和产出检核。合同、排期、Excel和总控汇总等正式产出也必须独立检核，不能由总控自批。
 project-controller 是主控职责，不需要重复生成总控。若宿主未注册角色名，用可用通用子 Agent 完整传入对应 TOML 和 Skill；没有真正独立实例时保留待检稿，不能声明独立通过。

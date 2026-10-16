@@ -300,8 +300,8 @@ huashu-design/
 │   ├── deck_stage.js        # HTML 幻灯片引擎
 │   ├── deck_index.html      # 多文件 deck 拼接器
 │   ├── design_canvas.jsx    # 并排变体展示
-│   ├── showcases/           # 24 个预制样例（8 场景 × 3 风格）
-│   └── bgm-*.mp3            # 6 首场景化背景音乐
+│   └── showcases/           # 24 个预制样例（8 场景 × 3 风格）
+│                            # 本工作包不带背景音乐：做旁白影片需要时，由用户提供音乐文件
 ├── references/              # 按任务深入读的子文档
 │   ├── animation-pitfalls.md
 │   ├── design-styles.md     # 60 种 HTML 原生风格库（网页 20 + PPT 20 + 信息图 20）

@@ -384,7 +384,7 @@ HTML文件的开头先写下你的assumptions + reasoning + placeholders，**尽
    - `scripts/render-video.js` 录 25fps 纯画面 MP4（只是中间产物，**不是成品**）
    - 需要**真 60fps / 确定性 / B站作品集交付**且动画走 Stage 时钟时，改用 `scripts/render-video-seek.js --fps=60`（逐帧 seek，免插帧、无黑帧，详见 `references/video-export.md`）
    - `scripts/convert-formats.sh` 派生 60fps MP4 + palette 优化 GIF（视平台需要）
-   - `scripts/add-music.sh` 加 BGM（6 首场景化配乐：tech/ad/educational/tutorial + alt 变体）
+   - `scripts/add-music.sh` 加背景音乐（本工作包不带背景音乐，需要时由用户提供音乐文件）
    - SFX 按 `references/audio-design-rules.md` 设计 cue 清单（时间轴 + 音效类型），用 `assets/sfx/<category>/*.mp3` 37 个预制资源，按配方 A/B/C/D 选密度（发布 hero ≈ 6个/10s，工具演示 ≈ 0-2个/10s）
    - **BGM + SFX 双轨制必须同时做**——只做 BGM 是 ⅓ 分完成度；SFX 占高频、BGM 占低频，频段隔离见 audio-design-rules.md 的 ffmpeg 模板
    - 交付前 `ffprobe -select_streams a` 确认有 audio stream，没有则不是成品
@@ -396,7 +396,7 @@ HTML文件的开头先写下你的assumptions + reasoning + placeholders，**尽
    - **跑 narrate-pipeline.mjs**（豆包 TTS · `.env` 配置音色）→ 输出 voiceover.mp3 + timeline.json（cue 时间是真实测出来的，不是按字符估算）
    - **🛑 设计动画前先答铁律 3 条**：(1) hero element 是什么？(2) 它跨 7 段怎么 morph？(3) 任意一帧画面有运动吗？答不上不要写代码
    - **写动画 HTML**：用 `assets/narration_stage.jsx`（NarrationStage + Scene + Cue + useNarration + useSceneFade + **Subtitles**）→ hero 直接放 `<NarrationStage>` 子级，不进 Scene；`<Subtitles />` 默认带（B 站风·深墨字+白光晕，按 timeline.chunks 自动切 ≤12 字短行不跨句号）
-   - **录最终 MP4**：`bash scripts/render-narration.sh demo.html --timeline=_narration/timeline.json [--bgm-mood=educational]` → 自动录无声 MP4 + 混入人声 + 可选 BGM
+   - **录最终 MP4**：`bash scripts/render-narration.sh demo.html --timeline=_narration/timeline.json [--bgm=<用户提供的音乐文件>]` → 自动录无声 MP4 + 混入人声 + 可选背景音乐（本工作包不带背景音乐，需要时由用户提供音乐文件）
    - **失败模式 #1（必须避免）**：每个 Scene 各自独立 layout + cue 用 fade-up + scene 切换整页 opacity 切换 = **带配音的 PowerPoint** = 质感归零。完整规则见 `references/voiceover-pipeline.md` 头部「铁律」章节。
 10. **（可选）专家评审**：用户若提「评审」「好不好看」「review」「打分」，或你对产出有疑问想主动质检，按 `references/critique-guide.md` 走 5 维度评审——哲学一致性 / 视觉层级 / 细节执行 / 功能性 / 创新性各 0-10 分，输出总评 + Keep（做得好的）+ Fix（严重程度 ⚠️致命 / ⚡重要 / 💡优化）+ Quick Wins（5 分钟能做的前 3 件事）。评审设计不评设计师。
 

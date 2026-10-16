@@ -11,9 +11,11 @@ from handoff_records import append_event, now, read_manifest, write_json_atomic
 from handoff_inspection import inspect_workspace, unsafe_storage_report
 
 
-def build_manifest(root: Path, report: dict[str, object], actor: str) -> dict[str, object]:
-    entries = file_inventory(root)
-    return {
+def build_manifest(root: Path, report: dict[str, object], actor: str, entries: list | None = None,
+                   package: dict | None = None) -> dict[str, object]:
+    """entries / package 只给交接打包（jiaojie_dabao.py）用：清单按精简后真正放进压缩包的文件算，package 写明带了什么、没带什么。默认行为不变。"""
+    entries = file_inventory(root) if entries is None else entries
+    manifest = {
         "schema_version": 1,
         "manifest_id": uuid.uuid4().hex,
         "kind": "project_handoff",
@@ -42,6 +44,9 @@ def build_manifest(root: Path, report: dict[str, object], actor: str) -> dict[st
             "真实客户资料的保密和分发授权",
         ],
     }
+    if package is not None:
+        manifest["package"] = package
+    return manifest
 
 
 @__import__('yunxing_rizhi').observed('project_handoff.prepare')
@@ -115,6 +120,12 @@ def accept(root: Path, actor: str, manifest_id: str) -> dict[str, object]:
         return _accept_unlocked(root, actor, manifest_id)
 
 
+def strip_known_errors(errors, known):
+    """交出时就有、交出的人同意原样交的老问题（一字不差）可以放过；“疑似凭据”类一律不放过（全盘细查 P0-1：凭据不接受“原样交”）。"""
+    from mingan_xinxi import is_credential_problem
+    return [item for item in errors if item not in known or is_credential_problem(item)]
+
+
 def _accept_unlocked(root: Path, actor: str, manifest_id: str) -> dict[str, object]:
     report = inspect_workspace(root)
     if report.get("storage_blocked"):
@@ -131,6 +142,12 @@ def _accept_unlocked(root: Path, actor: str, manifest_id: str) -> dict[str, obje
     entries = file_inventory(root)
     actual_digest = inventory_digest(entries)
     errors = list(report["errors"])
+    known = (manifest.get("package") or {}).get("known_errors") if isinstance(manifest.get("package"), dict) else None
+    if isinstance(known, list) and known and isinstance(manifest.get("package", {}).get("known_errors_words"), str):
+        # 交接打包时检查本来就有问题、交出的人当次原话同意原样交：只放过这些一字不差的老问题，新冒出来的问题照拦
+        errors = strip_known_errors(errors, known)
+        report = {**report, "warnings": sorted(set(report["warnings"]) | {"交出时就有、已由交出的人同意原样交的问题：" + item for item in known
+                                                                           if item in report["errors"] and item not in errors})}
     if not isinstance(manifest_id, str) or not manifest_id.strip():
         errors.append("接收必须绑定移交方提供的 manifest_id")
     elif manifest.get("manifest_id") != manifest_id:

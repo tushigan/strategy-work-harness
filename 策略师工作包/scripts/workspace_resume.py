@@ -152,11 +152,46 @@ def volume(root):
             +"技术附录（给 Agent）：旧稿按策略师当次授权用 guidang.py 归档"
             +("；检核基线副本先预览 python3 scripts/banben_baoliu.py --workspace . --baselines --dry-run --json，"
               "确认后执行 python3 scripts/banben_baoliu.py --workspace . --baselines --json（只移没人再用的副本）" if baselines else ""))
+    # v1.7.8 J06：超线时按类别说清（过程、暂存、看名字像过程的、没登记成任务的大文件夹各多少）并建议说“整理过程文件”；
+    # 有不属于任何任务的大文件夹时，不论总量是否超线都提醒一句“要不要登记成任务”。只提醒，不阻断，不移动任何文件。
+    # 续做状态每次开工都跑，所以只给“估计”：不读文件内容、不算指纹（重复副本要看整理预览才算得准），几个 GB 的项目也不多花时间。
+    breakdown=None;unregistered=[];unregistered_advice=''
+    try:
+        from guocheng_zhengli import UNREGISTERED_BYTES,classify,summarize,unregistered_dirs,_human
+        if over:
+            found=classify(root,hash_duplicates=False);info=summarize(found)
+            breakdown={'estimate':True,'movable':info['movable'],'suspect':{k:info['suspect'][k] for k in ('files','bytes','largest')},
+                       'unregistered_dirs':found['unregistered_dirs'],'incomplete':found['incomplete'],
+                       'totals':{k:v for k,v in found['totals'].items() if v['files']},'largest_movable':info['largest_movable']}
+            unregistered=found['unregistered_dirs']
+            if not found['incomplete'] and (info['movable']['files'] or info['suspect']['files'] or unregistered):
+                names={'process':'过程文件','temp':'暂存'}
+                parts=[f"{names[k]} {v['files']} 个（{_human(v['bytes'])}）" for k,v in info['movable']['by_category'].items() if k in names]
+                if info['suspect']['files']:parts.append(f"看名字像过程的 {info['suspect']['files']} 个（{_human(info['suspect']['bytes'])}）")
+                if unregistered:parts.append('不属于任何任务的大文件夹 '+str(len(unregistered))+' 个（'+_human(sum(d['bytes'] for d in unregistered))+'）')
+                advice=(f"项目已 {mb(total)}MB、{files} 个文件，超过提示线（{mb(VOLUME_BYTES)}MB 或 {VOLUME_FILES} 个文件）。其中（估计，只看名字和位置）："+'、'.join(parts)+"；"
+                        "重复副本要看整理预览才算得准。"
+                        "建议你说“整理过程文件”，我先列清单给你看，你回“好”我再移到项目旁边的归档文件夹（移走不删，要用可以搬回）。"
+                        "技术附录（给 Agent）：预览 python3 scripts/guocheng_zhengli.py preview --workspace . --json；策略师回“好”后 python3 scripts/guocheng_zhengli.py organize --workspace . --words \"<原话>\" --actor <实例>"
+                        "（只移确定的加 --only-sure；策略师点名要移的文件夹加 --include <project/ 开头的路径>，可重复）；"
+                        "旧稿按策略师当次授权用 guidang.py 归档"
+                        +("；检核基线副本先预览 python3 scripts/banben_baoliu.py --workspace . --baselines --dry-run --json，"
+                          "确认后执行 python3 scripts/banben_baoliu.py --workspace . --baselines --json（只移没人再用的副本）" if baselines else ""))
+        elif any(v>=UNREGISTERED_BYTES for k,v in by_dir.items() if k.split('/')[0] in {'outputs','exports'}):
+            unregistered=unregistered_dirs(root)
+        if unregistered:
+            shown='、'.join('「'+d['dir'].rsplit('/',1)[-1]+'」'+_human(d['bytes']) for d in unregistered[:3])
+            unregistered_advice=(f"有不属于任何任务的大文件夹：{shown}。要不要把它登记成一个任务？登记后交接、整理都按任务来；不登记也行，我不会动它。"
+                                 "技术附录（给 Agent）：未登记大文件夹的判定见 scripts/guocheng_zhengli.py，提醒线 "+str(mb(UNREGISTERED_BYTES))+"MB。")
+    except Exception as exc:  # 提醒功能出错不影响续做状态
+        breakdown={'status':'unknown','reason':str(exc)[:200]}
     return {'bytes':total,'mb':mb(total),'files':files,'threshold':{'mb':mb(VOLUME_BYTES),'files':VOLUME_FILES},
             'largest_dirs':largest,
             'fastest_growing_7d':[{'dir':k,'mb':mb(v)} for k,v in sorted(recent.items(),key=lambda x:-x[1])[:5]],
             'over_threshold':over,
-            'advice':advice if over else '未超过阈值'}
+            'advice':advice if over else '未超过阈值',
+            **({'breakdown':breakdown} if breakdown is not None else {}),
+            **({'unregistered_dirs':unregistered,'unregistered_advice':unregistered_advice} if unregistered_advice else {})}
 
 
 @evaluation
@@ -174,6 +209,7 @@ def resume(root, task_id=None, details=False):
     errors, warnings, capabilities = check(root, current_only=True)
     package = inspect_package(root)
     errors.extend(package['errors'])
+    warnings.extend(package.get('warnings',[]))
     workflows = inspect_workflows(root, warnings, current_only=True)
     state = json.loads((root/'project/state.json').read_text()) if not errors else {}
     project = project_progress(state, workflows)
@@ -296,7 +332,8 @@ def resume(root, task_id=None, details=False):
             'memory':{k:workflows.get('project_memory',{}).get(k) for k in ('status','memory_version','digest','record_path')},
             'state_attention':state_attention(state), 'pending_transactions':pending,
             'embedded_pending':markers,'external_dependencies':external_dependencies(state),
-            'errors':sorted(set(errors)),'warnings':sorted(set(warnings)),
+            'errors':sorted(set(errors)),'warnings':package.get('warnings',[])+[w for w in sorted(set(warnings)) if w not in package.get('warnings',[])],  # 升级后残留旧文件的提示放最前面（续做状态只展示前几条提醒，不能被淹没）
+            
             'details_command':'python scripts/project_handoff.py resume --workspace . --details --json',
             'formal_handoff_command':'python scripts/project_handoff.py inspect --workspace . --json'}
     result['readback_unregistered']=waiting_candidates
@@ -364,6 +401,9 @@ def resume(root, task_id=None, details=False):
         if result['project_volume']['over_threshold']:
             result['warnings'].append(result['project_volume']['advice'])
             if result['status']=='ready':result['status']='attention'
+        if result['project_volume'].get('unregistered_advice'):
+            result['warnings'].append(result['project_volume']['unregistered_advice'])
+            if result['status']=='ready':result['status']='attention'
     except OSError as exc:
         result['project_volume']={'status':'unknown','reason':str(exc)}
     memory=workflows.get('project_memory',{})
@@ -402,7 +442,13 @@ def resume(root, task_id=None, details=False):
     except (OSError,ValueError,KeyError,TypeError) as exc:
         result['warnings'].append('最终版检查记录无法读取：'+brief(str(exc),160))
     if (reminders or finals) and result['status']=='ready':result['status']='attention'
-    result={**{k:result[k] for k in ('schema_version','mode','status')},'strategist_reminders':reminders,'final_unchecked':finals,**result}
+    handed=[]
+    try:  # v1.7.8 J01：这份工作区交出去过，顶部提醒一句（只提醒，不阻断）
+        from jiaojie_dabao import handed_over
+        handed=handed_over(root)[:3]
+    except (ImportError,OSError,ValueError,KeyError,TypeError):
+        handed=[]
+    result={**{k:result[k] for k in ('schema_version','mode','status')},**({'handed_over':handed} if handed else {}),'strategist_reminders':reminders,'final_unchecked':finals,**result}
     try:  # 候选 r3 #3：引用目标在归档记录里的单列“已归档（可搬回）”；归档记录读不出来时照旧按“引用目标不存在”归组
         from guidang import archived_index
         archived={path for path,_ in archived_index(root)}

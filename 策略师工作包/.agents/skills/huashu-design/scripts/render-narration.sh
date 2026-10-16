@@ -14,8 +14,8 @@
 #   --timeline=<path>     timeline.json 路径（自动读 totalDuration 和 voiceover.mp3 路径）
 #
 # Optional:
-#   --bgm-mood=<name>     BGM 预设（educational / tech / tutorial / ...）
-#   --bgm=<path>          自定义 BGM 文件
+#   --bgm=<path>          背景音乐文件（由用户提供；工作包不带背景音乐，不给就不加）
+#   --bgm-mood=<name>     旧版预设名；新包已不带预设音乐，找不到时先不加音乐、不报错
 #   --bgm-volume=<0-1>    BGM 静态音量，默认 0.18
 #   --no-ducking          关 sidechain ducking
 #   --keep-silent         保留中间产物（无声 MP4），便于 debug
@@ -27,7 +27,7 @@
 #
 # Examples:
 #   bash render-narration.sh demo.html --timeline=_narration/timeline.json
-#   bash render-narration.sh demo.html --timeline=_narration/timeline.json --bgm-mood=educational
+#   bash render-narration.sh demo.html --timeline=_narration/timeline.json --bgm=path/to/song.mp3
 #
 set -e
 

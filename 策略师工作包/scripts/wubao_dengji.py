@@ -9,6 +9,9 @@
 - 记录在 project/records/false-alarms.jsonl，只追加；每行须字段齐全、记录编号与内容一致，否则当损坏：一处也不放过并如实提示（r2 #4）。
 - 影响启动检查、续做状态与正式移交检查（都经 validate_project.check）；记一笔、对外导出、发行检查照旧按原规则判。
 - 报错写法只在 validate_project 写一份（credential_location 反解，r2 #6）。
+- N4 P2-1（v1.7.8）：交接打包的凭据扫描（mingan_xinxi.credential_file）判出、但启动检查不管的文件（比如 project/ 下的 .py 脚本里的飞书文件代号），
+  也可以登记：--path 写文件、--field 写“（按文本检查）”，放行范围是“这份文件”，规矩同上（原话、文件指纹、硬规则命中仍拒、文件变了重新拦）；
+  交接扫描（jiaojie_dabao._released_by_false_alarm）认这种登记。
 - 全盘细查返修 P1-3：放行范围是“这一字段”（按文本检查的是“这份文件”），不是其中某一行。登记只能放过软规则命中（像密码、密钥这类键名后面赋了一个值的写法）；
   同一字段（或文件）里有硬规则命中——密钥样式（如 sk-、ghp_、AKIA 开头的长串）、Bearer、Authorization 头、带凭据的网址、私钥头
   （package_checks_content.SECRET）——登记时拒绝，旧记录放行前也再查一次，命中照拦。同一字段里的几处软规则命中一起放行（已知边界）。
@@ -182,6 +185,37 @@ def current_hits(root):
     return spots, names
 
 
+def handoff_scan_hit(root, rel, field):
+    """交接打包的凭据扫描（mingan_xinxi.credential_file）判出、但启动检查不管的文件：按“这份文件”（field 须写“（按文本检查）”）可以登记。
+    文件名像凭据的不行（登记入口前面已拒）；含硬规则命中的登记时另拒（register 里的 hard_hit）。"""
+    from mingan_xinxi import credential_file, credential_name
+    from validate_project import CREDENTIAL_TEXT_FIELD
+    if field != CREDENTIAL_TEXT_FIELD or LINE.match(rel) or not rel.startswith("project/") or credential_name(Path(rel).name):
+        return False
+    try:
+        path = local(root, rel)
+        return path.is_file() and not path.is_symlink() and bool(credential_file(path))
+    except (OSError, WorkflowError):
+        return False
+
+
+def whole_file_registered(root, rel):
+    """交接扫描用：这份文件按“这份文件”登记过误报、文件内容没变、没有硬规则命中。文件名像凭据的永远不放。"""
+    from mingan_xinxi import credential_name
+    from validate_project import CREDENTIAL_TEXT_FIELD
+    if credential_name(Path(rel).name):
+        return False
+    sha = _sha(root, rel)
+    if sha is None:
+        return False
+    mark = field_digest(CREDENTIAL_TEXT_FIELD)
+    try:
+        done = [r for r in records(root) if r["source"] == rel and r["field_sha256"] == mark and r["sha256"] == sha]
+    except (OSError, ValueError):
+        return False
+    return bool(done) and not hard_hit(root, rel, CREDENTIAL_TEXT_FIELD)
+
+
 def inspect(root):
     spots, names = current_hits(root)
     rows = records(root)
@@ -215,6 +249,8 @@ def register(root, path, field, words, actor):
     before = _sha(root, source_file(rel))
     spots, _ = current_hits(root)
     target = [s for s in spots if (s["source"], s["field"]) == (rel, field)]
+    if not target and handoff_scan_hit(root, rel, field):
+        target = [{"source": rel, "field": field, "path": rel}]     # N4 P2-1：只被交接打包的凭据扫描判出的文件，按“这份文件”登记
     if not target:
         listed = "；".join(s["source"] for s in spots[:10]) or "现在没有按内容判出的疑似凭据"
         raise WorkflowError("这一处现在没有被判成疑似凭据，不用登记，这次没有登记。"

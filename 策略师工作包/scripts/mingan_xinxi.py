@@ -33,6 +33,11 @@ def credential_name(name):
     return bool(SENSITIVE_NAME.match(name) or CHINESE_NAME.search(name))
 
 
+def is_credential_problem(message):
+    """启动检查 / 移交检查报出的一条问题是不是“疑似凭据”类（validate_project 的两种写法都含这四个字）。交接打包遇到这类问题直接拒绝，接收核对也不放过。"""
+    return "疑似凭据" in str(message)
+
+
 def credential_text(text):
     """内容像凭据：与发行检查、启动检查同一判定 package_checks_content.text_has_secret（含 app_secret 等带前缀的键名，占位符放行）。"""
     from package_checks_content import text_has_secret

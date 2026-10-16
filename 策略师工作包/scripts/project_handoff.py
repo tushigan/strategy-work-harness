@@ -42,6 +42,9 @@ def print_result(result: dict[str, object], as_json: bool) -> None:
     print(f"项目交接检查: {result.get('status', 'unknown')}")
     report = result.get("report", result)
     project = report.get("project", {})
+    for item in result.get("handed_over") or []:
+        # v1.7.8 J01：交出去过的工作区，顶部提醒一句
+        print("已交出提醒：" + str(item.get("for_strategist", "")))
     for item in result.get("strategist_reminders") or []:
         # G02（v1.7.5）：先交后检发现的问题置顶，策略师确认前一直显示
         print("要你看的检查提醒（任务 " + str(item.get("task_id")) + "）：")

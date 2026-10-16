@@ -37,6 +37,45 @@ def waiver_source(event):
     return event.get("waiver_source") or "strategist"
 
 
+DECISION_EVENTS = {"waiver", "final_version", "recheck_dont", "reminder_ack"}
+RECEIVED_LOG = "project/records/handoff-received.jsonl"
+
+
+def receiver_cutoff(root):
+    """最近一次“全量接手”的时刻（全盘细查 不确定 1：全量交接也换了人）。没有（或读不出来）返回 None。"""
+    path = local(root, RECEIVED_LOG)
+    if not path.is_file():
+        return None
+    latest = None
+    try:
+        for line in path.read_text(encoding="utf-8").splitlines():
+            if line.strip():
+                row = json.loads(line)
+                if isinstance(row, dict) and row.get("event") == "handoff_received" and row.get("kind") == "full" and row.get("at"):
+                    moment = _moment(row["at"])
+                    latest = moment if latest is None or moment > latest else latest
+    except (OSError, ValueError, TypeError):
+        return None
+    return latest
+
+
+def decisions_in_force(root, rows, cutoff=None):
+    """去掉“接手之前说的”决定类记录（豁免、最终版、不用查、已看到提醒）：全量接手后这些话对新人不生效，对方要自己再说一次；历史记录照常保留可看，检核按内容仍算数。"""
+    cutoff = receiver_cutoff(root) if cutoff is None else cutoff
+    if cutoff is None:
+        return rows
+    out = []
+    for e in rows:
+        if e.get("event") in DECISION_EVENTS:
+            try:
+                if _moment(e["created_at"]) <= cutoff:
+                    continue
+            except (KeyError, TypeError, ValueError):
+                pass
+        out.append(e)
+    return out
+
+
 def send_waivers(rows, task_id, fingerprint):
     """能当发客户依据的豁免（v1.7.5 批次二返修 #1）：只认“策略师明确不检核”的对外豁免（旧记录没有来源字段按策略师读）。
     “检核没跑成”“事后补登记”只说明为什么没检核，不能当发客户依据。普通发客户与补登记共用这一口径。"""
@@ -177,7 +216,7 @@ def waive(root, task_id, purpose, words, actor, source="strategist", reason_code
         raise WorkflowError("只有“检核没跑成”需要写原因代码。技术附录（给 Agent）：--reason-code 只用于 --source not_run")
     with serialized(root):
         current = version(root, task_id)
-        rows = events(root)
+        rows = decisions_in_force(root, events(root))
         for e in rows:
             if (e["event"] == "waiver" and e["task_id"] == task_id and e["fingerprint"] == current["fingerprint"]
                     and e["purpose"] == purpose and _same_words(e["words"], words) and waiver_source(e) == source
@@ -255,7 +294,7 @@ def status(root, task_id, light=False, file_issues=None):
     """file_issues：resume 已核对过的当前来源/成品问题（复用，避免重复读原件）；有问题时不显示“已有有效检核”。"""
     current = version(root, task_id, live=False)
     review = review_state(root, task_id, light)
-    mine = [e for e in events(root) if e["task_id"] == task_id and e.get("fingerprint") == current["fingerprint"]]
+    mine = [e for e in decisions_in_force(root, events(root)) if e["task_id"] == task_id and e.get("fingerprint") == current["fingerprint"]]
     waivers = [e for e in mine if e["event"] == "waiver"]
     delivered = [e for e in mine if e["event"] == "delivered"]
     exports = [e for e in mine if e["event"] == "external_version"]
@@ -402,7 +441,7 @@ def deliver(root, task_id, to, actor, words=None, export_record=None, pptx_words
         current = version(root, task_id)
         current.pop("files_changed", None)
         review = review_state(root, task_id)
-        rows = events(root)
+        rows = decisions_in_force(root, events(root))
         external = send_waivers(rows, task_id, current["fingerprint"])
         behind = None if review["reviewed"] or external else behind_basis(root, task_id, current)
         if review["reviewed"]:
@@ -756,7 +795,7 @@ _LEVEL_WORDS = {"red": "要更正的问题", "yellow": "可以改进的地方"}
 
 def reminders(root, task_id=None):
     """G02：交出后才登记的检核结果里，需要策略师知道的（发现问题、通过带黄灯、资料不够没看完），策略师确认前一直给出。"""
-    rows = events(root)
+    rows = decisions_in_force(root, events(root))
     acked = {e["review_record_id"] for e in rows if e["event"] == "reminder_ack"}
     handed = {}
     for e in rows:
@@ -806,7 +845,7 @@ def acknowledge(root, task_id, review_record_id, words, actor):
     actor_check(actor); text(words, "策略师原话")
     with serialized(root):
         pending = {x["review_record_id"]: x for x in reminders(root, task_id)}
-        for e in events(root):
+        for e in decisions_in_force(root, events(root)):
             if e["event"] == "reminder_ack" and e["review_record_id"] == review_record_id:
                 return {**e, "status": "existing"}
         if review_record_id not in pending:
@@ -1062,7 +1101,7 @@ def deliver_retroactive(root, task_id, to, actor, words, sent_at, versions=None)
             # 批次二返修 #9：依据看先后——检核、策略师原话登记得比发出晚的，不算发出时的依据（照实写“发出后才检查通过”）
             passed = [r for r in reviews if r.get("target", {}).get("version") == number and r.get("status") in PASS and decision_valid(root, r)]
             passed_before = [r for r in passed if _moment(r["created_at"]) < sent_moment]
-            words_all = send_waivers(rows, task_id, fingerprint)
+            words_all = send_waivers(decisions_in_force(root, rows), task_id, fingerprint)
             waived = [e for e in words_all if _moment(e["created_at"]) < sent_moment]
             base = {"task_id": task_id, "revision": event["revision"], "deliverables": [list(x) for x in files], "fingerprint": fingerprint}
             if passed_before:
@@ -1257,7 +1296,7 @@ def _stale(root, target):
 
 def final_checks(root, task_id=None):
     """续做状态、交付关口 status 里的最终版一行（G07，候选 r5）：每个任务只按最新一条最终版记录，出不出、说什么只由 recheck_state 定。"""
-    rows = events(root)
+    rows = decisions_in_force(root, events(root))
     tasks = dict.fromkeys(e["task_id"] for e in rows if e["event"] == "final_version" and (not task_id or e["task_id"] == task_id))
     out = []
     for tid in tasks:
@@ -1417,6 +1456,13 @@ def main():
         result = deliver(root, args.task_id, args.to, args.actor, args.words, args.export_record, args.pptx_words)
     elif args.command == "final":
         result = mark_final(root, args.task_id, args.words, args.actor, args.version, args.client_confirmed)
+        # v1.7.8 J06：标最终版成功登记之后，顺手把该任务的过程文件夹、暂存、可证明同内容的多余副本移到归档并事后告知；
+        # 整理失败只报告，不影响最终版登记（最终版记录此时已经写好）
+        from guocheng_zhengli import auto_after_final
+        cleanup = auto_after_final(root, args.task_id, args.actor)
+        result["process_cleanup"] = cleanup
+        if cleanup.get("for_strategist"):
+            result["text"] = result["text"] + " " + cleanup["for_strategist"]
     elif args.command == "recheck":
         result = recheck_dont(root, args.task_id, args.final_record, args.words, args.actor)
     elif args.command == "handover":

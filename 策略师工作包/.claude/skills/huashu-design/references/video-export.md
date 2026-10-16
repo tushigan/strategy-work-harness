@@ -45,40 +45,27 @@ NODE_PATH=$(npm root -g) node /path/to/claude-design/scripts/render-video.js <ht
 
 输出：与 HTML 同目录，同名 `.mp4`。
 
-### 2. `add-music.sh` — MP4 + BGM → MP4
+### 2. `add-music.sh` — MP4 + 背景音乐 → MP4
 
-给无声 MP4 混入背景音乐，按场景（mood）从内置 BGM 库里选，也可自带音频。自动匹配时长、加淡入淡出。
+给无声 MP4 混入背景音乐。**本工作包不带背景音乐**（旧版自带的 6 首已移除，为的是让安装包小一些），要加音乐时由用户提供音乐文件，用 `--music=<path>` 指定。自动匹配时长、加淡入淡出。
 
 ```bash
-bash add-music.sh <input.mp4> [--mood=<name>] [--music=<path>] [--out=<path>]
+bash add-music.sh <input.mp4> --music=<用户提供的音乐文件> [--out=<path>]
 ```
-
-**内置 BGM 库**（在 `assets/bgm-<mood>.mp3`）：
-
-| `--mood=` | 风格 | 适配场景 |
-|-----------|------|---------|
-| `tech`（默认） | Apple Silicon / 苹果发布会，极简合成器+钢琴 | 产品发布、AI工具、Skill 宣传 |
-| `ad` | upbeat 现代电子，有 build + drop | 社交媒体广告、产品预告、促销片 |
-| `educational` | 温暖明亮、轻吉他/电钢琴，inviting | 科普、教程介绍、课程预告 |
-| `educational-alt` | 同类备选，换一首试试 | 同上 |
-| `tutorial` | lo-fi 环境音，几乎无存在感 | 软件演示、编程教程、长演示 |
-| `tutorial-alt` | 同类备选 | 同上 |
 
 **行为**：
 - 音乐按视频时长裁剪
 - 0.3s 淡入 + 1s 淡出（避免硬切）
 - 视频流 `-c:v copy` 不重编码，音频 AAC 192k
-- `--music=<path>` 优先级高于 `--mood`，可以直接指定任意外部音频
-- 传错 mood 名会列出所有可用选项，不会静默失败
+- 没给音乐文件、或给的文件找不到：不报错，提示“工作包不带背景音乐”，并原样复制一份不带音乐的影片（输出名同上），方便接着做下一步
+- 选什么风格的音乐，参考 `references/audio-design-rules.md` 的「背景音乐选择」
 
 **典型流水线**（动画导出三件套 + 配乐）：
 ```bash
 node render-video.js animation.html                        # 录屏
 bash convert-formats.sh animation.mp4                      # 派生 60fps + GIF
-bash add-music.sh animation-60fps.mp4                      # 加默认 tech BGM
-# 或针对不同场景：
-bash add-music.sh tutorial-demo.mp4 --mood=tutorial
-bash add-music.sh product-promo.mp4 --mood=ad --out=promo-final.mp4
+bash add-music.sh animation-60fps.mp4 --music=<用户提供的音乐文件>   # 加背景音乐
+bash add-music.sh product-promo.mp4 --music=<用户提供的音乐文件> --out=promo-final.mp4
 ```
 
 ### 3. `convert-formats.sh` — MP4 → 60fps MP4 + GIF

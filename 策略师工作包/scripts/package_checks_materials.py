@@ -22,7 +22,8 @@ PROJECT_DOCS.add("project/records/closure-checklist.md")
 # v1.7.5 E7：随包的说人话词表、事实台账慎用说法模板与给策略师的三份文字模板是工具资产，不是客户业务资料
 TEMPLATE_DOCS = {"templates/选品打分表.json", "templates/竞品对照表.json", "templates/产品矩阵表.json",  # v1.7.6 K5/K7：产品矩阵填表模板（含虚构示例行，不是客户资料）
                  "templates/说人话词表.tsv", "templates/台账慎用说法.txt", "templates/给策略师-交稿说明.md",
-                 "templates/给策略师-报错说明.md", "templates/给策略师-复盘.md"}
+                 "templates/给策略师-报错说明.md", "templates/给策略师-复盘.md",
+                 "templates/交接说明.md"}   # v1.7.8 J01：交接说明模板（双读者，空模板）
 EMPTY_STATUS = {"not_initialized", "not_started", "not_applicable", "not_requested",
                 "not_configured", "project_setup"}
 BASELINE = ".agents/skills/project-import-template/assets/openclaw-gantt-import-template.xlsx"

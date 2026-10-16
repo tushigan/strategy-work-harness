@@ -3,6 +3,7 @@
 本目录只放与当前工作包一起复制的规则入口，不复制全局技能的客户资料、凭据或未适配脚本。
 
 - `project-control/SKILL.md`：总控如何读取状态、安排任务和记录交接。
+- `handoff/SKILL.md`（v1.7.8）：策略师说“交接”“打包给同事”时，先问全量还是任务，先给看、回“好”才把整个工作区（全量）或一个任务（任务交接）打成压缩包；对方说“接手”时，先找包、核对、看清情况，他选了再动手，接好后用三句话报现在到哪了。
 - `independent-review/SKILL.md`：中立检核如何独立读取标准、证据和实际产出。
 - `contract-schedule/SKILL.md`：合同列项、关键流程排期及人工确认。
 - `project-import-template/SKILL.md`：绑定实际 Excel 模板、识别变更及导出。
@@ -24,4 +25,4 @@ Codex 或 Claude Code 自然语言对话是主入口；结构及命令由主控�
 
 方法适配来源见 `方法来源.json`。不依赖源 Skill 的本机绝对路径，这些项目内规则随包复制。跨阶段及结项操作见根目录 `项目检核与结项运行说明.md`；外部适配不代表真实账号已接通，方法参考不提供外部操作权限。本地检查不证明客户批准或真实返工改善。
 
-以上共 15 个业务 Skill，不包含开发技能。六个角色在 `.codex/agents/`：project-controller 总控，strategy-author 写策略内容，proposal-author 写逐字稿，deck-builder 制作演示稿，design-expression-reviewer 做设计诊断，independent-reviewer 检核所有正式产出。设计诊断须再由不同的中立实例核对原件与逐页证据，形成最终报告。`huashu-design` 样式必须接入 `html-deck` 的同一份正式 HTML，而非另产一个不受检核的视觉稿；PDF、自由多文件或 PPTX 都不自动继承 HTML 批准。
+以上共 16 个业务 Skill，不包含开发技能。六个角色在 `.codex/agents/`：project-controller 总控，strategy-author 写策略内容，proposal-author 写逐字稿，deck-builder 制作演示稿，design-expression-reviewer 做设计诊断，independent-reviewer 检核所有正式产出。设计诊断须再由不同的中立实例核对原件与逐页证据，形成最终报告。`huashu-design` 样式必须接入 `html-deck` 的同一份正式 HTML，而非另产一个不受检核的视觉稿；PDF、自由多文件或 PPTX 都不自动继承 HTML 批准。

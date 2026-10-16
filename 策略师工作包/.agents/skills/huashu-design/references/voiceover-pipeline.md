@@ -399,7 +399,7 @@ DOUBAO_TTS_VOICE_ID=zh_female_xiaohe_uranus_bigtts
 6. **实播预览**：浏览器打开 HTML，点 ▶ Play，听画面+解说同步
 7. **第一观众自检**：用上面「自检 · 第一观众反应」表打分。失败回到 Step 4 重做
 8. **录视频**：`bash scripts/render-narration.sh demo.html --timeline=_narration/timeline.json`（自动录无声 MP4 + 混入 voiceover）
-9. **可选 BGM**：在 render-narration 加 `--bgm-mood=educational`（或 tech / tutorial 等）
+9. **可选背景音乐**：本工作包不带背景音乐，要加的话由用户提供音乐文件，在 render-narration 加 `--bgm=<用户提供的音乐文件>`；不提供就不加，影片照常出
 10. **交付**：浏览器 HTML（实时演示用）+ 最终 MP4（发布用）
 
 ## 异常处理

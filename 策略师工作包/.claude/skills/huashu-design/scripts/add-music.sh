@@ -1,20 +1,15 @@
 #!/usr/bin/env bash
-# Mix a BGM track into an MP4 video.
+# Mix a background-music track into an MP4 video.
+#
+# 本工作包不带背景音乐：音乐文件由用户提供，用 --music=<path> 指定。
+# 没给音乐文件、或给的文件找不到：不报错，提示一句并原样复制一份不带音乐的影片。
 #
 # Usage:
-#   bash add-music.sh <input.mp4> [--mood=<name>] [--music=<path>] [--out=<path>]
+#   bash add-music.sh <input.mp4> --music=<path> [--out=<path>]
 #
-# Mood library (in ../assets/, matching bgm-<mood>.mp3):
-#   tech              — Apple Silicon / product keynote vibe, minimal synth+piano (default)
-#   ad                — upbeat modern, clear build + drop, social-media ad energy
-#   educational       — warm, patient, inviting learning tone
-#   educational-alt   — alternate take of educational
-#   tutorial          — lo-fi background, stays out of voiceover's way
-#   tutorial-alt      — alternate take of tutorial
-#
-# Flags (all optional):
-#   --mood=<name>     pick a preset from the library (default: tech)
-#   --music=<path>    override with your own audio file (wins over --mood)
+# Flags:
+#   --music=<path>    the audio file to mix in (provided by the user)
+#   --mood=<name>     legacy preset name; presets are no longer bundled, so this only produces the hint
 #   --out=<path>      output path (default: <input-basename>-bgm.mp4)
 #
 # Legacy positional form still works: bash add-music.sh in.mp4 music.mp3 out.mp4
@@ -25,10 +20,8 @@
 #   - Video stream copied (no re-encode), audio AAC 192k
 #
 # Examples:
-#   bash add-music.sh my.mp4                              # default: tech mood
-#   bash add-music.sh my.mp4 --mood=ad                    # switch mood
-#   bash add-music.sh my.mp4 --mood=educational --out=final.mp4
-#   bash add-music.sh my.mp4 --music=path/to/song.mp3 # bring your own
+#   bash add-music.sh my.mp4 --music=path/to/song.mp3
+#   bash add-music.sh my.mp4 --music=path/to/song.mp3 --out=final.mp4
 #
 set -e
 
@@ -58,29 +51,37 @@ INPUT="${POSITIONAL[0]}"
 
 if [ -z "$INPUT" ] || [ ! -f "$INPUT" ]; then
   echo "Usage: bash add-music.sh <input.mp4> [--mood=<name>] [--music=<path>] [--out=<path>]" >&2
-  echo "Moods available: $(ls "$ASSETS_DIR" | grep -E '^bgm-.*\.mp3$' | sed 's/^bgm-//;s/\.mp3$//' | tr '\n' ' ')" >&2
   exit 1
 fi
 
-# ── Resolve music source: --music wins, else --mood ─────────────────
+# ── Resolve music source: --music wins, else --mood（旧版预设；新包不带，仅在 assets/ 里有同名文件时才用）──
+CUSTOM_GIVEN=""
 if [ -n "$CUSTOM_MUSIC" ]; then
   MUSIC="$CUSTOM_MUSIC"
   SOURCE_LABEL="custom: $MUSIC"
+  CUSTOM_GIVEN="1"
 else
   MUSIC="$ASSETS_DIR/bgm-${MOOD}.mp3"
   SOURCE_LABEL="mood: $MOOD"
-fi
-
-if [ ! -f "$MUSIC" ]; then
-  echo "✗ Music not found: $MUSIC" >&2
-  echo "  Available moods: $(ls "$ASSETS_DIR" | grep -E '^bgm-.*\.mp3$' | sed 's/^bgm-//;s/\.mp3$//' | tr '\n' ' ')" >&2
-  exit 1
 fi
 
 # ── Resolve output path ─────────────────────────────────────────────
 INPUT_DIR="$(cd "$(dirname "$INPUT")" && pwd)"
 INPUT_NAME="$(basename "$INPUT" .mp4)"
 [ -z "$OUTPUT" ] && OUTPUT="$INPUT_DIR/$INPUT_NAME-bgm.mp4"
+
+if [ ! -f "$MUSIC" ]; then
+  if [ -n "$CUSTOM_GIVEN" ]; then
+    echo "提示：找不到你指定的音乐文件（${MUSIC}），工作包也不带背景音乐，这次的影片先不加音乐。" >&2
+    echo "  （给 Agent：核对 --music= 的路径后重新运行）" >&2
+  else
+    echo "提示：工作包不带背景音乐，这次的影片先不加音乐。想加的话，请你提供一个音乐文件。" >&2
+    echo "  （给 Agent：用户给了音乐文件后，重新运行并加 --music=<音乐文件>）" >&2
+  fi
+  if [ "$INPUT" != "$OUTPUT" ]; then cp "$INPUT" "$OUTPUT"; fi
+  echo "✓ 已原样复制一份不带音乐的影片：${OUTPUT}"
+  exit 0
+fi
 
 # ── Measure video duration, compute fade-out start ──────────────────
 DURATION=$(ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "$INPUT")
