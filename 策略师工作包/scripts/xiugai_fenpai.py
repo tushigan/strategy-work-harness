@@ -40,12 +40,12 @@ def prepare_targets(root,request,payload,dispatch_id):
 def invocation(root,item,evidence,instance,host):
     from registration_guard import actor_check
     actor_check(instance);actor_check(host)
-    ref=file_ref(root,evidence,'真实宿主调用凭证')
+    ref=file_ref(root,evidence,'真实宿主调用证据')
     if ref['path'] in {r['candidate_path'] for r in item['modification_targets']} or ref in [t['original'] for t in item['modification_targets']]:raise WorkflowError('成品/原件不能充当调用证明')
     try:p=json.loads(local(root,ref['path']).read_text())
-    except (ValueError,UnicodeError):raise WorkflowError('修改分派须独立JSON调用凭证；真实接口无凭证保留未验证')
+    except (ValueError,UnicodeError):raise WorkflowError('修改分派须独立JSON调用证据；真实接口无证据保留未验证')
     keys={'kind','dispatch_id','instance','host_instance','started_at','returned_at','simulation','status','tool_call_id'}
-    if not isinstance(p,dict) or set(p)!=keys or p['kind']!='host_invocation' or any(p[k]!=v for k,v in [('dispatch_id',item['dispatch_id']),('instance',instance),('host_instance',host)]):raise WorkflowError('调用凭证身份/分派不匹配；不能用成品补造')
+    if not isinstance(p,dict) or set(p)!=keys or p['kind']!='host_invocation' or any(p[k]!=v for k,v in [('dispatch_id',item['dispatch_id']),('instance',instance),('host_instance',host)]):raise WorkflowError('调用证据身份/分派不匹配；不能用成品补造')
     if type(p['simulation']) is not bool or p['simulation'] and not test_mode(root):raise WorkflowError('模拟调用只限合成项目')
     if p['status'] not in {'started','returned'} or not isinstance(p['tool_call_id'],str) or not p['tool_call_id'].strip():raise WorkflowError('须实际可观测调用号与状态')
     start=datetime.fromisoformat(p['started_at']);prepared=datetime.fromisoformat(item.get('prepared_at',item['created_at']));current=datetime.now(timezone.utc)
@@ -59,11 +59,11 @@ def invocation(root,item,evidence,instance,host):
 def terminal_invocation(root,item,evidence):
     initial=item['invocation_details']
     if initial['status']=='returned':
-        if evidence is not None:raise WorkflowError('同步返回已有不可变凭证，不重复补造')
+        if evidence is not None:raise WorkflowError('同步返回已有不可变证据，不重复补造')
         return {}
-    if evidence is None:raise WorkflowError('异步调用尚缺真实返回凭证；保留候选等待回传，不重派')
+    if evidence is None:raise WorkflowError('异步调用尚缺真实返回证据；保留候选等待回传，不重派')
     ref,p=invocation(root,item,evidence,item['instance'],item['host_instance'])
-    if p['status']!='returned' or any(p[k]!=initial[k] for k in ('tool_call_id','started_at','simulation')) or ref==item['invocation_evidence']:raise WorkflowError('异步返回必须对应同一调用且用独立返回凭证，不能覆盖启动凭证')
+    if p['status']!='returned' or any(p[k]!=initial[k] for k in ('tool_call_id','started_at','simulation')) or ref==item['invocation_evidence']:raise WorkflowError('异步返回必须对应同一调用且用独立返回证据，不能覆盖启动证据')
     return {'return_invocation_evidence':ref,'return_invocation_details':p}
 
 def candidates(root,item,values):
@@ -98,7 +98,7 @@ def integrate(root,dispatch_id,packet,actor):
         if item.get('dispatch_protocol')!=2 or item.get('status')!='completed':raise WorkflowError('修改候选须先完成真实回传与主控回读；旧分派沿用原登记')
         if controller_of(root,item)!=actor:raise WorkflowError('须由本次登记主控续接')
         if not isinstance(packet,dict) or not isinstance(packet.get('basis'),dict) or packet['basis'].get('task_id')!=item['task_id']:
-            raise WorkflowError('续接预览凭证与分派不属于同一任务')
+            raise WorkflowError('续接预览证据与分派不属于同一任务')
         if item.get('integration'):
             if item['integration'].get('task_id',item['task_id'])!=item['task_id']:raise WorkflowError('已有续接回执任务归属冲突')
             if item['integration']['request_hash']!=digest(packet):raise WorkflowError('同分派登记请求内容冲突')

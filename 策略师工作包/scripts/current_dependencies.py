@@ -103,7 +103,7 @@ def dispatch_issues(root,current_only=False):
         else:
             # F05（v1.7.3）：已结束分派的输入与接手证据只是“当时用过的版本”。文件后来变了只记历史，
             # 当前引用由任务自己的 file_issues 报一次，不按分派数重复、也不阻断工作区。
-            # （采纳候选的接手证据仍随下方凭证一起核对。）
+            # （采纳候选的接手证据仍随下方证据一起核对。）
             ended=[(label,ref) for label,ref in live if label in {'输入文件','接手证据'}]
             live=[pair for pair in live if pair not in ended]
             if any(label=='回传候选' for label,ref in live):
@@ -111,7 +111,7 @@ def dispatch_issues(root,current_only=False):
                 # its calling/controller proof. Shared inputs do not imply adoption.
                 # Inline originals are checked above by exact current references;
                 # do not reactivate other candidates/versions in an old readback.
-                live += [(label,ref) for label,ref in refs if label in {'调用凭证','返回调用凭证','回读凭证','接手证据'} and (label,ref) not in live]
+                live += [(label,ref) for label,ref in refs if label in {'调用证据','返回调用证据','回读证据','接手证据','调用凭证','返回调用凭证','回读凭证'} and (label,ref) not in live]
             ended=[pair for pair in ended if pair not in live]
         retired=[pair for pair in refs if pair not in live and pair not in ended]
         prefix=f"分派 {item['dispatch_id']}："
@@ -125,7 +125,7 @@ def dispatch_issues(root,current_only=False):
             # known version replacements are cheap to explain; other history is deferred.
             for label,ref in retired:
                 if not isinstance(ref,dict) or not isinstance(ref.get('path'),str):
-                    historical.append(prefix+label+' 历史凭证引用不完整');continue
+                    historical.append(prefix+label+' 历史证据引用不完整');continue
                 p=dispatch_local(root,ref['path'])
                 if not p.is_file() and (ref['path'],ref.get('sha256')) in archived:archived_count+=1
                 elif not p.is_file():historical.append(prefix+label+' '+ref['path']+'：纯历史文件缺失')

@@ -81,9 +81,9 @@
       "path": ".agents/skills/handoff/SKILL.md",
       "kind": "file",
       "excluded": false,
-      "size": 17810,
+      "size": 20720,
       "mode": 420,
-      "sha256": "9e73b9a0cfdb0323aecb8521855a1f08b1865ce9827089ef1e350d004402b373"
+      "sha256": "50ca9f4a833c6ea4aded781cb3d711d429dff697d2e887549890a9ee2804cbb2"
     },
     {
       "path": ".agents/skills/html-deck",
@@ -2085,9 +2085,9 @@
       "path": ".claude/skills/handoff/SKILL.md",
       "kind": "file",
       "excluded": false,
-      "size": 17810,
+      "size": 20720,
       "mode": 420,
-      "sha256": "9e73b9a0cfdb0323aecb8521855a1f08b1865ce9827089ef1e350d004402b373"
+      "sha256": "50ca9f4a833c6ea4aded781cb3d711d429dff697d2e887549890a9ee2804cbb2"
     },
     {
       "path": ".claude/skills/html-deck",
@@ -3942,7 +3942,7 @@
       "excluded": false,
       "size": 28990,
       "mode": 420,
-      "sha256": "ceaedd0456251fe8b8564b3981e8a0abe31b1ae32575e6663364ac4ec7e8daa9"
+      "sha256": "44e349a91af605039de562831202b7a7635dc0e2596fc49cbe374bb81006f2d6"
     },
     {
       "path": ".codex",
@@ -4043,9 +4043,9 @@
       "path": "AGENTS.md",
       "kind": "file",
       "excluded": false,
-      "size": 149953,
+      "size": 152582,
       "mode": 420,
-      "sha256": "a51275cde5535710326aa9a4a6ff276249ac7bf41ff3b6eb9e29d7dfebf53103"
+      "sha256": "1a8e7a20f25678351483f05e32c34281a70a115f72e79c99c8a6d0be6c623694"
     },
     {
       "path": "CLAUDE.md",
@@ -4059,9 +4059,9 @@
       "path": "README.md",
       "kind": "file",
       "excluded": false,
-      "size": 39106,
+      "size": 40248,
       "mode": 420,
-      "sha256": "c01ed2bc9def34025b3e884d6c9019583160cf48c9a618e0cc17e3d4f6d42e74"
+      "sha256": "b97dc76985bffb1d5c44c7bae9031201665f9c02a97ea2c73522237a67c66075"
     },
     {
       "path": "project",
@@ -4531,9 +4531,9 @@
       "path": "scripts/current_dependencies.py",
       "kind": "file",
       "excluded": false,
-      "size": 7691,
+      "size": 7742,
       "mode": 420,
-      "sha256": "3b53d1307a8ff2b5ce9effacb7649a9048e661719cf231a15246967eb9f04d79"
+      "sha256": "5565a11cd6b81edc004add841963cc21431e99f9a2c511d7cc572b5ba0868ffe"
     },
     {
       "path": "scripts/deck_browser.mjs",
@@ -4645,7 +4645,7 @@
       "excluded": false,
       "size": 11922,
       "mode": 420,
-      "sha256": "08272342ae694e3ae8bacef67cd7e227f5be82821f8ddbd63aeb314b5ddc623c"
+      "sha256": "3848390ab6d8b9e8288ea54586ac7af8ec73d98f8fa0281bdc3f9694ed560c83"
     },
     {
       "path": "scripts/duiwai_daochu.py",
@@ -4795,9 +4795,9 @@
       "path": "scripts/jiaojie_dabao.py",
       "kind": "file",
       "excluded": false,
-      "size": 67410,
+      "size": 84495,
       "mode": 420,
-      "sha256": "8ccc5d1a0984d05bed30e9d9b2734d111fb5bac14a73e6e166cebd44c496948f"
+      "sha256": "96ba17cafbe5eab46b8b5e535568b528fabbe412dbf4d09b1740a00e962d1f67"
     },
     {
       "path": "scripts/jiaojie_jieshou.py",
@@ -4811,9 +4811,9 @@
       "path": "scripts/jiaojie_renwu.py",
       "kind": "file",
       "excluded": false,
-      "size": 51360,
+      "size": 52442,
       "mode": 420,
-      "sha256": "caa9b887f4b5ae250864dd509cd153d5ac022e366e7c6bd11301cb7db9551980"
+      "sha256": "941123a0dc6ac389c276a17fb0cdbc8a9e2e20fa348e3d348a96e9ae8565bd0d"
     },
     {
       "path": "scripts/jiaojie_shishi.py",
@@ -4827,9 +4827,9 @@
       "path": "scripts/jiaojie_yindao.py",
       "kind": "file",
       "excluded": false,
-      "size": 71394,
+      "size": 71865,
       "mode": 420,
-      "sha256": "1b759e36ac614c9728ae23f8082dc3c6798dd2980b55af992cd5b91378e35c75"
+      "sha256": "8ec5e8b59021b5cd94b4b64fba0d85fc2ca1007bc9892f466d041ed77da80938"
     },
     {
       "path": "scripts/jiyibi.py",
@@ -4875,9 +4875,9 @@
       "path": "scripts/mingan_xinxi.py",
       "kind": "file",
       "excluded": false,
-      "size": 6069,
+      "size": 6834,
       "mode": 420,
-      "sha256": "84d0214a5cbfa296daf651f3cc198d9e2d828611611d3749f7e58ddc4fcd9046"
+      "sha256": "a64b534b49ee363127cbcfc80a7e9b5bc2aff55b2b3d1d14c27a2d4740d2ed8f"
     },
     {
       "path": "scripts/neibu_yongyu.py",
@@ -5467,9 +5467,9 @@
       "path": "scripts/wubao_dengji.py",
       "kind": "file",
       "excluded": false,
-      "size": 20217,
+      "size": 20897,
       "mode": 420,
-      "sha256": "e804d08dc494e0430d4932814eefd9284ed253f4e8818050f2df90fb843484f1"
+      "sha256": "9de70c0bf5744b92aafd53556555559b7044f6e2524a8f2ec0177a4d39e04b70"
     },
     {
       "path": "scripts/xiugai_fenpai.py",
@@ -5477,7 +5477,7 @@
       "excluded": false,
       "size": 11304,
       "mode": 420,
-      "sha256": "9f114ad894278f8778f2b2f80fcefc86a77134be76b0d41ad7ff5c2e8f179b7f"
+      "sha256": "6ca077b38c2d401cb66f3ca86a092188e2e1795da859dd93519b8aeb2cb584ec"
     },
     {
       "path": "scripts/yunxing_chayi.py",
@@ -5680,9 +5680,9 @@
       "path": "运行环境与命令.md",
       "kind": "file",
       "excluded": false,
-      "size": 55725,
+      "size": 55869,
       "mode": 420,
-      "sha256": "3bc778ddfe09d521419932fe9651b4c7f9ccba4bc3f6c96dca92f15a0385f95d"
+      "sha256": "3975c75e486f45cbe8417f32d6b9326cde5e2b1e64ac03f656ecfe1f3034c8ed"
     },
     {
       "path": "项目检核与结项运行说明.md",

@@ -2,11 +2,12 @@
 
 只复用启动检查与发行检查已有的判定（validate_project.SENSITIVE_NAME / walk_sensitive_keys、package_checks_content.secret_key_name /
 placeholder / text_has_secret / DEV_PATH_SPAN；r3 起三处的键名、占位与文字判定都只在 package_checks_content 一处），
-另补中文文件名（密钥、密码、凭据、令牌）。判定是保守的常见样式拦截，不替代人工保密审查。"""
+另补中文文件名（密钥、密码、口令、令牌，按名字拦）。v1.7.9 J07：“凭证”“凭据”不再按名字一票否决，改按内容判
+（工作包自己把派工调用证据存成“调用凭证-启动.json”、业务里也常有“付款凭证”）。判定是保守的常见样式拦截，不替代人工保密审查。"""
 import re
 from pathlib import Path
 
-CHINESE_NAME = re.compile(r"密钥|密码|口令|凭据|凭证|令牌")
+CHINESE_NAME = re.compile(r"密钥|密码|口令|令牌")   # 按名字拦；J08：内容干净时可登记为误报（英文名字命中不行）
 # 只认英文字母数字，前面紧挨的汉字不吞；r3：只从一串的开头尝试（长串无“@”时线性，不回溯）
 EMAIL = re.compile(r"(?<![A-Za-z0-9._%+-])[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)+")
 # 手机（含 +86，允许空格或连字符分组 138 1234 5678）、带区号座机（010-12345678、(010)12345678、（010）12345678）、国际号码；
@@ -27,10 +28,20 @@ AUTH_HEADER = re.compile(r"\bauthorization[\"']?[ \t]*[:=][ \t]*" + _SPAN + "(?:
 VALUE_TAIL = re.compile("(?:[ \t]+[^\\s,;#" + _CN_STOP + _CJK + "]+)*")
 
 
-def credential_name(name):
-    """文件名像凭据：与启动检查同一规则（token、secret、password、credential、.pem/.key 等），另加中文。"""
+def english_name_hit(name):
+    """文件名命中启动检查的英文规则（token、secret、password、credential、.env、.pem/.key 等）：整份不能登记为误报。"""
     from validate_project import SENSITIVE_NAME
-    return bool(SENSITIVE_NAME.match(name) or CHINESE_NAME.search(name))
+    return bool(SENSITIVE_NAME.match(name))
+
+
+def chinese_name_hit(name):
+    """文件名带中文的密码、密钥、口令、令牌：按名字拦，但内容干净时可以登记为误报（J08）。“凭证”“凭据”不在此列，按内容判（J07）。"""
+    return bool(CHINESE_NAME.search(name))
+
+
+def credential_name(name):
+    """文件名像凭据：英文规则（与启动检查同一规则）加中文的密码、密钥、口令、令牌。"""
+    return english_name_hit(name) or chinese_name_hit(name)
 
 
 def is_credential_problem(message):

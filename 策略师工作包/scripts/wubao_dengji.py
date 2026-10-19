@@ -3,7 +3,9 @@
 启动检查、续做状态与正式移交检查不再因它阻断；不改原始资料。
 
 - 只登记按内容判出的那一处（文件 + 字段；读不成 JSON、按文本判的字段记“（按文本检查）”），而且必须是现在正被判成疑似凭据的一处；
-  文件名像凭据（.env、*.pem、名字里带 token 等）的整份文件不能登记，照拦。只认 project/ 下的文件，本登记记录自己不能登记。
+  文件名像凭据的英文写法（.env、*.pem、名字里带 token 等）整份文件不能登记，照拦。只认 project/ 下的文件，本登记记录自己不能登记。
+  （v1.7.9 J08：文件名带中文的“密码、密钥、口令、令牌”、内容检查干净的 project/ 文件，策略师当次确认“不是密码或密钥”后可以按“这份文件”登记；
+  规矩同上：原话、文件指纹、文件一变重新拦、含密钥样式仍拒。中文“凭证、凭据”不按名字拦，按内容判，见 mingan_xinxi。）
 - 每条登记记下策略师原话、文件与登记时整份文件的内容指纹；字段只存指纹（r2 #1：字段路径可能含像凭据的键名，原文不进记录、
   不进提示）。文件内容一变（指纹不同）这一处照常拦，要重新确认再登记。
 - 记录在 project/records/false-alarms.jsonl，只追加；每行须字段齐全、记录编号与内容一致，否则当损坏：一处也不放过并如实提示（r2 #4）。
@@ -187,10 +189,10 @@ def current_hits(root):
 
 def handoff_scan_hit(root, rel, field):
     """交接打包的凭据扫描（mingan_xinxi.credential_file）判出、但启动检查不管的文件：按“这份文件”（field 须写“（按文本检查）”）可以登记。
-    文件名像凭据的不行（登记入口前面已拒）；含硬规则命中的登记时另拒（register 里的 hard_hit）。"""
-    from mingan_xinxi import credential_file, credential_name
+    英文写法的文件名像凭据的不行（登记入口前面已拒）；中文名字命中（密码、密钥、口令、令牌）的可以（J08）；含硬规则命中的登记时另拒（register 里的 hard_hit）。"""
+    from mingan_xinxi import credential_file, english_name_hit
     from validate_project import CREDENTIAL_TEXT_FIELD
-    if field != CREDENTIAL_TEXT_FIELD or LINE.match(rel) or not rel.startswith("project/") or credential_name(Path(rel).name):
+    if field != CREDENTIAL_TEXT_FIELD or LINE.match(rel) or not rel.startswith("project/") or english_name_hit(Path(rel).name):
         return False
     try:
         path = local(root, rel)
@@ -200,10 +202,10 @@ def handoff_scan_hit(root, rel, field):
 
 
 def whole_file_registered(root, rel):
-    """交接扫描用：这份文件按“这份文件”登记过误报、文件内容没变、没有硬规则命中。文件名像凭据的永远不放。"""
-    from mingan_xinxi import credential_name
+    """交接扫描用：这份文件按“这份文件”登记过误报、文件内容没变、没有硬规则命中。英文写法的文件名像凭据的永远不放（中文名字命中的可以，J08）。"""
+    from mingan_xinxi import english_name_hit
     from validate_project import CREDENTIAL_TEXT_FIELD
-    if credential_name(Path(rel).name):
+    if english_name_hit(Path(rel).name):
         return False
     sha = _sha(root, rel)
     if sha is None:
@@ -231,7 +233,7 @@ def inspect(root):
 
 
 def register(root, path, field, words, actor):
-    from mingan_xinxi import credential_name, credential_text
+    from mingan_xinxi import credential_text, english_name_hit
     from registration_guard import actor_check
     actor_check(actor); text(words, "策略师原话"); text(path, "文件"); text(field, "字段")
     if credential_text(words):
@@ -242,9 +244,9 @@ def register(root, path, field, words, actor):
     if not rel.startswith("project/") or source_file(rel) == LOG:
         raise WorkflowError("只能登记项目资料里的一处，这次没有登记。"
                             f"技术附录（给 Agent）：--path 须在 project/ 下、不能是 {LOG}")
-    if credential_name(Path(source_file(rel)).name):  # r2 #7：文件名本身像凭据，整份照拦，不给登记
+    if english_name_hit(Path(source_file(rel)).name):  # r2 #7：英文写法的文件名像凭据，整份照拦，不给登记（中文名字命中的另走 J08）
         raise WorkflowError("这份资料的文件名像密码或密钥，不能登记为误报，这次没有登记。要用它，先给文件改个名字或移出项目文件夹。"
-                            "技术附录（给 Agent）：文件名命中 mingan_xinxi.credential_name（启动检查“疑似敏感文件不得进入工作包”）")
+                            "技术附录（给 Agent）：英文文件名命中 mingan_xinxi.english_name_hit（启动检查“疑似敏感文件不得进入工作包”）；中文名字带密码 / 密钥 / 口令 / 令牌的，内容干净才可登记")
     # r2 #9：完整判定在锁外做（只读）；判定前后文件指纹一致才算判的是这一份；锁内只再核一次指纹、查重、追加
     before = _sha(root, source_file(rel))
     spots, _ = current_hits(root)

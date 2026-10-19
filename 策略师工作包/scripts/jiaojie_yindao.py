@@ -147,6 +147,9 @@ def _manifest_id_of(path):
 def find_package(workspace, package=None):
     """找交接包。返回 {"status": found / choose_package / none, ...}；只读。"""
     workspace = Path(workspace).expanduser().resolve()
+    stop = _d().version_stop(workspace)                       # J14：用新版脚本去跑旧版工作区（或反过来）先停下
+    if stop:
+        return stop
     if package:
         path = Path(package).expanduser()
         path = path if path.is_absolute() else Path.cwd() / path
@@ -303,6 +306,8 @@ def _guide(workspace, package=None):
     D, J = _d(), _j()
     root = Path(workspace).expanduser().resolve()
     found = find_package(root, package)
+    if found["status"] == "version_mismatch":
+        return _wrap("refuse", "version_mismatch", found["for_strategist"], technical=found.get("technical"))
     unzipped = _unzipped_here(root)
     if found["status"] == "none" and unzipped:
         if unzipped in _received_ids(root):
@@ -690,6 +695,8 @@ def receive(workspace, package, choice, words, actor, name=None, from_who=None):
     if not isinstance(words, str) or not words.strip():
         raise WorkflowError("接手要有接手人当次的原话（--words），没有就不动任何文件")
     g = guide(root, package)
+    if g.get("situation") == "version_mismatch":
+        return g                                         # J14：版本对不上，什么都不写
     offered = {o["key"]: o for o in g.get("options", [])}
     if g["situation"] in ("choose_package", "not_found"):
         return g                                         # 还没确定是哪个包：先让他选 / 先放进文件夹，什么都不做

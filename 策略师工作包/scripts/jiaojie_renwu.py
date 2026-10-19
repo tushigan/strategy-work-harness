@@ -432,6 +432,9 @@ def _formal_talk(task):
 
 def preview(root, task_id=None, include=()):
     root = _d()._require_workspace(root)
+    stop = _d().version_stop(root)
+    if stop:
+        return stop
     listing = list_tasks(root)
     if not task_id:
         return {"status": "choose_task", "kind": "task", "tasks": listing, "warnings": listing["warnings"],
@@ -452,7 +455,8 @@ def preview(root, task_id=None, include=()):
     hits, released = _d()._scan(root, entries)
     blob_hits, blob_released = _scan_blobs(root, c)
     hits, released = sorted(set(hits) | set(blob_hits)), sorted(set(released) | set(blob_released))
-    problems = _d()._problems(root)
+    state = _d().resume_full(root)
+    problems = _d()._problems(root, state)
     cred_problems, problems_other = _d().split_problems(problems)
     hits = sorted(set(hits) | _d().credential_problem_files(cred_problems))
     carried = {e["path"] for e in entries}
@@ -471,9 +475,11 @@ def preview(root, task_id=None, include=()):
            "memory_rows": len(c["memory_lines"]), "credential_hits": hits, "credential_released": released, "problems": problems,
            "problem_kinds": _d().problem_kinds(problems_other), "errors": errors, "warnings": c["warnings"],
            "include": {"requested": [x for x in include]}, "identity": c["identity"], "login_skipped": c["login_skipped"],
+           "note_draft": _d().upper_half(_task_note(root, c, entries, skip, "（交出实例）", None, [], None, "（打包时生成）", "（打包时生成）")),
            "for_strategist": _task_talk(info, task, entries, groups, total, skip, c, hits, problems_other, errors),
            "technical": "打包：python3 scripts/jiaojie_dabao.py pack --workspace . --kind task --task " + task_id
-                        + " --words \"<策略师当次回复的原话>\" --actor <实例> [--to <接手人>] [--include <project/ 开头的路径>]... [--accept-problems \"<同意照原样交的原话>\"]"}
+                        + " --words \"<策略师当次回复的原话>\" --actor <实例> [--to <接手人>] [--include <project/ 开头的路径>]... [--accept-problems \"<同意照原样交的原话>\"] "
+                        "[--status-note \"<她看过说明草稿后同意带上的现状补充>\"]；note_draft 是交接说明“给接手人”那一半的草稿，用白话给她看"}
     return out
 
 
@@ -512,8 +518,7 @@ def _task_talk(info, task, entries, groups, total, skip, c, hits, problems, erro
         parts.append(f"还有 {len(c['unfinished_dispatches'])} 件派出去还没做完的检查任务，没有带。")
     parts.append("检核没问题的成品，字节不变的话对方不用重新检核；但对方发给客户前，门槛和你完全一样。")
     if hits:
-        names = "、".join(_clean(Path(x).name) or "一份名字是英文的文件" for x in hits[:3])
-        parts.append(f"注意：{names}里有像登录凭据的内容，没处理前我不会打包（你同意原样交也不行，凭据不能随包交出去）。如果那是误报，你确认后告诉我，我登记；也可以把里面的密码或密钥改掉。")
+        parts.append(_d().credential_warning(hits, {e["path"] for e in entries if e["role"] != "你点名多带的"}))
     if problems:
         parts.append(f"另外，工作区现在的检查有 {len(problems)} 个没解决的问题，大致是：{_d().kinds_words(problems)}；要先修，还是你同意原样交？原样交的话，请你当次明确说“同意照原样交”。")
     for w in c.get("warnings", []):
@@ -526,7 +531,7 @@ def _task_talk(info, task, entries, groups, total, skip, c, hits, problems, erro
 
 # ---------------- 打包 ----------------
 
-def _task_note(root, c, entries, skip, actor, to, problems, accept_words, manifest_id, zip_name):
+def _task_note(root, c, entries, skip, actor, to, problems, accept_words, manifest_id, zip_name, status_note=None):
     D = _d()
     template = Path(root) / "templates/交接说明.md"
     try:
@@ -542,12 +547,16 @@ def _task_note(root, c, entries, skip, actor, to, problems, accept_words, manife
     versions = D.task_own_versions(task)
     summary = D.plain_piece(task.get("summary"), names, "", root, versions)
     where = f"任务状态：{D.STATUS_WORDS.get(task['status'], '状态待确认')}；已经改到第 {c['events'][-1]['revision']} 版。" + (f"摘要：{summary}" if summary else "")
+    if status_note:
+        where = status_note.strip() + "\n\n" + where
     nxt = D.plain_piece(task.get("next_action"), names, "", root, versions) or "接手后先看一遍成品和检核记录，再决定下一步。"
     delivered = [json.loads(t) for t in c["rows"].get("delivery-gate.jsonl", [])]
     notes = []
     for row in delivered:
         if row.get("event") == "delivered":
-            notes.append(f"这个任务的第 {row.get('version', '?')} 版已经发给过{row.get('to') or '客户'}（接着改之前先看清哪一版发出去了）")
+            version = row.get("version")
+            label = f"第 {version} 版" if isinstance(version, int) and not isinstance(version, bool) else ""   # r2：拿不到版本号就不写版本
+            notes.append(f"这个任务的{label}已经发给过{row.get('to') or '客户'}（接着改之前先看清哪一版发出去了）")
     notes.append("发给客户之前的门槛对你和原来的人完全一样：成品没变、原来的独立检核仍然有效就能直接用；原来的人说过的“不用检查”“最终版”不会带过来。")
     if c["dependencies"]:
         notes.append("它用到了别的任务的成果，作为只读参考一起带来了，只能看；那些任务本身不在你这里")
@@ -571,6 +580,7 @@ def _task_note(root, c, entries, skip, actor, to, problems, accept_words, manife
         "- 没带的类别与个数：" + (json.dumps({k: v['files'] for k, v in skip.items()}, ensure_ascii=False) if skip else "无") + "；决定类：" + (json.dumps(dec, ensure_ascii=False) if dec else "无"),
         "- 交出时仍有的检查问题：" + (json.dumps(problems, ensure_ascii=False)[:1500] if problems else "无") + (f"；交出的人当次原话：{accept_words}" if problems else ""),
         f"- 依赖的前序成果（只读参考）：{json.dumps(c['dependencies'], ensure_ascii=False) if c['dependencies'] else '无'}",
+        "- 现状补充：" + ("交出的人补了一段（已放在“现在到哪了”最前面，原文也记在清单与交出记录里）" if status_note else "无"),
     ])
     for key, value in (("what", what), ("where", where), ("next", nxt), ("waiting", D._bullets(waiting, "暂时没有人在等拍板。")), ("notes", D._bullets(notes, "暂时没有特别要提醒的。")),
                        ("missing", missing_text), ("accounts", accounts), ("appendix", appendix)):
@@ -584,10 +594,11 @@ def forward_text(project_name, title, size):
             "接手的做法：在你自己的「Codex」或「Claude」（两款 AI 助手软件）里，先打开你要放这个任务的工作区文件夹（同一个客户的工作区，或者一个装好同版本工作包的空白工作区），"
             "把压缩包拖进对话，对它说“接手这个交接包”。它会先检查压缩包有没有损坏、客户对不对，再一步一步带你。\n"
             "请不要自己解压：压缩包里的文件要由 AI 一步一步放进去，自己解压到工作区会盖掉你那边已有的记录。\n"
-            "飞书、云端大脑、产品线网站这类账号没有放在包里，需要用的话用你自己的账号连一次。\n" + _d().CAUTION)
+            "飞书、云端大脑、产品线网站这类账号没有放在包里，需要用的话用你自己的账号连一次。\n"
+            + (_d().big_sentence(size) + "\n" if size > _d().BIG_PACKAGE_BYTES else "") + _d().CAUTION)
 
 
-def pack(root, task_id, words, actor, to=None, accept_problems=None, include=()):
+def pack(root, task_id, words, actor, to=None, accept_problems=None, include=(), status_note=None):
     D = _d()
     from registration_guard import actor_check
     from workspace_lock import serialized
@@ -595,6 +606,12 @@ def pack(root, task_id, words, actor, to=None, accept_problems=None, include=())
     if not isinstance(words, str) or not words.strip():
         raise WorkflowError("打包须有策略师当次回复的原话（--words，比如她回的“好”），没有就不打包")
     root = D._require_workspace(root)
+    stop = D.version_stop(root)
+    if stop:
+        return stop
+    status_note, rejected = D.check_status_note(root, status_note)
+    if rejected:
+        return rejected
     if not task_id:
         return preview(root)
     listing = list_tasks(root)
@@ -610,10 +627,10 @@ def pack(root, task_id, words, actor, to=None, accept_problems=None, include=())
         blob_hits, _ = _scan_blobs(root, c)
         hits = sorted(set(hits) | set(blob_hits))
         if hits:
-            names = "、".join(Path(x).name for x in hits[:5])
+            used = {e["path"] for e in entries if e["role"] != "你点名多带的"}
             return {"status": "blocked_credentials", "credential_hits": hits,
-                    "for_strategist": D.credential_talk(hits, names),
-                    "technical": "命中的文件（不回显内容）：" + "、".join(hits) + "；确认是误报：python3 scripts/wubao_dengji.py register --workspace . --path <路径> --field （按文本检查） --words \"<原话>\" --actor <实例>"}
+                    "for_strategist": D.credential_talk(hits, used=used),
+                    "technical": D.CREDENTIAL_TECH.format(files="、".join(hits))}
         from handoff_inspection import inspect_workspace
         from handoff_inventory import inventory_digest, sha256_bytes
         from handoff_records import now as record_now
@@ -622,7 +639,7 @@ def pack(root, task_id, words, actor, to=None, accept_problems=None, include=())
         report = inspect_workspace(root)
         if report.get("storage_blocked"):
             raise WorkflowError("交接存储目录或文件有问题（" + "；".join(report.get("errors", []))[:200] + "），先恢复再交接")
-        resume_state = resume(root)
+        resume_state = resume(root, details=True)             # J09：问题取全，不用只给前 12 条的摘要
         problems = sorted(set(report.get("errors", [])) | set(resume_state.get("errors", [])))
         blocked = D.credential_block(problems)
         if blocked:
@@ -639,7 +656,7 @@ def pack(root, task_id, words, actor, to=None, accept_problems=None, include=())
         part = root.parent / f".{zip_name}.part"
         note_rel = f"{D.NOTE_DIR}/{D._unique(Path(root) / D.NOTE_DIR, zip_name[:-4], '.md')}"
         skip = _not_carried(root, c, result, {e["path"] for e in entries})
-        note_bytes = _task_note(root, c, entries, skip, actor, to, problems, accept_problems, manifest_id, zip_name).encode("utf-8")
+        note_bytes = _task_note(root, c, entries, skip, actor, to, problems, accept_problems, manifest_id, zip_name, status_note).encode("utf-8")
         need = sum(e["bytes"] for e in entries)
         import shutil
         try:
@@ -676,13 +693,13 @@ def pack(root, task_id, words, actor, to=None, accept_problems=None, include=())
                                  "dependencies": c["dependencies"], "unfinished_dispatches": c["unfinished_dispatches"],
                                  "files": [{"path": e["path"], "role": e["role"], "bytes": e["bytes"]} for e in entries], "note_path": note_rel,
                                  "not_carried": skip, "baseline": c["baseline"], "memory_rows": len(c["memory_lines"]),
-                                 "append_only_files": [f"project/records/策略师原话/{c['task_id']}.jsonl"]}
+                                 "append_only_files": [f"project/records/策略师原话/{c['task_id']}.jsonl"], "status_note": status_note}
                 D._add_bytes(z, TASK_MANIFEST, (json.dumps(task_manifest, ensure_ascii=False, indent=2) + "\n").encode("utf-8"), members)
                 inventory = sorted(({"name": m["name"], "kind": "file", "size": m["size"], "sha256": m["sha256"]} for m in members), key=lambda x: x["name"])
                 package = {"format": D.PACKAGE_FORMAT, "kind": "task", "task_id": c["task_id"], "created_by_tool": "scripts/jiaojie_dabao.py", "recipient": to, "words": words,
                            "package_version": D._package_version(root), "identity": ident, "note_path": note_rel,
                            "carried": {"files": len(members), "bytes": sum(m["size"] for m in members)}, "members": members, "known_errors": problems,
-                           "known_errors_words": accept_problems if problems else None,
+                           "known_errors_words": accept_problems if problems else None, "status_note": status_note,
                            "note": "任务交接包：只列这个任务的文件与记录摘录；接手用 scripts/jiaojie_jieshou.py，不用整个工作区的接收核对"}
                 manifest = build_manifest(root, report, actor, entries=inventory, package=package)
                 manifest["manifest_id"] = manifest_id
@@ -715,16 +732,18 @@ def pack(root, task_id, words, actor, to=None, accept_problems=None, include=())
         row = {"schema_version": 1, "event": "handed_over", "handover_id": uuid.uuid4().hex, "kind": "task", "task_id": c["task_id"], "task_title": title, "created_at": created,
                "actor": actor, "words": words, "recipient": to, "package_name": zip_name, "package_bytes": size, "package_sha256": zip_sha.hexdigest(), "manifest_id": manifest_id,
                "inventory_sha256": manifest["inventory_sha256"], "files": len(members), "revisions": len(c["events"]), "revision_at_handover": c["events"][-1]["revision"],
-               "decision_rows_not_carried": task_manifest["decision_rows_not_carried"], "note_path": note_rel, "known_errors": len(problems), "basis": BASIS}
+               "decision_rows_not_carried": task_manifest["decision_rows_not_carried"], "note_path": note_rel, "known_errors": len(problems),
+               "status_note": status_note, "basis": BASIS}
         with (Path(root) / D.LOG_OUT).open("a", encoding="utf-8") as stream:
             stream.write(json.dumps(row, ensure_ascii=False) + "\n"); stream.flush(); os.fsync(stream.fileno())
         forward = forward_text(ident.get("project_name") or root.name, title, size)
         talk = (f"任务交接包做好了：{_human(size)}，放在你工作区文件夹的旁边（路径在下面，可以直接复制）。里面是「{title}」这一个任务的 {len(members)} 个文件和记录；"
-                "打包后我已经把包里每个文件核对过一遍，没有损坏。原来的工作区一个文件都没删，只多了一份交接说明和一条交出记录。\n\n"
-                f"```\n{zip_path}\n```\n\n把压缩包连同下面这段话一起发给对方：\n\n{forward}")
+                "打包后我已经把包里每个文件核对过一遍，没有损坏。原来的工作区一个文件都没删，只多了一份交接说明和一条交出记录。"
+                + (f"\n\n{D.big_sentence(size)}" if size > D.BIG_PACKAGE_BYTES else "")
+                + f"\n\n```\n{zip_path}\n```\n\n把压缩包连同下面这段话一起发给对方：\n\n{forward}")
         return {"status": "packed", "kind": "task", "task_id": c["task_id"], "package_path": str(zip_path), "package_name": zip_name, "package_bytes": size,
                 "package_sha256": row["package_sha256"], "manifest_id": manifest_id, "carried": package["carried"], "known_errors": problems, "note_path": note_rel,
-                "decision_rows_not_carried": task_manifest["decision_rows_not_carried"], "forward_text": forward, "for_strategist": talk,
+                "decision_rows_not_carried": task_manifest["decision_rows_not_carried"], "forward_text": forward, "for_strategist": talk, "status_note": status_note,
                 "technical": f"交出记录 {D.LOG_OUT}（kind=task）；任务清单在包内 {TASK_MANIFEST}；接手 scripts/jiaojie_jieshou.py check / apply"}
 
 

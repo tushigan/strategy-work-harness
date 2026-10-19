@@ -125,21 +125,21 @@ def required_refs(item):
     refs=[(label,r) for key,label in (('input_files','输入文件'),('candidates','回传候选'),
           ('takeover_refs','接手证据')) for r in item.get(key,[])]
     invocation=item.get('invocation_evidence')
-    if invocation is not None:refs.append(('调用凭证',invocation))
-    elif item.get('instance'):refs.append(('调用凭证',None))
+    if invocation is not None:refs.append(('调用证据',invocation))
+    elif item.get('instance'):refs.append(('调用证据',None))
     terminal=item.get('return_invocation_evidence')
-    if terminal is not None:refs.append(('返回调用凭证',terminal))
+    if terminal is not None:refs.append(('返回调用证据',terminal))
     proof=item.get('readback_evidence')
     if proof is not None:
         if isinstance(proof,dict) and proof.get('kind')=='readback_summary':
             refs.extend(('回读原件',r) for r in proof.get('references',[]))
             if not proof.get('references'):refs.append(('回读原件',None))
-        else:refs.append(('回读凭证',proof))
-    elif item.get('readback_verified'):refs.append(('回读凭证',None))
+        else:refs.append(('回读证据',proof))
+    elif item.get('readback_verified'):refs.append(('回读证据',None))
     return refs
 
 
-# F06（v1.7.3 r2）：前缀宽容只对输入 / 来源类引用；调用、返回调用、回读凭证与回传候选照旧整文件核对。
+# F06（v1.7.3 r2）：前缀宽容只对输入 / 来源类引用；调用、返回调用、回读证据与回传候选照旧整文件核对。
 APPENDABLE={'输入文件','接手证据','回读原件'}
 
 
